@@ -1,4 +1,4 @@
-package ac.boar.check.api;
+package ac.boar.anticheat.check.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
