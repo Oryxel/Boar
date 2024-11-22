@@ -1,9 +1,15 @@
 package ac.boar.data;
 
+import ac.boar.data.block.NbtBlockDefinitionRegistry;
+import ac.boar.utils.StringUtils;
 import ac.boar.utils.math.BoundingBox;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.cloudburstmc.nbt.NBTInputStream;
+import org.cloudburstmc.nbt.NbtMap;
+import org.cloudburstmc.nbt.NbtType;
+import org.cloudburstmc.nbt.NbtUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,14 +18,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class BedrockMappingData {
 
+    public static Logger LOGGER = Logger.getLogger("[Boar - Mapping Phase]");
+
     private static Gson GSON = new Gson();
     private static Map<Integer, List<BoundingBox>> collisionMap = new HashMap<>();
-    private static Map<Integer, BlockMappedData> blockCollisionMappings = new HashMap<>();
+    private static Map<String, List<BlockMappedData>> blockCollisionMappings = new HashMap<>();
 
-    public static void load() throws Exception {
+    private static NbtBlockDefinitionRegistry blockDefinitionRegistry;
+
+    public static void load() {
+        {
+            NbtMap map = (NbtMap) loadGzipNBT("block_palette.1_21_40.nbt");
+            blockDefinitionRegistry = new NbtBlockDefinitionRegistry(map.getList("blocks", NbtType.COMPOUND), false);
+        }
+
         {
             final JsonObject blockCollisions = readJson("1.21.0-block-collisions.json");
 
@@ -45,17 +61,50 @@ public class BedrockMappingData {
                 collisionMap.put(id, collisions);
             }
 
+            int count = 0;
+            final JsonObject blocks = blockCollisions.getAsJsonObject("blocks");
+            for (String element : blocks.keySet()) {
+                final String name = StringUtils.addNamespaceIfNeeded(element);
+                final JsonArray array = blocks.getAsJsonArray(element);
 
+                if (array.isEmpty()) {
+                    LOGGER.info("Failed to find " + name + " in nbt block definitions.");
+                    continue; // Shouldn't happen but just in case.
+                }
+
+                final List<BlockMappedData> list = new ArrayList<>();
+                for (int i = 0; i < array.size(); i++) {
+                    final int collisionId = array.get(i).getAsInt();
+
+                    list.add(new BlockMappedData(i, collisionMap.get(collisionId)));
+                }
+
+                blockCollisionMappings.put(name, list);
+                count++;
+            }
+
+            if (count < blocks.keySet().size()) {
+                LOGGER.info("Block collision list: " + blocks.keySet().size() + ", actual mapped size: " + count);
+            }
         }
     }
 
     private static JsonObject readJson(final String file) {
-        try (final InputStream inputStream = BedrockMappingData.class.getClassLoader().getResourceAsStream("/data/" + file)) {
+        try (final InputStream inputStream = BedrockMappingData.class.getClassLoader().getResourceAsStream("data/" + file)) {
             if (inputStream == null) {
                 return null;
             }
 
             return GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static Object loadGzipNBT(String file) {
+        try (InputStream inputStream = BedrockMappingData.class.getClassLoader().getResourceAsStream("data/" + file);
+             NBTInputStream nbtInputStream = NbtUtils.createGZIPReader(inputStream)) {
+            return nbtInputStream.readTag();
         } catch (IOException e) {
             return null;
         }
