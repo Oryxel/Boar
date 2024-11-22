@@ -26,7 +26,7 @@ dependencies {
     compileOnly(libs.bedrock.connection)
     compileOnly(libs.protocol)
     compileOnly(libs.spigot.api)
-    compileOnly(libs.geyser.api)
+    compileOnly(libs.geyser.core)
 
     implementation(libs.lombok)
 

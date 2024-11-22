@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BedrockPacketEvents {
+public final class BedrockPacketEvents {
     @Getter
     private static List<BedrockPacketListener> listeners = new ArrayList<>();
 

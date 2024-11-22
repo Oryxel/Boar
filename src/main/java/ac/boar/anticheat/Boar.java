@@ -1,6 +1,7 @@
 package ac.boar.anticheat;
 
 import ac.boar.anticheat.geyser.GeyserSessionJoinEvent;
+import ac.boar.anticheat.packets.MovementCheckRunner;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.data.BedrockMappingData;
 import ac.boar.plugin.BoarPlugin;
@@ -22,6 +23,7 @@ public class Boar {
 
         BoarPlugin.LOGGER.info("Initialing events....");
         new GeyserSessionJoinEvent();
+        BedrockPacketEvents.register(new MovementCheckRunner());
 
         this.playerManager = new BoarPlayerManager();
     }
