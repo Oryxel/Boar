@@ -8,11 +8,7 @@ import java.util.List;
 
 public class JavaPacketEvents {
     @Getter
-    private static List<PacketListener> listeners;
-
-    public static void init() {
-        JavaPacketEvents.listeners = new ArrayList<>();
-    }
+    private static List<PacketListener> listeners = new ArrayList<>();
 
     public static void register(final PacketListener listener) {
         JavaPacketEvents.listeners.add(listener);
