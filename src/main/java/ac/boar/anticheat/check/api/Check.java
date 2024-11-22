@@ -1,4 +1,4 @@
-package ac.boar.check.api;
+package ac.boar.anticheat.check.api;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.RequiredArgsConstructor;
