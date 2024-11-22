@@ -10,7 +10,7 @@ import org.cloudburstmc.protocol.bedrock.packet.BedrockPacketHandler;
 import org.cloudburstmc.protocol.common.PacketSignal;
 
 @RequiredArgsConstructor
-public class MITMBedrockListener implements BedrockPacketHandler {
+public final class MITMBedrockListener implements BedrockPacketHandler {
     private final BoarPlayer player;
     private final BedrockPacketHandler oldHandler;
 

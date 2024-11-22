@@ -10,7 +10,7 @@ import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
 import org.geysermc.mcprotocollib.network.packet.Packet;
 
 @RequiredArgsConstructor
-public class TcpSessionListener extends SessionAdapter {
+public final class TcpSessionListener extends SessionAdapter {
     private final BoarPlayer player;
 
     @Override

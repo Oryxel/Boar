@@ -6,7 +6,7 @@ import ac.boar.protocol.event.java.PacketListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaPacketEvents {
+public final class JavaPacketEvents {
     @Getter
     private static List<PacketListener> listeners = new ArrayList<>();
 

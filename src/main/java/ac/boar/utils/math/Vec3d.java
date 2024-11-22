@@ -1,7 +1,5 @@
 package ac.boar.utils.math;
 
-import org.joml.Vector3f;
-
 public class Vec3d {
     public static final Vec3d ZERO = new Vec3d(0, 0, 0);
     public double x;
@@ -19,10 +17,6 @@ public class Vec3d {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    public Vec3d(Vector3f vec) {
-        this((double)vec.x(), (double)vec.y(), (double)vec.z());
     }
 
     public Vec3d relativize(Vec3d vec) {
@@ -164,10 +158,6 @@ public class Vec3d {
 
     public final double getZ() {
         return this.z;
-    }
-
-    public Vector3f toVector3f() {
-        return new Vector3f((float)this.x, (float)this.y, (float)this.z);
     }
 
     public Vec3d projectOnto(Vec3d vec) {

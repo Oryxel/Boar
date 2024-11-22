@@ -18,6 +18,9 @@ public class BoarPlayer {
     private BedrockSession bedrockSession;
     private Session javaSession;
 
+    public float x, y, z;
+    public long tick;
+
     public void init() {
         GeyserUtil.hookGeyserPlayer(this);
     }
