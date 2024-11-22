@@ -12,14 +12,7 @@ public final class BoarPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         LOGGER = getLogger();
-        try {
-            Boar.getInstance().init();
-        } catch (Exception e) {
-            LOGGER.warning("Please report this to the developer.");
-            this.getServer().getPluginManager().disablePlugin(this);
-
-            throw new RuntimeException(e);
-        }
+        Boar.getInstance().init();
     }
 
     @Override

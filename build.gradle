@@ -21,13 +21,18 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor ('org.projectlombok:lombok:1.18.36')
+    annotationProcessor (libs.lombok)
 
-    compileOnly('org.cloudburstmc.protocol:bedrock-connection:3.0.0.Beta5-20241022.154658-14')
-    compileOnly('org.geysermc.mcprotocollib:protocol:1.21.2-20241107.110329-3')
-    compileOnly('org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT')
-    compileOnly('org.geysermc.geyser:api:2.4.2-SNAPSHOT')
-    compileOnly('org.projectlombok:lombok:1.18.36')
+    compileOnly(libs.bedrock.connection)
+    compileOnly(libs.protocol)
+    compileOnly(libs.spigot.api)
+    compileOnly(libs.geyser.api)
+
+    implementation(libs.lombok)
+
+    testImplementation(libs.lombok)
+    testImplementation(libs.gson)
+    testImplementation(libs.bedrock.connection)
 }
 
 processResources {

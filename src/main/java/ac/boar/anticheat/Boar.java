@@ -16,7 +16,7 @@ public class Boar {
 
     private BoarPlayerManager playerManager;
 
-    public void init() throws Exception {
+    public void init() {
         BoarPlugin.LOGGER.info("Loading mappings.....");
         BedrockMappingData.load();
 
