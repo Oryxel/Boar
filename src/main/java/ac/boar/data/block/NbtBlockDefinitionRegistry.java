@@ -11,7 +11,6 @@ import java.util.List;
 
 // https://github.com/CloudburstMC/ProxyPass
 public class NbtBlockDefinitionRegistry implements DefinitionRegistry<BlockDefinition> {
-
     private final Int2ObjectMap<NbtBlockDefinition> definitions = new Int2ObjectOpenHashMap<>();
 
     public NbtBlockDefinitionRegistry(List<NbtMap> definitions, boolean hashed) {

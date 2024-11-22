@@ -7,7 +7,9 @@ This is an anticheat!
 - [ ] Anticheat base....
 - [ ] A prediction engine or small one for movement or velocity check.
 - [ ] Fully synced lag compensated system
-- [ ] AI detection, sound fun :D
+- [ ] AI based check, sound fun :D
 
 ### Credit:
 - https://github.com/PrismarineJS/minecraft-data
+- https://github.com/CloudburstMC/ProxyPass
+- https://github.com/GeyserMC/Geyser
