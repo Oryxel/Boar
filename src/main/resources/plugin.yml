@@ -1,0 +1,4 @@
+name: Boar
+version: '1.0'
+main: ac.boar.anticheat.plugin.BoarPlugin
+api-version: '1.21'
