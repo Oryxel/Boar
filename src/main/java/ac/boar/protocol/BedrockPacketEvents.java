@@ -8,11 +8,7 @@ import java.util.List;
 
 public class BedrockPacketEvents {
     @Getter
-    private static List<BedrockPacketListener> listeners;
-
-    public static void init() {
-        BedrockPacketEvents.listeners = new ArrayList<>();
-    }
+    private static List<BedrockPacketListener> listeners = new ArrayList<>();
 
     public static void register(final BedrockPacketListener listener) {
         BedrockPacketEvents.listeners.add(listener);

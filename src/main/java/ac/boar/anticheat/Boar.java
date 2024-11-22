@@ -22,8 +22,6 @@ public class Boar {
 
         BoarPlugin.LOGGER.info("Initialing events....");
         new GeyserSessionJoinEvent();
-        BedrockPacketEvents.init();
-        JavaPacketEvents.init();
 
         this.playerManager = new BoarPlayerManager();
     }
@@ -33,6 +31,6 @@ public class Boar {
         this.playerManager.clear();
 
         BedrockPacketEvents.terminate();
-        JavaPacketEvents.init();
+        JavaPacketEvents.terminate();
     }
 }
