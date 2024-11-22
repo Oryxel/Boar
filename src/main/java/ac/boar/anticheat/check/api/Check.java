@@ -10,6 +10,9 @@ public class Check {
     private final String name = getClass().getDeclaredAnnotation(CheckInfo.class).name(),
                 type = getClass().getDeclaredAnnotation(CheckInfo.class).type();
     private final int maxVl = getClass().getDeclaredAnnotation(CheckInfo.class).maxVl();
-
     private int vl = 0;
+
+    public void flag() {
+        this.vl++;
+    }
 }

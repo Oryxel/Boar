@@ -1,6 +1,6 @@
 package ac.boar.utils.math;
 
-public class Vec3d {
+public class Vec3d implements Cloneable {
     public static final Vec3d ZERO = new Vec3d(0, 0, 0);
     public double x;
     public double y;
@@ -162,5 +162,10 @@ public class Vec3d {
 
     public Vec3d projectOnto(Vec3d vec) {
         return vec.lengthSquared() == 0.0 ? vec : vec.multiply(this.dotProduct(vec)).multiply(1.0 / vec.lengthSquared());
+    }
+
+    @Override
+    public Vec3d clone() {
+        return new Vec3d(this.x, this.y, this.z);
     }
 }
