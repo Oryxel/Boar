@@ -15,13 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeyserUtil {
-    public static void hookGeyserPlayer(BoarPlayer player) {
+    public static void hookBedrockSession(BoarPlayer player) {
         final GeyserConnection connection = player.getSession();
 
         try {
             BedrockServerSession bedrockSession = getBedrockSession(player, connection);
             player.setBedrockSession(bedrockSession);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static void hookJavaSession(BoarPlayer player) {
+        final GeyserConnection connection = player.getSession();
+
+        try {
             TcpSession javaSession = getJavaSession(player, connection);
             player.setJavaSession(javaSession);
         } catch (Exception e) {

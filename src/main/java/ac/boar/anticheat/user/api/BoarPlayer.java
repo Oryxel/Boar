@@ -71,7 +71,7 @@ public class BoarPlayer {
     public BoundingBox boundingBox;
 
     public void init() {
-        GeyserUtil.hookGeyserPlayer(this);
+        GeyserUtil.hookBedrockSession(this);
         this.checkHolder.init();
     }
 
