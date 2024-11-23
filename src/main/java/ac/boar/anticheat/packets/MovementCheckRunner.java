@@ -25,6 +25,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
+        // This DOES happen, sometimes it failed to add the adapter, force player to rejoin...
         if (player.getJavaSession() == null) {
             player.getSession().disconnect("Failed to add MCProtocolLib adapter, please rejoin!");
         }
