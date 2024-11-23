@@ -7,11 +7,14 @@ import ac.boar.utils.math.Vec3d;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.network.Session;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class BoarPlayer {
@@ -36,6 +39,8 @@ public class BoarPlayer {
     public long lastReceivedId = -1, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
     public boolean lastTickWasTeleport;
+
+    public Optional<Vector3i> supportingBlockPos;
 
     // End of tick velocity.
     public Vec3d clientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO;
@@ -62,5 +67,37 @@ public class BoarPlayer {
         }
 
         return sprinting ? 0.025999999F : 0.02F;
+    }
+
+    public Vector3i getVelocityAffectingPos() {
+        return this.getPosWithYOffset(0.500001F);
+    }
+
+    public Vector3i getSteppingPos() {
+        return this.getPosWithYOffset(1.0E-5F);
+    }
+
+    public Vector3i getPosWithYOffset(float offset) {
+        if (this.supportingBlockPos.isPresent()) {
+            Vector3i blockPos = this.supportingBlockPos.get();
+            return blockPos;
+//            if (!(offset > 1.0E-5F)) {
+//                return blockPos;
+//            } else {
+//                BlockState blockState = this.getWorld().getBlockState(blockPos);
+//                return (!((double)offset <= 0.5) || !blockState.isIn(BlockTags.FENCES)) && !blockState.isIn(BlockTags.WALLS) && !(blockState.getBlock() instanceof FenceGateBlock) ? blockPos.withY(MathHelper.floor(this.pos.y - (double)offset)) : blockPos;
+//            }
+        } else {
+            int i = (int) Math.floor(this.x);
+            int j = (int) Math.floor(this.y - (double)offset);
+            int k = (int) Math.floor(this.z);
+            return Vector3i.from(i, j, k);
+        }
+    }
+
+    public double getEffectiveGravity() {
+        boolean bl = clientVelocity.y <= 0.0;
+        return 0.08D;
+//        return bl && this.hasStatusEffect(StatusEffects.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity();
     }
 }
