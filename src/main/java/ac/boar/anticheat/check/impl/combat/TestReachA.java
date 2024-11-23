@@ -54,7 +54,7 @@ public class TestReachA extends PacketCheck {
             return false;
         }
 
-        Bukkit.broadcastMessage(cache.getPosition().x + ", " + cache.getPosition().y + ", " + cache.getPosition().z);
+        Bukkit.broadcastMessage("" + cache.getPosition().distanceTo(eyeHeight.subtract(0, 1.62, 0)));
         return !player.boundingBox.expand(3.04, 4.65, 3.04).intersects(cache.getBoundingBox().expand(0.1));
     }
 }
