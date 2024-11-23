@@ -4,6 +4,7 @@ import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.utils.LatencyUtil;
 import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.utils.GeyserUtil;
+import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +39,14 @@ public class BoarPlayer {
     public float fallDistance;
 
     public float yaw, pitch;
-    public boolean sprinting, lastSprinting, sneaking, lastSneaking;
+    public boolean sprinting, lastSprinting, sneaking, lastSneaking, swimming, lastSwimming;
 
     public long lastReceivedId = -1, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
     public boolean lastTickWasTeleport;
+
+    public boolean wasInPowderSnow, inPowderSnow;
+    public boolean touchingWater, submergedInWater;
 
     public Optional<Vector3i> supportingBlockPos;
 
@@ -52,7 +56,9 @@ public class BoarPlayer {
 
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
 
-    protected Map<Fluid, Double> fluidHeight = new HashMap<>();
+    public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag;
+
+    public BoundingBox boundingBox;
 
     public void init() {
         GeyserUtil.hookGeyserPlayer(this);
@@ -154,6 +160,10 @@ public class BoarPlayer {
 
     public final double getFinalGravity() {
         return 0.08D;
+    }
+
+    public void onLanding() {
+        this.fallDistance = 0.0F;
     }
 
 }
