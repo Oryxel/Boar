@@ -54,6 +54,6 @@ public class TestReachA extends PacketCheck {
             return false;
         }
 
-        return !player.boundingBox.expand(3.04, 4.65, 3.04).intersects(cache.getBoundingBox().expand(0.1));
+        return !player.boundingBox.expand(3, 4.62, 3).intersects(cache.getBoundingBox().expand(0.1));
     }
 }
