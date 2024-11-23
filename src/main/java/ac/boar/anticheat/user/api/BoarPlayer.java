@@ -1,5 +1,7 @@
 package ac.boar.anticheat.user.api;
 
+import ac.boar.anticheat.check.api.holder.CheckHolder;
+import ac.boar.anticheat.compensated.CompensatedEntity;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
@@ -34,6 +36,10 @@ public class BoarPlayer {
     public final TeleportUtil teleportUtil = new TeleportUtil(this);
     public final LatencyUtil latencyUtil = new LatencyUtil(this);
 
+    public final CompensatedEntity compensatedEntity = new CompensatedEntity(this);
+
+    public final CheckHolder checkHolder = new CheckHolder(this);
+
     public float lastX, x, lastY, y, lastZ, z;
     public long tick;
 
@@ -66,6 +72,7 @@ public class BoarPlayer {
 
     public void init() {
         GeyserUtil.hookGeyserPlayer(this);
+        this.checkHolder.init();
     }
 
     public void sendTransaction() {

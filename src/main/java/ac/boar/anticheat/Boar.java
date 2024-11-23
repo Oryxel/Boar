@@ -1,10 +1,7 @@
 package ac.boar.anticheat;
 
 import ac.boar.anticheat.geyser.GeyserSessionJoinEvent;
-import ac.boar.anticheat.packets.EffectUpdatePacket;
-import ac.boar.anticheat.packets.LatencyPacket;
-import ac.boar.anticheat.packets.MovementCheckRunner;
-import ac.boar.anticheat.packets.WorldTeleportPacket;
+import ac.boar.anticheat.packets.*;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.data.BedrockMappingData;
 import ac.boar.plugin.BoarPlugin;
@@ -29,9 +26,12 @@ public class Boar {
         BedrockPacketEvents.register(new LatencyPacket());
         BedrockPacketEvents.register(new WorldTeleportPacket());
         BedrockPacketEvents.register(new MovementCheckRunner());
+        BedrockPacketEvents.register(new PacketCheckRunner());
 
         JavaPacketEvents.register(new WorldTeleportPacket());
         JavaPacketEvents.register(new EffectUpdatePacket());
+        JavaPacketEvents.register(new EntityUpdatePacket());
+        JavaPacketEvents.register(new PacketCheckRunner());
 
         this.playerManager = new BoarPlayerManager();
     }

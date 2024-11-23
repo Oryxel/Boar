@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public final class LatencyUtil {
     private final BoarPlayer player;
     @Getter
     private final List<Long> sentTransactions = new ArrayList<>();
-    private final Map<Long, Runnable> map = new HashMap<>();
+    private final Map<Long, Runnable> map = new ConcurrentHashMap<>();
 
     public void addTransactionToQueue(long id, Runnable runnable) {
         if (id <= player.lastReceivedId) {

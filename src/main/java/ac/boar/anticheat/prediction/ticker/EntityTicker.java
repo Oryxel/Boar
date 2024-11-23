@@ -15,14 +15,17 @@ import org.geysermc.geyser.level.block.Fluid;
 public class EntityTicker {
     private final BoarPlayer player;
 
+    public void tick() {
+        baseTick();
+        tickMovement();
+    }
+
     public void baseTick() {
         player.wasInPowderSnow = player.inPowderSnow;
         player.inPowderSnow = false;
         updateWaterState();
         updateSubmergedInWaterState();
         updateSwimming();
-
-        tickMovement();
     }
 
     public void tickMovement() {

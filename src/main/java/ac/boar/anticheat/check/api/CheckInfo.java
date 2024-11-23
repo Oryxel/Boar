@@ -7,5 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface CheckInfo {
     String name();
     String type() default "";
-    int maxVl();
+    int maxVl() default -1;
 }
