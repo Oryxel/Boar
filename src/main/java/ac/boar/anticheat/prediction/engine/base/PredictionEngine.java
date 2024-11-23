@@ -1,17 +1,33 @@
 package ac.boar.anticheat.prediction.engine.base;
 
 import ac.boar.anticheat.prediction.engine.data.Vector;
+import ac.boar.anticheat.prediction.engine.data.VectorType;
+import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3d;
+import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface PredictionEngine {
-    List<Vector> gatherAllPossibilities();
-    Vec3d jump(Vec3d vec3d);
-    boolean canJump();
-    void travel(Vec3d movementInput);
+@RequiredArgsConstructor
+public abstract class PredictionEngine {
+    protected final BoarPlayer player;
 
-    default void apply003ToPossibilities(final List<Vector> vectors) {
+    protected abstract Vec3d jump(Vec3d vec3d);
+    protected abstract boolean canJump();
+    protected abstract void travel(Vec3d movementInput);
+
+    public final List<Vector> gatherAllPossibilities() {
+        List<Vector> vectors = new ArrayList<>();
+        vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
+
+        apply003ToPossibilities(vectors);
+        applyJumpingToPossibilities(vectors);
+
+        return vectors;
+    }
+
+    protected final void apply003ToPossibilities(final List<Vector> vectors) {
         for (final Vector vector : vectors) {
             final Vec3d vec3d = vector.getVelocity();
             double d = vec3d.x;
@@ -33,7 +49,7 @@ public interface PredictionEngine {
         }
     }
 
-    default void applyJumpingToPossibilities(List<Vector> vectors) {
+    protected final void applyJumpingToPossibilities(List<Vector> vectors) {
         if (!canJump()) {
             return;
         }

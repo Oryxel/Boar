@@ -1,29 +1,13 @@
 package ac.boar.anticheat.prediction.engine;
 
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
-import ac.boar.anticheat.prediction.engine.data.Vector;
-import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3d;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class PredictionEngineNormal implements PredictionEngine {
-    private final BoarPlayer player;
-
+public class PredictionEngineNormal extends PredictionEngine {
     public PredictionEngineNormal(BoarPlayer player) {
-        this.player = player;
-    }
-
-    @Override
-    public List<Vector> gatherAllPossibilities() {
-        List<Vector> vectors = new ArrayList<>();
-        vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
-
-        apply003ToPossibilities(vectors);
-        applyJumpingToPossibilities(vectors);
-        return vectors;
+        super(player);
     }
 
     @Override
