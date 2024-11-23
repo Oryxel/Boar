@@ -34,7 +34,7 @@ public class BoarPlayer {
     public float fallDistance;
 
     public float yaw, pitch;
-    public boolean sprinting, lastSprinting;
+    public boolean sprinting, lastSprinting, sneaking, lastSneaking;
 
     public long lastReceivedId = -1, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
