@@ -1,6 +1,7 @@
 package ac.boar.anticheat.geyser;
 
 import ac.boar.anticheat.Boar;
+import ac.boar.plugin.BoarPlugin;
 import org.geysermc.event.PostOrder;
 import org.geysermc.event.subscribe.Subscribe;
 import org.geysermc.geyser.api.GeyserApi;
@@ -15,5 +16,6 @@ public class GeyserSessionJoinEvent implements EventRegistrar {
     @Subscribe(postOrder = PostOrder.FIRST)
     public void onSessionJoin(SessionJoinEvent event) {
         Boar.getInstance().getPlayerManager().add(event.connection());
+        BoarPlugin.LOGGER.info(event.connection().bedrockUsername() + " joined!");
     }
 }

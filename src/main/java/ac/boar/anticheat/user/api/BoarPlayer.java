@@ -55,6 +55,8 @@ public class BoarPlayer {
         latencyPacket.setFromServer(true);
 
         this.bedrockSession.sendPacketImmediately(latencyPacket);
+
+        this.latencyUtil.getSentTransactions().add(lastSentId);
     }
 
     public GeyserSession getSession() {
