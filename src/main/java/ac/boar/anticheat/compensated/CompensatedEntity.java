@@ -15,7 +15,6 @@ import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.spaw
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-// TODO: FIX THIS!
 @RequiredArgsConstructor
 @Getter
 public class CompensatedEntity {
@@ -42,7 +41,12 @@ public class CompensatedEntity {
             return;
         }
 
-        final Vec3d pos = cache.getPosition();
+        Entity geyserEntity = getGeyserEntity(id);
+        if (geyserEntity == null) {
+            return;
+        }
+
+        final Vec3d pos = new Vec3d(geyserEntity.getPosition());
         final Vec3d vec3d = new Vec3d(pos.getX() + relX, pos.getY() + relY, pos.getZ() + relZ);
         queuePositionUpdate(event, id, vec3d);
     }
