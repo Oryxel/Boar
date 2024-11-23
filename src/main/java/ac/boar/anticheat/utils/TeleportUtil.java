@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
+import org.geysermc.geyser.entity.EntityDefinitions;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -35,7 +36,7 @@ public final class TeleportUtil {
 
         MoveEntityAbsolutePacket packet = new MoveEntityAbsolutePacket();
         packet.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
-        packet.setPosition(Vector3f.from(lastKnowValid.x, lastKnowValid.y, lastKnowValid.z));
+        packet.setPosition(Vector3f.from(vec3d.x, vec3d.y + EntityDefinitions.PLAYER.offset(), vec3d.z));
         packet.setRotation(player.getSession().getPlayerEntity().getBedrockRotation());
         packet.setOnGround(false);
         packet.setTeleported(true);
