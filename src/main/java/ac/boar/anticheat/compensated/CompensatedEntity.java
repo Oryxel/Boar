@@ -33,11 +33,6 @@ public class CompensatedEntity {
         return cache;
     }
 
-    public boolean isValidEntity(long id) {
-        final EntityCache cache = getEntityCache(id);
-        return cache != null && cache.isSpawned();
-    }
-
     public void queueRelativeUpdate(PacketSendEvent event, int id, double relX, double relY, double relZ) {
         final EntityCache cache = this.map.get(id);
         if (cache == null) {
@@ -67,9 +62,7 @@ public class CompensatedEntity {
 
         event.getPostTasks().add(() -> {
             player.sendTransaction();
-            player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-                cache.setBoundingBox(newBox);
-            });
+            player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> cache.setBoundingBox(newBox));
         });
     }
 
@@ -85,7 +78,6 @@ public class CompensatedEntity {
         this.map.put(packet.getEntityId(), cache);
 
         player.sendTransaction();
-        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> cache.setSpawned(true));
     }
 
     public void removeEntity(final int id) {

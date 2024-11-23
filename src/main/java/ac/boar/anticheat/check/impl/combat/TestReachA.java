@@ -5,8 +5,6 @@ import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
-import ac.boar.utils.math.Vec3d;
-import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryTransactionType;
 import org.cloudburstmc.protocol.bedrock.packet.InteractPacket;
 import org.cloudburstmc.protocol.bedrock.packet.InventoryTransactionPacket;
@@ -44,12 +42,11 @@ public class TestReachA extends PacketCheck {
     }
 
     public boolean check(BoarPlayer player, long id) {
-        if (!player.compensatedEntity.isValidEntity(id)) {
+        EntityCache cache = player.compensatedEntity.getEntityCache(id);
+        if (cache == null) {
             return true;
         }
 
-        EntityCache cache = player.compensatedEntity.getEntityCache(id);
-        // LOL.
-        return false;
+        return !player.boundingBox.expand(4.0D).intersects(cache.getBoundingBox());
     }
 }
