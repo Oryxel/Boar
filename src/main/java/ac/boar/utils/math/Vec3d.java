@@ -1,10 +1,16 @@
 package ac.boar.utils.math;
 
+import org.cloudburstmc.math.vector.Vector3f;
+
 public class Vec3d implements Cloneable {
     public static final Vec3d ZERO = new Vec3d(0, 0, 0);
     public double x;
     public double y;
     public double z;
+
+    public Vector3f toVector3f() {
+        return Vector3f.from(x, y, z);
+    }
 
     public static Vec3d unpackRgb(int rgb) {
         double d = (double)(rgb >> 16 & 255) / 255.0;
@@ -17,6 +23,12 @@ public class Vec3d implements Cloneable {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Vec3d(Vector3f vector3f) {
+        this.x = vector3f.getX();
+        this.y = vector3f.getY();
+        this.z = vector3f.getZ();
     }
 
     public Vec3d relativize(Vec3d vec) {

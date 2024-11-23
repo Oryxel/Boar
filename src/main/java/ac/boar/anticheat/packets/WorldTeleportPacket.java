@@ -32,8 +32,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                 player.teleportUtil.getTeleportQueue().poll();
 
                 if (cache.getTransactionId() == player.lastReceivedId) {
-                    Vector3f cachePosition = Vector3f.from(cache.getPosition().x, cache.getPosition().y, cache.getPosition().z);
-                    double distance = packet.getPosition().sub(0, EntityDefinitions.PLAYER.offset(), 0).distanceSquared(cachePosition);
+                    double distance = packet.getPosition().sub(0, EntityDefinitions.PLAYER.offset(), 0).distanceSquared(cache.getPosition().toVector3f());
 
                     if (distance > (cache.isRelative() ? 0.001 : 0)) {
                         if (player.teleportUtil.getTeleportQueue().isEmpty()) {
