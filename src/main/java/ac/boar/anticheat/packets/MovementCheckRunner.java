@@ -3,6 +3,7 @@ package ac.boar.anticheat.packets;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
+import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
@@ -38,6 +39,10 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.sprinting = packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING) || packet.getInputData().contains(PlayerAuthInputData.SPRINTING);
         player.sneaking = packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING) || packet.getInputData().contains(PlayerAuthInputData.SNEAKING);
 
+        if (player.boundingBox == null) {
+            player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
+        }
+
         if (packet.getInputData().contains(PlayerAuthInputData.START_SWIMMING)) {
             player.swimming = true;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SWIMMING)) {
@@ -52,6 +57,8 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         player.lastTickWasTeleport = false;
+
+        player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
 
         if (player.teleportUtil.teleportInQueue()) {
             event.setCancelled(true);

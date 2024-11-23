@@ -16,5 +16,4 @@ public class EntityCache {
     private final EntityDefinition definition;
     private Vec3d position = Vec3d.ZERO;
     private BoundingBox boundingBox = new BoundingBox(0, 0, 0, 0, 0, 0);
-    private boolean spawned = false;
 }
