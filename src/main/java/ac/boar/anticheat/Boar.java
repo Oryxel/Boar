@@ -26,8 +26,8 @@ public class Boar {
         BoarPlugin.LOGGER.info("Initialing events....");
         new GeyserSessionJoinEvent();
         BedrockPacketEvents.register(new LatencyPacket());
-        BedrockPacketEvents.register(new MovementCheckRunner());
         BedrockPacketEvents.register(new WorldTeleportPacket());
+        BedrockPacketEvents.register(new MovementCheckRunner());
 
         this.playerManager = new BoarPlayerManager();
     }

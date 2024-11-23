@@ -10,7 +10,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
-        player.lastTickWasTeleport = false;
         if (!(event.getPacket() instanceof MovePlayerPacket)) {
             return;
         }
@@ -32,5 +31,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.z = packet.getPosition().getZ();
 
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
+        player.lastTickWasTeleport = false;
     }
 }
