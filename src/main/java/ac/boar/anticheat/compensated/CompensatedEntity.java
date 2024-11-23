@@ -41,12 +41,7 @@ public class CompensatedEntity {
             return;
         }
 
-        Entity geyserEntity = getGeyserEntity(id);
-        if (geyserEntity == null) {
-            return;
-        }
-
-        final Vec3d pos = new Vec3d(geyserEntity.getPosition());
+        final Vec3d pos = cache.getUtdPosition();
         final Vec3d vec3d = new Vec3d(pos.getX() + relX, pos.getY() + relY, pos.getZ() + relZ);
         queuePositionUpdate(event, id, vec3d);
     }
@@ -60,6 +55,7 @@ public class CompensatedEntity {
         final EntityDefinition definition = cache.getDefinition();
         final BoundingBox newBox = BoundingBox.getBoxAt(vec3d.x, vec3d.y, vec3d.z, definition.width(), definition.height());
 
+        cache.setUtdPosition(vec3d.clone());
         player.sendTransaction();
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
             cache.setPosition(vec3d);
@@ -80,6 +76,7 @@ public class CompensatedEntity {
 
         final EntityCache cache = new EntityCache(packet.getType(), definition);
         cache.setPosition(new Vec3d(packet.getX(), packet.getY(), packet.getZ()));
+        cache.setUtdPosition(cache.getPosition().clone());
         cache.setBoundingBox(BoundingBox.getBoxAt(packet.getX(), packet.getY(), packet.getZ(), definition.width(), definition.height()));
         this.map.put(packet.getEntityId(), cache);
 
