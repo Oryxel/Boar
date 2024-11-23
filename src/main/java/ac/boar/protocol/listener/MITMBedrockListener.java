@@ -20,6 +20,7 @@ public final class MITMBedrockListener implements BedrockPacketHandler {
 
         for (final BedrockPacketListener listener : BedrockPacketEvents.getListeners()) {
             final PacketReceivedEvent event = new PacketReceivedEvent(player, packet);
+            event.setCancelled(cancelled);
             listener.onPacketReceived(event);
 
             cancelled = event.isCancelled();

@@ -17,7 +17,6 @@ public final class TeleportUtil {
     private final BoarPlayer player;
     private final Queue<TeleportCache> teleportQueue = new ConcurrentLinkedQueue<>();
     public Vec3d lastKnowValid = Vec3d.ZERO;
-    public boolean acceptTeleportBeforehand = false;
 
     public void addTeleportToQueue(Vec3d vec3d, boolean relative) {
         this.player.sendTransaction();
@@ -27,6 +26,8 @@ public final class TeleportUtil {
     }
 
     public void setbackTo(Vec3d vec3d) {
+        this.addTeleportToQueue(vec3d, false);
+
         // Server won't know about this if we sent it like this, well they don't need to anyway.
         // As long as we handle thing correctly, it won't be a problem
         // If we do not however, server will likely set player back for 'Moved too quickly'
@@ -39,8 +40,6 @@ public final class TeleportUtil {
         packet.setOnGround(false);
         packet.setTeleported(true);
         this.player.getBedrockSession().sendPacketImmediately(packet);
-
-        this.addTeleportToQueue(vec3d, false);
     }
 
     public TeleportCache getOldestTeleport() {

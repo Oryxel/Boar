@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 
 public class GeyserUtil {
     public static void hookGeyserPlayer(BoarPlayer player) {
-        final GeyserConnection connection = player.getConnection();
+        final GeyserConnection connection = player.getSession();
 
         try {
             BedrockServerSession bedrockSession = getBedrockSession(player, connection);

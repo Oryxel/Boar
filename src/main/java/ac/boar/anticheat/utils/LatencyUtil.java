@@ -1,15 +1,16 @@
 package ac.boar.anticheat.utils;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 public final class LatencyUtil {
     private final BoarPlayer player;
+    @Getter
+    private final List<Long> sentTransactions = new ArrayList<>();
     private final Map<Long, Runnable> map = new HashMap<>();
 
     public void addTransactionToQueue(long id, Runnable runnable) {
@@ -22,17 +23,11 @@ public final class LatencyUtil {
     }
 
     public void confirmTransaction(long id) {
-        boolean found = false;
-        for (Map.Entry<Long, Runnable> entry : this.map.entrySet()) {
-            if (entry.getKey() == id) {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
+        if (!this.sentTransactions.contains(id)) {
             return;
         }
+
+        this.sentTransactions.remove(id);
 
         Iterator<Map.Entry<Long, Runnable>> iterator = this.map.entrySet().iterator();
 

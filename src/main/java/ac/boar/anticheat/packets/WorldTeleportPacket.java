@@ -2,15 +2,15 @@ package ac.boar.anticheat.packets;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.TeleportUtil;
+import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.protocol.event.java.PacketListener;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.math.vector.Vector3f;
-import org.cloudburstmc.protocol.bedrock.data.PlayerActionType;
-import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
-import org.cloudburstmc.protocol.bedrock.packet.PlayerActionPacket;
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
+import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.PositionElement;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket;
@@ -20,47 +20,32 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
 
-        if (event.getPacket() instanceof PlayerActionPacket) {
-            if (((PlayerActionPacket) event.getPacket()).getAction() != PlayerActionType.HANDLED_TELEPORT) {
-                return;
-            }
+        if (event.getPacket() instanceof PlayerAuthInputPacket) {
+            final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
 
             final TeleportUtil.TeleportCache cache = player.teleportUtil.getOldestTeleport();
             if (cache == null) {
                 return;
             }
 
-            if (cache.getTransactionId() == player.lastReceivedId) {
-                player.teleportUtil.acceptTeleportBeforehand = true;
-            }
-        }
-
-        if (event.getPacket() instanceof MovePlayerPacket) {
-            final MovePlayerPacket packet = (MovePlayerPacket) event.getPacket();
-
-            final TeleportUtil.TeleportCache cache = player.teleportUtil.getOldestTeleport();
-            if (cache == null) {
-                return;
-            }
-
-            if (player.teleportUtil.acceptTeleportBeforehand) {
+            if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT)) {
                 player.teleportUtil.getTeleportQueue().poll();
 
-                Vector3f cachePosition = Vector3f.from(cache.getPosition().x, cache.getPosition().y, cache.getPosition().z);
-                if (packet.getPosition().distanceSquared(cachePosition) >= (cache.isRelative() ? 0.001 : 0)) {
-                    if (player.teleportUtil.getTeleportQueue().isEmpty()) {
-                        player.teleportUtil.setbackTo(cache.getPosition());
-                    }
-                } else {
-                    cache.setAccepted(true);
-                    player.lastTickWasTeleport = true;
-                }
-                return;
-            }
+                if (cache.getTransactionId() == player.lastReceivedId) {
+                    Vector3f cachePosition = Vector3f.from(cache.getPosition().x, cache.getPosition().y, cache.getPosition().z);
+                    double distance = packet.getPosition().sub(0, EntityDefinitions.PLAYER.offset(), 0).distanceSquared(cachePosition);
 
-            if (player.teleportUtil.teleportInQueue()) {
-                event.setCancelled(true);
-                return;
+                    if (distance > (cache.isRelative() ? 0.001 : 0)) {
+                        if (player.teleportUtil.getTeleportQueue().isEmpty()) {
+                            player.teleportUtil.setbackTo(cache.getPosition());
+                        }
+                    } else {
+                        BoarPlugin.LOGGER.info("Accepted teleport!");
+                        cache.setAccepted(true);
+                        player.lastTickWasTeleport = true;
+                    }
+                    return;
+                }
             }
 
             if (player.lastReceivedId - cache.getTransactionId() > 1) {
@@ -98,7 +83,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
         }
 
         double newX = packet.getPosition().getX() + (packet.getRelatives().contains(PositionElement.X) ? player.x : 0);
-        double newY = packet.getPosition().getY() + (packet.getRelatives().contains(PositionElement.Y) ? player.y - EntityDefinitions.PLAYER.offset() : 0);
+        double newY = packet.getPosition().getY() + (packet.getRelatives().contains(PositionElement.Y) ? player.y : 0);
         double newZ = packet.getPosition().getZ() + (packet.getRelatives().contains(PositionElement.Z) ? player.z : 0);
 
         player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), !packet.getRelatives().isEmpty());
