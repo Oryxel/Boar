@@ -25,6 +25,10 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
+        if (player.getJavaSession() == null) {
+            player.getSession().disconnect("Failed to add MCProtocolLib adapter, please rejoin!");
+        }
+
         player.lastX = player.tick == 0 ? player.x : packet.getPosition().getX();
         player.lastY = player.tick == 0 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.lastZ = player.tick == 0 ? player.z : packet.getPosition().getZ();
