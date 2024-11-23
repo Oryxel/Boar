@@ -71,12 +71,12 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
 
     @Override
     public void onPacketSend(PacketSendEvent event) {
-        if (!(event.packet() instanceof ClientboundPlayerPositionPacket)) {
+        if (!(event.getPacket() instanceof ClientboundPlayerPositionPacket)) {
             return;
         }
 
-        final BoarPlayer player = event.player();
-        final ClientboundPlayerPositionPacket packet = (ClientboundPlayerPositionPacket) event.packet();
+        final BoarPlayer player = event.getPlayer();
+        final ClientboundPlayerPositionPacket packet = (ClientboundPlayerPositionPacket) event.getPacket();
         if (!player.getSession().isSpawned()) {
             player.clientVelocity = new Vec3d(0, 0, 0);
         }

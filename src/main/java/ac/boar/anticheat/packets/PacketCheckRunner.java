@@ -10,7 +10,7 @@ import ac.boar.protocol.event.java.PacketSendEvent;
 public class PacketCheckRunner implements PacketListener, BedrockPacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {
-        final BoarPlayer player = event.player();
+        final BoarPlayer player = event.getPlayer();
         player.checkHolder.forEach((k, v) -> {
             if (v instanceof PacketCheck) {
                 ((PacketCheck) v).onPacketSend(event);
