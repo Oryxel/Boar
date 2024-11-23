@@ -73,8 +73,8 @@ public class CompensatedEntity {
         }
 
         final EntityCache cache = new EntityCache(packet.getType(), definition);
-        cache.setPosition(new Vec3d(packet.getX(), packet.getY() - definition.offset(), packet.getZ()));
-        cache.setBoundingBox(BoundingBox.getBoxAt(packet.getX(), packet.getY() - definition.offset(), packet.getZ(), definition.width(), definition.height()));
+        cache.setPosition(new Vec3d(packet.getX(), packet.getY(), packet.getZ()));
+        cache.setBoundingBox(BoundingBox.getBoxAt(packet.getX(), packet.getY(), packet.getZ(), definition.width(), definition.height()));
         this.map.put(packet.getEntityId(), cache);
 
         player.sendTransaction();
