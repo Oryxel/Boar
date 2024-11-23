@@ -44,6 +44,7 @@ public class BoarPlayer {
 
     // End of tick velocity.
     public Vec3d clientVelocity = Vec3d.ZERO, claimedClientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO;
+    public Vec3d movementInput = Vec3d.ZERO, claimedMovementInput = Vec3d.ZERO;
 
     public void init() {
         GeyserUtil.hookGeyserPlayer(this);

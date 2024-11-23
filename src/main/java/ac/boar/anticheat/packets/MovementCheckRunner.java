@@ -41,6 +41,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.pitch = packet.getRotation().getX();
 
         player.claimedClientVelocity = new Vec3d(packet.getDelta());
+        player.claimedMovementInput = new Vec3d(packet.getMotion().getX(), 0, packet.getMotion().getY());
 
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         player.lastTickWasTeleport = false;
