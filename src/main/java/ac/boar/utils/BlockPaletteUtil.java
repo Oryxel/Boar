@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.*;
 
 // https://github.com/CloudburstMC/ProxyPass
-public class BlockPaletteUtils {
+public class BlockPaletteUtil {
     public static int createHash(NbtMap block) {
         if (block.getString("name").equals("minecraft:unknown")) {
             return -2; // This is special case

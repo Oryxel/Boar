@@ -1,6 +1,6 @@
 package ac.boar.data.block;
 
-import ac.boar.utils.BlockPaletteUtils;
+import ac.boar.utils.BlockPaletteUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.cloudburstmc.nbt.NbtMap;
@@ -16,7 +16,7 @@ public class NbtBlockDefinitionRegistry implements DefinitionRegistry<BlockDefin
     public NbtBlockDefinitionRegistry(List<NbtMap> definitions, boolean hashed) {
         int counter = 0;
         for (NbtMap definition : definitions) {
-            int runtimeId = hashed ? BlockPaletteUtils.createHash(definition) : counter++;
+            int runtimeId = hashed ? BlockPaletteUtil.createHash(definition) : counter++;
             this.definitions.put(runtimeId, new NbtBlockDefinition(runtimeId, definition));
         }
     }

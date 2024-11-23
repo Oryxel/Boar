@@ -5,21 +5,21 @@ import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
-import org.geysermc.geyser.session.GeyserSession;
 
-public class MovementCheckRunner extends BedrockPacketListener {
+public class MovementCheckRunner implements BedrockPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
+        final BoarPlayer player = event.getPlayer();
+        player.lastTickWasTeleport = false;
         if (!(event.getPacket() instanceof MovePlayerPacket)) {
             return;
         }
 
-        final BoarPlayer player = event.getPlayer();
         player.tick++;
 
         final MovePlayerPacket packet = (MovePlayerPacket) event.getPacket();
         if (packet.getTick() != packet.getTick()) {
-            ((GeyserSession)player.getConnection()).disconnect("Invalid movement packet!");
+            player.getSession().disconnect("Invalid movement packet!");
             return;
         }
 
