@@ -5,8 +5,6 @@ import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3d;
-import org.cloudburstmc.math.vector.Vector3i;
-import org.geysermc.geyser.level.WorldManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,37 +22,31 @@ public class PredictionEngineNormal implements PredictionEngine {
         vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
 
         apply003ToPossibilities(vectors);
+        applyJumpingToPossibilities(vectors);
         return vectors;
     }
 
-    private void apply003ToPossibilities(final List<Vector> vectors) {
-        for (final Vector vector : vectors) {
-            final Vec3d vec3d = vector.getVec3d();
-            double d = vec3d.x;
-            double e = vec3d.y;
-            double f = vec3d.z;
-            if (Math.abs(vec3d.x) < 0.003) {
-                d = 0.0;
+    @Override
+    public Vec3d jump(Vec3d client) {
+        Vec3d vec3d = client.clone();
+        float f = player.getJumpVelocity();
+        if (!(f <= 1.0E-5F)) {
+            vec3d = new Vec3d(vec3d.x, Math.max(f, vec3d.y), vec3d.z);
+            if (player.sprinting) {
+                float g = player.yaw * 0.017453292F;
+                vec3d = vec3d.add(new Vec3d(-Math.sin(g) * 0.2, 0.0, Math.cos(g) * 0.2));
             }
-
-            if (Math.abs(vec3d.y) < 0.003) {
-                e = 0.0;
-            }
-
-            if (Math.abs(vec3d.z) < 0.003) {
-                f = 0.0;
-            }
-
-            vector.setVec3d(new Vec3d(d, e, f));
         }
+        return vec3d;
     }
 
     @Override
-    public void travel() {
-
+    public boolean canJump() {
+        return false;
     }
 
-    private Vec3d travelNormal(Vec3d movementInput) {
+    @Override
+    public void travel(Vec3d movementInput) {
 //        // WorldManager worldManager = player.getSession().getGeyser().getWorldManager();
 //
 //        Vector3i blockPos = player.getVelocityAffectingPos();
@@ -76,20 +68,18 @@ public class PredictionEngineNormal implements PredictionEngine {
 ////        }
 //
 //        return new Vec3d(vec3d.x * g, d * 0.98D, vec3d.z * g);
-        return Vec3d.ZERO;
     }
 
-//    private Vec3d applyMovementInput(Vec3d movementInput, float slipperiness) {
-//        this.updateVelocity(this.getMovementSpeed(slipperiness), movementInput);
-//        this.setVelocity(this.applyClimbingSpeed(this.getVelocity()));
-//        this.move(MovementType.SELF, this.getVelocity());
-//        Vec3d vec3d = this.getVelocity();
+    private Vec3d applyMovementInput(Vec3d client, Vec3d movementInput, float slipperiness) {
+        Vec3d vec3d = client.add(movementInputToVelocity(movementInput, player.getMovementSpeed(slipperiness), player.yaw));
+        // this.setVelocity(this.applyClimbingSpeed(this.getVelocity())); climbing...
+        // this.move(MovementType.SELF, this.getVelocity()); // collision
 //        if ((this.horizontalCollision || this.jumping) && (this.isClimbing() || this.getBlockStateAtPos().isOf(Blocks.POWDER_SNOW) && PowderSnowBlock.canWalkOnPowderSnow(this))) {
 //            vec3d = new Vec3d(vec3d.x, 0.2, vec3d.z);
 //        }
-//
-//        return vec3d;
-//    }
+
+        return vec3d;
+    }
 
     protected static Vec3d movementInputToVelocity(Vec3d movementInput, float speed, float yaw) {
         double d = movementInput.lengthSquared();
@@ -100,11 +90,5 @@ public class PredictionEngineNormal implements PredictionEngine {
             double f = Math.sin(yaw * 0.017453292F), g = Math.cos(yaw * 0.017453292F);
             return new Vec3d(vec3d.x * g - vec3d.z * f, vec3d.y, vec3d.z * g + vec3d.x * f);
         }
-    }
-
-
-    @Override
-    public Vec3d applyEndOfTick() {
-        return null;
     }
 }

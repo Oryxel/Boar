@@ -1,5 +1,6 @@
 package ac.boar.anticheat.user.api;
 
+import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.utils.LatencyUtil;
 import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.utils.GeyserUtil;
@@ -11,10 +12,13 @@ import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
+import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.network.Session;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class BoarPlayer {
@@ -46,6 +50,10 @@ public class BoarPlayer {
     public Vec3d clientVelocity = Vec3d.ZERO, claimedClientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO;
     public Vec3d movementInput = Vec3d.ZERO, claimedMovementInput = Vec3d.ZERO;
 
+    public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
+
+    protected Map<Fluid, Double> fluidHeight = new HashMap<>();
+
     public void init() {
         GeyserUtil.hookGeyserPlayer(this);
     }
@@ -58,6 +66,28 @@ public class BoarPlayer {
         this.bedrockSession.sendPacketImmediately(latencyPacket);
 
         this.latencyUtil.getSentTransactions().add(lastSentId);
+    }
+
+    public void tick() {
+        this.tick++;
+
+        List<Effect> ranOutStatus = new ArrayList<>();
+        for (Map.Entry<Effect, StatusEffect> entry : this.statusMap.entrySet()) {
+            entry.getValue().tick();
+            if (entry.getValue().getDuration() <= 0) {
+                ranOutStatus.add(entry.getKey());
+            }
+        }
+
+        ranOutStatus.forEach(e -> this.statusMap.remove(e));
+    }
+
+    public boolean hasStatusEffect(final Effect effect) {
+        return this.statusMap.containsKey(effect);
+    }
+
+    public StatusEffect getStatusEffect(final Effect effect) {
+        return this.statusMap.get(effect);
     }
 
     public GeyserSession getSession() {
@@ -98,9 +128,32 @@ public class BoarPlayer {
         }
     }
 
-    public double getEffectiveGravity() {
-        boolean bl = clientVelocity.y <= 0.0;
-        return 0.08D;
-//        return bl && this.hasStatusEffect(StatusEffects.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity();
+    public float getJumpVelocity() {
+        return this.getJumpVelocity(1.0F);
     }
+
+    protected float getJumpVelocity(float strength) {
+        return /*this.getAttributeValue(EntityAttributes.JUMP_STRENGTH)*/ 0.42F * strength * this.getJumpVelocityMultiplier() + this.getJumpBoostVelocityModifier();
+    }
+
+    public float getJumpBoostVelocityModifier() {
+        return this.hasStatusEffect(Effect.JUMP_BOOST) ? 0.1F * (this.getStatusEffect(Effect.JUMP_BOOST).getAmplifier() + 1.0F) : 0.0F;
+    }
+
+    protected float getJumpVelocityMultiplier() {
+//        float f = this.getWorld().getBlockState(this.getBlockPos()).getBlock().getJumpVelocityMultiplier();
+//        float g = this.getWorld().getBlockState(this.getVelocityAffectingPos()).getBlock().getJumpVelocityMultiplier();
+//        return (double)f == 1.0 ? g : f;
+
+        return 1.0F;
+    }
+
+    public double getEffectiveGravity() {
+        return clientVelocity.y <= 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity();
+    }
+
+    public final double getFinalGravity() {
+        return 0.08D;
+    }
+
 }

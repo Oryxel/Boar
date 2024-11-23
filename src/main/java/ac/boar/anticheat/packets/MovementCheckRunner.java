@@ -16,7 +16,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
-        player.tick++;
+        player.tick();
 
         final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
         if (packet.getTick() != packet.getTick()) {

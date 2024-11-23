@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Vector {
-    private Vec3d vec3d;
+    private Vec3d velocity;
     private VectorType type;
 }
