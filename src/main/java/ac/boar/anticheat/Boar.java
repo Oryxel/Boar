@@ -1,6 +1,7 @@
 package ac.boar.anticheat;
 
-import ac.boar.anticheat.geyser.GeyserSessionJoinEvent;
+import ac.boar.anticheat.event.geyser.GeyserSessionJoinEvent;
+import ac.boar.anticheat.event.spigot.PlayerJoinListener;
 import ac.boar.anticheat.packets.*;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.data.BedrockMappingData;
@@ -23,6 +24,9 @@ public class Boar {
 
         BoarPlugin.LOGGER.info("Initialing events....");
         new GeyserSessionJoinEvent();
+
+        BoarPlugin.PLUGIN.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), BoarPlugin.PLUGIN);
+
         BedrockPacketEvents.register(new LatencyPacket());
         BedrockPacketEvents.register(new WorldTeleportPacket());
         BedrockPacketEvents.register(new MovementCheckRunner());

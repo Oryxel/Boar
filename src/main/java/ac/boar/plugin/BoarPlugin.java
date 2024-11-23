@@ -7,10 +7,12 @@ import java.util.logging.Logger;
 
 public final class BoarPlugin extends JavaPlugin {
 
+    public static BoarPlugin PLUGIN;
     public static Logger LOGGER;
 
     @Override
     public void onEnable() {
+        PLUGIN = this;
         LOGGER = getLogger();
         Boar.getInstance().init();
     }
