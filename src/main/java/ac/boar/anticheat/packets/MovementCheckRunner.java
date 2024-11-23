@@ -34,8 +34,15 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         player.lastSprinting = player.sprinting;
         player.lastSneaking = player.sneaking;
+        player.lastSwimming = player.swimming;
         player.sprinting = packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING) || packet.getInputData().contains(PlayerAuthInputData.SPRINTING);
         player.sneaking = packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING) || packet.getInputData().contains(PlayerAuthInputData.SNEAKING);
+
+        if (packet.getInputData().contains(PlayerAuthInputData.START_SWIMMING)) {
+            player.swimming = true;
+        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SWIMMING)) {
+            player.swimming = false;
+        }
 
         player.yaw = packet.getRotation().getY();
         player.pitch = packet.getRotation().getX();
