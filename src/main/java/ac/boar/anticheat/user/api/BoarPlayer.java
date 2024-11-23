@@ -43,7 +43,7 @@ public class BoarPlayer {
     public Optional<Vector3i> supportingBlockPos;
 
     // End of tick velocity.
-    public Vec3d clientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO;
+    public Vec3d clientVelocity = Vec3d.ZERO, claimedClientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO;
 
     public void init() {
         GeyserUtil.hookGeyserPlayer(this);
