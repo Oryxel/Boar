@@ -45,7 +45,6 @@ public final class TcpSessionListener extends SessionAdapter {
     @Override
     public void disconnected(DisconnectedEvent event) {
         listeners.forEach(l -> l.disconnected(event));
-        Boar.getInstance().getPlayerManager().remove(player.getSession());
     }
 
     @Override
