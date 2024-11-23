@@ -24,6 +24,12 @@ public class BoundingBox implements Cloneable {
         this.maxZ = Math.max(z1, z2);
     }
 
+    public static BoundingBox getBoxAt(double x, double y, double z, double width, double height) {
+        float f = (float) (width / 2.0f);
+        float g = (float) height;
+        return new BoundingBox(x - (double)f, y, z - (double)f, x + (double)f, y + (double)g, z + (double)f);
+    }
+
     public double calculateXOffset(BoundingBox other, double offsetX) {
         if (other.maxY > this.minY && other.minY < this.maxY && other.maxZ > this.minZ && other.minZ < this.maxZ) {
             if (offsetX > 0.0D && other.maxX <= this.minX) {
