@@ -13,32 +13,32 @@ import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.spaw
 public class EntityUpdatePacket implements PacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {
-        final BoarPlayer player = event.player();
+        final BoarPlayer player = event.getPlayer();
 
-        if (event.packet() instanceof ClientboundAddEntityPacket) {
-            player.compensatedEntity.addEntity((ClientboundAddEntityPacket) event.packet());
+        if (event.getPacket() instanceof ClientboundAddEntityPacket) {
+            player.compensatedEntity.addEntity((ClientboundAddEntityPacket) event.getPacket());
         }
 
-        if (event.packet() instanceof ClientboundRemoveEntitiesPacket) {
-            final ClientboundRemoveEntitiesPacket packet = (ClientboundRemoveEntitiesPacket) event.packet();
+        if (event.getPacket() instanceof ClientboundRemoveEntitiesPacket) {
+            final ClientboundRemoveEntitiesPacket packet = (ClientboundRemoveEntitiesPacket) event.getPacket();
             for (int i : packet.getEntityIds()) {
                 player.compensatedEntity.removeEntity(i);
             }
         }
 
-        if (event.packet() instanceof ClientboundEntityPositionSyncPacket) {
-            final ClientboundEntityPositionSyncPacket packet = (ClientboundEntityPositionSyncPacket) event.packet();
-            player.compensatedEntity.queuePositionUpdate(packet.getId(), new Vec3d(packet.getPosition().getX(), packet.getPosition().getY(), packet.getPosition().getZ()));
+        if (event.getPacket() instanceof ClientboundEntityPositionSyncPacket) {
+            final ClientboundEntityPositionSyncPacket packet = (ClientboundEntityPositionSyncPacket) event.getPacket();
+            player.compensatedEntity.queuePositionUpdate(event, packet.getId(), new Vec3d(packet.getPosition().getX(), packet.getPosition().getY(), packet.getPosition().getZ()));
         }
 
-        if (event.packet() instanceof ClientboundMoveEntityPosRotPacket) {
-            final ClientboundMoveEntityPosRotPacket packet = (ClientboundMoveEntityPosRotPacket) event.packet();
-            player.compensatedEntity.queueRelativeUpdate(packet.getEntityId(), packet.getMoveX(), packet.getMoveY(), packet.getMoveZ());
+        if (event.getPacket() instanceof ClientboundMoveEntityPosRotPacket) {
+            final ClientboundMoveEntityPosRotPacket packet = (ClientboundMoveEntityPosRotPacket) event.getPacket();
+            player.compensatedEntity.queueRelativeUpdate(event, packet.getEntityId(), packet.getMoveX(), packet.getMoveY(), packet.getMoveZ());
         }
 
-        if (event.packet() instanceof ClientboundMoveEntityPosPacket) {
-            final ClientboundMoveEntityPosPacket packet = (ClientboundMoveEntityPosPacket) event.packet();
-            player.compensatedEntity.queueRelativeUpdate(packet.getEntityId(), packet.getMoveX(), packet.getMoveY(), packet.getMoveZ());
+        if (event.getPacket() instanceof ClientboundMoveEntityPosPacket) {
+            final ClientboundMoveEntityPosPacket packet = (ClientboundMoveEntityPosPacket) event.getPacket();
+            player.compensatedEntity.queueRelativeUpdate(event, packet.getEntityId(), packet.getMoveX(), packet.getMoveY(), packet.getMoveZ());
         }
     }
 }

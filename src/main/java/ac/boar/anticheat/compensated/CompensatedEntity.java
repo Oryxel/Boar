@@ -2,6 +2,7 @@ package ac.boar.anticheat.compensated;
 
 import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
+import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class CompensatedEntity {
         return cache != null && cache.isSpawned();
     }
 
-    public void queueRelativeUpdate(int id, double relX, double relY, double relZ) {
+    public void queueRelativeUpdate(PacketSendEvent event, int id, double relX, double relY, double relZ) {
         final EntityCache cache = this.map.get(id);
         if (cache == null) {
             return;
@@ -45,10 +46,10 @@ public class CompensatedEntity {
 
         final Vec3d pos = cache.getPosition();
         final Vec3d vec3d = new Vec3d(pos.getX() + relX, pos.getY() + relY, pos.getZ() + relZ);
-        queuePositionUpdate(id, vec3d);
+        queuePositionUpdate(event, id, vec3d);
     }
 
-    public void queuePositionUpdate(int id, Vec3d vec3d) {
+    public void queuePositionUpdate(PacketSendEvent event, int id, Vec3d vec3d) {
         final EntityCache cache = this.map.get(id);
         if (cache == null) {
             return;
@@ -63,9 +64,12 @@ public class CompensatedEntity {
             cache.setPosition(vec3d);
             cache.setBoundingBox(cache.getBoundingBox().union(newBox));
         });
-        player.sendTransaction();
-        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-            cache.setBoundingBox(newBox);
+
+        event.getPostTasks().add(() -> {
+            player.sendTransaction();
+            player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
+                cache.setBoundingBox(newBox);
+            });
         });
     }
 

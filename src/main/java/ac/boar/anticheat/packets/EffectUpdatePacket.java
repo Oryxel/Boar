@@ -11,10 +11,10 @@ import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.Clie
 public class EffectUpdatePacket implements PacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {
-        final BoarPlayer player = event.player();
+        final BoarPlayer player = event.getPlayer();
 
-        if (event.packet() instanceof ClientboundUpdateMobEffectPacket) {
-            final ClientboundUpdateMobEffectPacket packet = (ClientboundUpdateMobEffectPacket) event.packet();
+        if (event.getPacket() instanceof ClientboundUpdateMobEffectPacket) {
+            final ClientboundUpdateMobEffectPacket packet = (ClientboundUpdateMobEffectPacket) event.getPacket();
             Entity entity = player.getSession().getEntityCache().getEntityByJavaId(packet.getEntityId());
             if (entity == null) {
                 return;
@@ -30,8 +30,8 @@ public class EffectUpdatePacket implements PacketListener {
             });
         }
 
-        if (event.packet() instanceof ClientboundRemoveMobEffectPacket) {
-            final ClientboundRemoveMobEffectPacket packet = (ClientboundRemoveMobEffectPacket) event.packet();
+        if (event.getPacket() instanceof ClientboundRemoveMobEffectPacket) {
+            final ClientboundRemoveMobEffectPacket packet = (ClientboundRemoveMobEffectPacket) event.getPacket();
             Entity entity = player.getSession().getEntityCache().getEntityByJavaId(packet.getEntityId());
             if (entity == null) {
                 return;
