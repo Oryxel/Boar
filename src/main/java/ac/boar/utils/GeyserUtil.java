@@ -6,9 +6,13 @@ import ac.boar.protocol.listener.TcpSessionListener;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacketHandler;
 import org.geysermc.geyser.api.connection.GeyserConnection;
+import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
+import org.geysermc.mcprotocollib.network.event.session.SessionListener;
 import org.geysermc.mcprotocollib.network.tcp.TcpSession;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeyserUtil {
     public static void hookGeyserPlayer(BoarPlayer player) {
@@ -33,7 +37,11 @@ public class GeyserUtil {
         Field field = o.getClass().getDeclaredField("session");
         field.setAccessible(true);
         TcpSession session = (TcpSession) field.get(o);
-        session.addListener(new TcpSessionListener(player));
+
+        List<SessionListener> adapters = new ArrayList<>();
+        adapters.addAll(session.getListeners());
+        session.getListeners().forEach(session::removeListener);
+        session.addListener(new TcpSessionListener(player, adapters));
         return session;
     }
 

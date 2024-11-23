@@ -9,7 +9,7 @@ import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class PacketReceivedEvent {
+public final class PacketReceivedEvent {
     private final BoarPlayer player;
     private final BedrockPacket packet;
     private boolean cancelled;
