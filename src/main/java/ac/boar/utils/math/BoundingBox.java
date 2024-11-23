@@ -1,8 +1,12 @@
 package ac.boar.utils.math;
 
+import it.unimi.dsi.fastutil.doubles.AbstractDoubleList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
+
 import java.util.Optional;
 
-public class BoundingBox {
+public class BoundingBox implements Cloneable {
     private static final double EPSILON = 1.0E-7;
     public double minX;
     public double minY;
@@ -18,6 +22,64 @@ public class BoundingBox {
         this.maxX = Math.max(x1, x2);
         this.maxY = Math.max(y1, y2);
         this.maxZ = Math.max(z1, z2);
+    }
+
+    public double calculateXOffset(BoundingBox other, double offsetX) {
+        if (other.maxY > this.minY && other.minY < this.maxY && other.maxZ > this.minZ && other.minZ < this.maxZ) {
+            if (offsetX > 0.0D && other.maxX <= this.minX) {
+                double d1 = this.minX - other.maxX;
+
+                if (d1 < offsetX) {
+                    offsetX = d1;
+                }
+            } else if (offsetX < 0.0D && other.minX >= this.maxX) {
+                double d0 = this.maxX - other.minX;
+
+                if (d0 > offsetX) {
+                    offsetX = d0;
+                }
+            }
+        }
+        return offsetX;
+    }
+
+    public double calculateYOffset(BoundingBox other, double offsetY) {
+        if (other.maxX > this.minX && other.minX < this.maxX && other.maxZ > this.minZ && other.minZ < this.maxZ) {
+            if (offsetY > 0.0D && other.maxY <= this.minY) {
+                double d1 = this.minY - other.maxY;
+
+                if (d1 < offsetY) {
+                    offsetY = d1;
+                }
+            } else if (offsetY < 0.0D && other.minY >= this.maxY) {
+                double d0 = this.maxY - other.minY;
+
+                if (d0 > offsetY) {
+                    offsetY = d0;
+                }
+            }
+        }
+        return offsetY;
+    }
+
+    public double calculateZOffset(BoundingBox other, double offsetZ) {
+        if (other.maxX > this.minX && other.minX < this.maxX && other.maxY > this.minY && other.minY < this.maxY) {
+            if (offsetZ > 0.0D && other.maxZ <= this.minZ) {
+                double d1 = this.minZ - other.maxZ;
+
+                if (d1 < offsetZ) {
+                    offsetZ = d1;
+                }
+            } else if (offsetZ < 0.0D && other.minZ >= this.maxZ) {
+                double d0 = this.maxZ - other.minZ;
+
+                if (d0 > offsetZ) {
+                    offsetZ = d0;
+                }
+            }
+
+        }
+        return offsetZ;
     }
 
     public BoundingBox withMinX(double minX) {
@@ -306,5 +368,58 @@ public class BoundingBox {
 
     public static BoundingBox of(Vec3d center, double dx, double dy, double dz) {
         return new BoundingBox(center.x - dx / 2.0, center.y - dy / 2.0, center.z - dz / 2.0, center.x + dx / 2.0, center.y + dy / 2.0, center.z + dz / 2.0);
+    }
+
+    public DoubleList getPointPositions() {
+        return gather(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    public static DoubleList gather(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        if (maxX - minX < 1.0E-7 || maxY - minY < 1.0E-7 || maxZ - minZ < 1.0E-7) {
+            return DoubleList.of();
+        }
+        int i = findRequiredBitResolution(minX, maxX);
+        int j = findRequiredBitResolution(minY, maxY);
+        int k = findRequiredBitResolution(minZ, maxZ);
+        if (i < 0 || j < 0 || k < 0) {
+            return DoubleArrayList.wrap(new double[]{minY, maxY});
+        }
+        if (i == 0 && j == 0 && k == 0) {
+            return DoubleArrayList.wrap(new double[]{0, 1});
+        }
+
+        int m = 1 << j;
+        return new AbstractDoubleList() {
+            @Override
+            public double getDouble(int i) {
+                return i / m;
+            }
+
+            @Override
+            public int size() {
+                return m + 1;
+            }
+        };
+    }
+
+    protected static int findRequiredBitResolution(double min, double max) {
+        if (min < -1.0E-7 || max > 1.0000001) {
+            return -1;
+        }
+        for (int i = 0; i <= 3; ++i) {
+            int j = 1 << i;
+            double d = min * (double)j;
+            double e = max * (double)j;
+            boolean bl = Math.abs(d - (double)Math.round(d)) < 1.0E-7 * (double)j;
+            boolean bl2 = Math.abs(e - (double)Math.round(e)) < 1.0E-7 * (double)j;
+            if (!bl || !bl2) continue;
+            return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public BoundingBox clone() {
+        return new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
     }
 }
