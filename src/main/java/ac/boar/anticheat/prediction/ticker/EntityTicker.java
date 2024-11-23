@@ -1,5 +1,8 @@
 package ac.boar.anticheat.prediction.ticker;
 
+import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
+import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
+import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.MojangMath;
 import ac.boar.utils.math.BoundingBox;
@@ -23,7 +26,31 @@ public class EntityTicker {
     }
 
     public void tickMovement() {
+        PredictionEngine engine;
+//        if ((this.isTouchingWater() || this.isInLava()) && this.shouldSwimInFluids() && !this.canWalkOnFluid(fluidState)) {
+//            this.travelInFluid(movementInput);
+//        } else if (this.isGliding()) {
+//            this.travelGliding();
+//        } else {
+//            this.travelMidAir(movementInput);
+//        }
 
+        engine = new PredictionEngineNormal(player);
+
+        double closetOffset = Double.MAX_VALUE;
+        for (Vector vector : engine.gatherAllPossibilities()) {
+            double offset = vector.getVelocity().squaredDistanceTo(player.actualVelocity);
+            if (offset < closetOffset) {
+                closetOffset = offset;
+                player.closetVector = vector;
+            }
+        }
+
+        double offset = player.closetVector.getVelocity().distanceTo(player.actualVelocity);
+        // We're aiming for 1e-3 -> 1e-4 accuracy
+        if (offset > 1e-4) {
+
+        }
     }
 
     private boolean updateWaterState() {
