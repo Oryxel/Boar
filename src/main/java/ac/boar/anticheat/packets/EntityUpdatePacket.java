@@ -10,6 +10,7 @@ import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.Clie
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundRemoveEntitiesPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.spawn.ClientboundAddEntityPacket;
 
+// TODO: FIX THIS!
 public class EntityUpdatePacket implements PacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {

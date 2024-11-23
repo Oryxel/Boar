@@ -309,7 +309,7 @@ public class BoundingBox implements Cloneable {
         double d = to.x - from.x;
         double e = to.y - from.y;
         double f = to.z - from.z;
-        Direction direction = traceCollisionSide(minX, minY, minZ, maxX, maxY, maxZ, from, ds, (Direction)null, d, e, f);
+        Direction direction = traceCollisionSide(minX, minY, minZ, maxX, maxY, maxZ, from, ds, null, d, e, f);
         if (direction == null) {
             return Optional.empty();
         } else {
