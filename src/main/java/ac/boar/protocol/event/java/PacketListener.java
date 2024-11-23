@@ -1,5 +1,5 @@
 package ac.boar.protocol.event.java;
 
-public class PacketListener {
-    public void onPacketSend(final PacketSendEvent event) {}
+public interface PacketListener {
+    default void onPacketSend(final PacketSendEvent event) {}
 }

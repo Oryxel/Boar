@@ -1,7 +1,7 @@
 package ac.boar.data;
 
 import ac.boar.data.block.NbtBlockDefinitionRegistry;
-import ac.boar.utils.StringUtils;
+import ac.boar.utils.StringUtil;
 import ac.boar.utils.math.BoundingBox;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -64,7 +64,7 @@ public class BedrockMappingData {
             int count = 0;
             final JsonObject blocks = blockCollisions.getAsJsonObject("blocks");
             for (String element : blocks.keySet()) {
-                final String name = StringUtils.addNamespaceIfNeeded(element);
+                final String name = StringUtil.addNamespaceIfNeeded(element);
                 final JsonArray array = blocks.getAsJsonArray(element);
 
                 if (array.isEmpty()) {
