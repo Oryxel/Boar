@@ -5,6 +5,8 @@ import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
+import ac.boar.utils.math.Vec3d;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryTransactionType;
 import org.cloudburstmc.protocol.bedrock.packet.InteractPacket;
 import org.cloudburstmc.protocol.bedrock.packet.InventoryTransactionPacket;
@@ -47,6 +49,12 @@ public class TestReachA extends PacketCheck {
             return true;
         }
 
-        return !player.boundingBox.expand(4.0D).intersects(cache.getBoundingBox());
+        final Vec3d eyeHeight = new Vec3d(player.x, player.y + 1.62, player.z);
+        if (cache.getBoundingBox().contains(eyeHeight)) {
+            return false;
+        }
+
+        Bukkit.broadcastMessage(cache.getPosition().x + ", " + cache.getPosition().y + ", " + cache.getPosition().z);
+        return !player.boundingBox.expand(3.04, 4.65, 3.04).intersects(cache.getBoundingBox().expand(0.1));
     }
 }

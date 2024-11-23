@@ -5,6 +5,7 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.geysermc.geyser.entity.EntityDefinition;
 import org.geysermc.geyser.entity.type.Entity;
@@ -14,7 +15,9 @@ import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.spaw
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+// TODO: FIX THIS!
 @RequiredArgsConstructor
+@Getter
 public class CompensatedEntity {
     private final BoarPlayer player;
     private final Map<Integer, EntityCache> map = new ConcurrentHashMap<>();
@@ -51,7 +54,6 @@ public class CompensatedEntity {
         }
 
         final EntityDefinition definition = cache.getDefinition();
-
         final BoundingBox newBox = BoundingBox.getBoxAt(vec3d.x, vec3d.y, vec3d.z, definition.width(), definition.height());
 
         player.sendTransaction();
