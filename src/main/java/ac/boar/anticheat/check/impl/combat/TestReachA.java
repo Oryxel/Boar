@@ -3,6 +3,7 @@ package ac.boar.anticheat.check.impl.combat;
 import ac.boar.anticheat.check.api.CheckInfo;
 import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.compensated.cache.EntityCache;
+import ac.boar.anticheat.config.Configs;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.math.Vec3d;
@@ -33,6 +34,11 @@ public class TestReachA extends PacketCheck {
         if (event.getPacket() instanceof InteractPacket) {
             final InteractPacket packet = (InteractPacket) event.getPacket();
             if (packet.getAction() != InteractPacket.Action.DAMAGE) {
+                return;
+            }
+
+            if (Configs.CANCEL_INTERACT_ATTACK_PACKET) {
+                event.setCancelled(true);
                 return;
             }
 
