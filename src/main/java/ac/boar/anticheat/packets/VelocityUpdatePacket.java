@@ -4,23 +4,32 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.java.PacketListener;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.Vec3d;
+import org.cloudburstmc.math.vector.Vector3d;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundSetEntityMotionPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundExplodePacket;
 
 public class VelocityUpdatePacket implements PacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {
-        if (!(event.getPacket() instanceof ClientboundSetEntityMotionPacket)) {
-            return;
-        }
-
         final BoarPlayer player = event.getPlayer();
-        final ClientboundSetEntityMotionPacket packet = (ClientboundSetEntityMotionPacket) event.getPacket();
-        if (packet.getEntityId() != player.getSession().getPlayerEntity().getEntityId()) {
-            return;
+        if (event.getPacket() instanceof ClientboundSetEntityMotionPacket) {
+            final ClientboundSetEntityMotionPacket packet = (ClientboundSetEntityMotionPacket) event.getPacket();
+            if (packet.getEntityId() != player.getSession().getPlayerEntity().getEntityId()) {
+                return;
+            }
+
+            player.sendTransaction();
+            player.queuedVelocities.put(player.lastSentId + 1, new Vec3d(packet.getMotionX(), packet.getMotionY(), packet.getMotionZ()));
+            event.getPostTasks().add(player::sendTransaction);
         }
 
-        player.sendTransaction();
-        player.queuedVelocities.put(player.lastSentId + 1, new Vec3d(packet.getMotionX(), packet.getMotionY(), packet.getMotionZ()));
-        event.getPostTasks().add(player::sendTransaction);
+        if (event.getPacket() instanceof ClientboundExplodePacket) {
+            final ClientboundExplodePacket packet = (ClientboundExplodePacket) event.getPacket();
+
+            final Vector3d vector3d = packet.getPlayerKnockback();
+            player.sendTransaction();
+            player.queuedExplosions.put(player.lastSentId + 1, new Vec3d(vector3d.getX(), vector3d.getY(), vector3d.getZ()));
+            event.getPostTasks().add(player::sendTransaction);
+        }
     }
 }
