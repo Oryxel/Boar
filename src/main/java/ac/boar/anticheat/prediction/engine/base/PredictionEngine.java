@@ -14,9 +14,10 @@ import java.util.Map;
 public abstract class PredictionEngine {
     protected final BoarPlayer player;
 
+    public abstract Vec3d travel(Vec3d vec3d, Vec3d movementInput);
+
     protected abstract Vec3d jump(Vec3d vec3d);
     protected abstract boolean canJump();
-    protected abstract void travel(Vec3d movementInput);
 
     public final List<Vector> gatherAllPossibilities() {
         List<Vector> vectors = new ArrayList<>();
