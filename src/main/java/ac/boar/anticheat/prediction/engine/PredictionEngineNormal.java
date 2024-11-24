@@ -1,8 +1,12 @@
 package ac.boar.anticheat.prediction.engine;
 
+import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3d;
+import org.cloudburstmc.math.vector.Vector3i;
+import org.geysermc.geyser.level.WorldManager;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 
 public class PredictionEngineNormal extends PredictionEngine {
@@ -30,28 +34,28 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     @Override
-    public void travel(Vec3d movementInput) {
-//        // WorldManager worldManager = player.getSession().getGeyser().getWorldManager();
-//
-//        Vector3i blockPos = player.getVelocityAffectingPos();
-//        float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
-//        float g = f * 0.91F;
-//        Vec3d vec3d = this.applyMovementInput(movementInput, f);
-//        double d = vec3d.y;
-////        StatusEffectInstance statusEffectInstance = this.getStatusEffect(StatusEffects.LEVITATION);
-////        if (statusEffectInstance != null) {
-////            d += (0.05 * (double)(statusEffectInstance.getAmplifier() + 1) - vec3d.y) * 0.2;
-////        } else if (!this.getWorld().isChunkLoaded(blockPos)) {
-////            if (this.getY() > (double)this.getWorld().getBottomY()) {
-////                d = -0.1;
-////            } else {
-////                d = 0.0;
-////            }
-////        } else {
-////            d -= player.getEffectiveGravity();
-////        }
-//
-//        return new Vec3d(vec3d.x * g, d * 0.98D, vec3d.z * g);
+    public Vec3d travel(Vec3d client, Vec3d movementInput) {
+        WorldManager worldManager = player.getSession().getGeyser().getWorldManager();
+
+        Vector3i blockPos = player.getVelocityAffectingPos();
+        float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
+        float g = f * 0.91F;
+        Vec3d vec3d = this.applyMovementInput(client, movementInput, f);
+        double d = vec3d.y;
+        StatusEffect statusEffect = player.getStatusEffect(Effect.LEVITATION);
+        if (statusEffect != null) {
+            d += (0.05 * (double)(statusEffect.getAmplifier() + 1) - vec3d.y) * 0.2;
+        } /* else if (!this.getWorld().isChunkLoaded(blockPos)) {
+            if (this.getY() > (double)this.getWorld().getBottomY()) {
+                d = -0.1;
+            } else {
+                d = 0.0;
+            }
+        } */ else {
+            d -= player.getEffectiveGravity();
+        }
+
+        return new Vec3d(vec3d.x * g, d * 0.98D, vec3d.z * g);
     }
 
     private Vec3d applyMovementInput(Vec3d client, Vec3d movementInput, float slipperiness) {

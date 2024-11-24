@@ -9,6 +9,7 @@ import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.math.vector.Vector3i;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
 
 @RequiredArgsConstructor
@@ -42,7 +43,9 @@ public class EntityTicker {
 
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
-            double offset = vector.getVelocity().squaredDistanceTo(player.actualVelocity);
+            final Vec3d vec3d = engine.travel(vector.getVelocity(), player.movementInput);
+
+            double offset = vec3d.squaredDistanceTo(player.actualVelocity);
             if (offset < closetOffset) {
                 closetOffset = offset;
                 player.closetVector = vector;
@@ -99,7 +102,7 @@ public class EntityTicker {
     }
 
     public double getEyeY() {
-        return 1.62f;
+        return EntityDefinitions.PLAYER.offset();
 //        return this.pos.y + (double)this.standingEyeHeight;
     }
 
