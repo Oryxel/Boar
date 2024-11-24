@@ -3,6 +3,7 @@ package ac.boar.anticheat.packets;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
+import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
@@ -28,6 +29,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // This DOES happen, sometimes it failed to add the adapter, force player to rejoin...
         if (player.getJavaSession() == null) {
             player.getSession().disconnect("Failed to add MCProtocolLib adapter, please rejoin!");
+            return;
         }
 
         player.lastX = player.tick == 0 ? player.x : packet.getPosition().getX();
@@ -58,13 +60,18 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.pitch = packet.getRotation().getX();
 
         player.claimedClientVelocity = new Vec3d(packet.getDelta());
-        player.claimedMovementInput = new Vec3d(packet.getMotion().getX(), 0, packet.getMotion().getY());
+
+        // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
+        // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
+        // Also, the player will always have to be moving forward to sprint so don't let player do that.
+        player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, player.sprinting ? 1 : MathUtil.toValue(packet.getMotion().getY(), 1));
 
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         player.lastTickWasTeleport = false;
 
         player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
 
+        // This is a lot more useful than you think it is.
         if (player.teleportUtil.teleportInQueue()) {
             event.setCancelled(true);
         }

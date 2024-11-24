@@ -1,6 +1,6 @@
 package ac.boar.utils;
 
-public class MojangMath {
+public class MathUtil {
     public static int floor(float value) {
         int i = (int)value;
         return value < (float)i ? i - 1 : i;
@@ -32,5 +32,15 @@ public class MojangMath {
     public static int ceil(double value) {
         int i = (int)value;
         return value > (double)i ? i + 1 : i;
+    }
+
+    public static double toValue(double value, double target) {
+        if (Double.isNaN(value) || Double.isInfinite(value) && value > 0) {
+            return target;
+        } else if (Double.isInfinite(value) && value < 0) {
+            return -target;
+        }
+
+        return value == 0 ? 0 : value > 0 ? target : -target;
     }
 }
