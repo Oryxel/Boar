@@ -65,6 +65,7 @@ public class BoarPlayer {
     public Vector closetVector = new Vector(Vec3d.ZERO, VectorType.NORMAL);
 
     public Map<Long, Vec3d> queuedVelocities = new ConcurrentHashMap<>();
+    public Map<Long, Vec3d> queuedExplosions = new ConcurrentHashMap<>();
 
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
 

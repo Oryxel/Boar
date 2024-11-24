@@ -22,6 +22,7 @@ public abstract class PredictionEngine {
         List<Vector> vectors = new ArrayList<>();
         vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
         addVelocityToPossibilities(vectors);
+        addExplosionToPossibilities(vectors);
 
         apply003ToPossibilities(vectors);
         addJumpingToPossibilities(vectors);
@@ -29,15 +30,26 @@ public abstract class PredictionEngine {
         return vectors;
     }
 
-    protected final void addVelocityToPossibilities(final List<Vector> vectors) {
-        for (final Map.Entry<Long, Vec3d> entry : player.queuedVelocities.entrySet()) {
-            final Vector vector = new Vector(entry.getValue(), VectorType.NORMAL);
+    // Normally it's actually addVelocity, but since geyser translate this to set motion so yeah.
+    // Not entirely their fault, they can't track client velocity and add velocity, bedrock doesn't seem to support add motion either.
+    // We can prob properly translate explosion using the prediction engine but eh not worth it.
+    private void addExplosionToPossibilities(final List<Vector> vectors) {
+        for (final Map.Entry<Long, Vec3d> entry : player.queuedExplosions.entrySet()) {
+            final Vector vector = new Vector(entry.getValue(), VectorType.EXPLOSION);
             vector.setTransactionId(entry.getKey());
             vectors.add(vector);
         }
     }
 
-    protected final void apply003ToPossibilities(final List<Vector> vectors) {
+    private void addVelocityToPossibilities(final List<Vector> vectors) {
+        for (final Map.Entry<Long, Vec3d> entry : player.queuedVelocities.entrySet()) {
+            final Vector vector = new Vector(entry.getValue(), VectorType.VELOCITY);
+            vector.setTransactionId(entry.getKey());
+            vectors.add(vector);
+        }
+    }
+
+    private void apply003ToPossibilities(final List<Vector> vectors) {
         for (final Vector vector : vectors) {
             final Vec3d vec3d = vector.getVelocity();
             double d = vec3d.x;
@@ -59,7 +71,7 @@ public abstract class PredictionEngine {
         }
     }
 
-    protected final void addJumpingToPossibilities(List<Vector> vectors) {
+    private void addJumpingToPossibilities(List<Vector> vectors) {
         if (!canJump()) {
             return;
         }
