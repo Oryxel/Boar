@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public abstract class PredictionEngine {
@@ -20,11 +21,20 @@ public abstract class PredictionEngine {
     public final List<Vector> gatherAllPossibilities() {
         List<Vector> vectors = new ArrayList<>();
         vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
+        addVelocityToPossibilities(vectors);
 
         apply003ToPossibilities(vectors);
-        applyJumpingToPossibilities(vectors);
+        addJumpingToPossibilities(vectors);
 
         return vectors;
+    }
+
+    protected final void addVelocityToPossibilities(final List<Vector> vectors) {
+        for (final Map.Entry<Long, Vec3d> entry : player.queuedVelocities.entrySet()) {
+            final Vector vector = new Vector(entry.getValue(), VectorType.NORMAL);
+            vector.setTransactionId(entry.getKey());
+            vectors.add(vector);
+        }
     }
 
     protected final void apply003ToPossibilities(final List<Vector> vectors) {
@@ -49,7 +59,7 @@ public abstract class PredictionEngine {
         }
     }
 
-    protected final void applyJumpingToPossibilities(List<Vector> vectors) {
+    protected final void addJumpingToPossibilities(List<Vector> vectors) {
         if (!canJump()) {
             return;
         }

@@ -35,6 +35,7 @@ public class Boar {
         JavaPacketEvents.register(new WorldTeleportPacket());
         JavaPacketEvents.register(new EffectUpdatePacket());
         JavaPacketEvents.register(new EntityUpdatePacket());
+        JavaPacketEvents.register(new VelocityUpdatePacket());
         JavaPacketEvents.register(new PacketCheckRunner());
 
         this.playerManager = new BoarPlayerManager();
