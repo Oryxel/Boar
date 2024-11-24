@@ -37,11 +37,6 @@ public class TestReachA extends PacketCheck {
                 return;
             }
 
-            if (Configs.CANCEL_INTERACT_ATTACK_PACKET) {
-                event.setCancelled(true);
-                return;
-            }
-
             if (check(player, packet.getRuntimeEntityId())) {
                 event.setCancelled(true);
             }
