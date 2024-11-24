@@ -6,6 +6,7 @@ import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.math.Vec3d;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryTransactionType;
 import org.cloudburstmc.protocol.bedrock.packet.InteractPacket;
 import org.cloudburstmc.protocol.bedrock.packet.InventoryTransactionPacket;
@@ -48,11 +49,8 @@ public class TestReachA extends PacketCheck {
             return true;
         }
 
-        final Vec3d eyeHeight = new Vec3d(player.x, player.y + 1.62, player.z);
-        if (cache.getBoundingBox().contains(eyeHeight)) {
-            return false;
-        }
-
-        return !player.boundingBox.expand(3, 4.62, 3).intersects(cache.getBoundingBox().expand(0.1));
+        // I guess this is a TODO, I think im not handling relative movement properly...
+        Bukkit.broadcastMessage("Distance: " + cache.getPosition().distanceTo(new Vec3d(player.x, player.y, player.z)));
+        return false;
     }
 }
