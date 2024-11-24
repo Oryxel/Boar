@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryTransactionType;
 import org.cloudburstmc.protocol.bedrock.packet.InteractPacket;
 import org.cloudburstmc.protocol.bedrock.packet.InventoryTransactionPacket;
+import org.geysermc.geyser.entity.EntityDefinitions;
 
 @CheckInfo(name = "TestReach", type = "A")
 public class TestReachA extends PacketCheck {
@@ -49,8 +50,17 @@ public class TestReachA extends PacketCheck {
             return true;
         }
 
+        final Vec3d vec3d = new Vec3d(player.x, player.y, player.z);
+
+        double distance = Math.min(cache.getBoundingBox().getMinPos().distanceTo(vec3d), cache.getBoundingBox().getMaxPos().distanceTo(vec3d));
+        if (cache.getBoundingBox().contains(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z)) {
+            distance = 0;
+        }
+
         // I guess this is a TODO, I think im not handling relative movement properly...
-        Bukkit.broadcastMessage("Distance: " + cache.getPosition().distanceTo(new Vec3d(player.x, player.y, player.z)));
+        if (distance > 3) {
+            Bukkit.broadcastMessage("Distance: " + distance);
+        }
         return false;
     }
 }

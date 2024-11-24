@@ -8,7 +8,6 @@ import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.protocol.event.java.PacketListener;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.Vec3d;
-import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
