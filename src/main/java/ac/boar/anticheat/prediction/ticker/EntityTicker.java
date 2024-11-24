@@ -4,7 +4,7 @@ import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.utils.MojangMath;
+import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import lombok.RequiredArgsConstructor;
@@ -139,12 +139,12 @@ public class EntityTicker {
             return false;
         } else {
             BoundingBox box = player.boundingBox.contract(0.001);
-            int i = MojangMath.floor(box.minX);
-            int j = MojangMath.ceil(box.maxX);
-            int k = MojangMath.floor(box.minY);
-            int l = MojangMath.ceil(box.maxY);
-            int m = MojangMath.floor(box.minZ);
-            int n = MojangMath.ceil(box.maxZ);
+            int i = MathUtil.floor(box.minX);
+            int j = MathUtil.ceil(box.maxX);
+            int k = MathUtil.floor(box.minY);
+            int l = MathUtil.ceil(box.maxY);
+            int m = MathUtil.floor(box.minZ);
+            int n = MathUtil.ceil(box.maxZ);
             double d = 0.0;
             boolean bl = this.isPushedByFluids();
             boolean bl2 = false;
