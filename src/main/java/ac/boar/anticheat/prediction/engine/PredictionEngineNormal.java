@@ -35,8 +35,6 @@ public class PredictionEngineNormal extends PredictionEngine {
 
     @Override
     public Vec3d travel(Vec3d client, Vec3d movementInput) {
-        WorldManager worldManager = player.getSession().getGeyser().getWorldManager();
-
         Vector3i blockPos = player.getVelocityAffectingPos();
         float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
         float g = f * 0.91F;

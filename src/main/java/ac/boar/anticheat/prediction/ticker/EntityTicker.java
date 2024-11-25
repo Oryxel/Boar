@@ -43,9 +43,10 @@ public class EntityTicker {
 
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
-            final Vec3d vec3d = engine.travel(vector.getVelocity(), player.movementInput);
+            final Vec3d bc = engine.travel(vector.getVelocity(), player.movementInput);
+            final Vec3d ac = bc.clone(); // TODO.
 
-            double offset = vec3d.squaredDistanceTo(player.actualVelocity);
+            double offset = ac.squaredDistanceTo(player.actualVelocity);
             if (offset < closetOffset) {
                 closetOffset = offset;
                 player.closetVector = vector;

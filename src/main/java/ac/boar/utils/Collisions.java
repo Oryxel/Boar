@@ -15,10 +15,6 @@ import java.util.List;
 
 public class Collisions {
 
-    public static Vec3d adjustMovementForCollisions(BoarPlayer player, Vec3d movement, BoundingBox entityBoundingBox, List<BoundingBox> collisions) {
-        return adjustMovementForCollisions(movement, entityBoundingBox, collisions);
-    }
-
     private static Vec3d adjustMovementForCollisions(Vec3d movement, BoundingBox entityBoundingBox, List<BoundingBox> collisions) {
         if (collisions.isEmpty()) {
             return movement;
@@ -99,7 +95,7 @@ public class Collisions {
 
     private Vec3d adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3d movement) {
         List<BoundingBox> list = /* this.getWorld().getEntityCollisions(this, box.stretch(movement)) */ new ArrayList<>();
-        Vec3d vec3d = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list);
+        Vec3d vec3d = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(movement, box, list);
         boolean bl = movement.x != vec3d.x;
         boolean bl2 = movement.y != vec3d.y;
         boolean bl3 = movement.z != vec3d.z;
@@ -147,6 +143,4 @@ public class Collisions {
         FloatArrays.unstableSort(fs);
         return fs;
     }
-
-
 }
