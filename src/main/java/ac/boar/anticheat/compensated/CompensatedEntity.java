@@ -58,8 +58,8 @@ public class CompensatedEntity {
         cache.setUtdPosition(vec3d.clone());
         player.sendTransaction();
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-            cache.setPosition(vec3d);
             cache.setBoundingBox(cache.getBoundingBox().union(newBox));
+            cache.setPosition(vec3d);
         });
 
         player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> cache.setBoundingBox(newBox));

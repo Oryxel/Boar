@@ -52,18 +52,12 @@ public class TestReachA extends PacketCheck {
 
         final Vec3d vec3d = new Vec3d(player.x, player.y, player.z);
 
-        double distance = Math.min(cache.getBoundingBox().getMinPos().distanceTo(vec3d), cache.getBoundingBox().getMaxPos().distanceTo(vec3d));
+        double distance = cache.getBoundingBox().toVec3d(cache.getDefinition().width()).distanceTo(vec3d);
         if (cache.getBoundingBox().contains(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z)) {
             distance = 0;
         }
 
-        // I don't think I'm a good anti cheat dev lol, something 100% wrong with how I handle relative.
-        // This also false if move at a rapid speed or teleport, it's 100% going to false.
-        if (distance > 3) {
-            Bukkit.broadcastMessage("Distance: " + distance);
-        }
-
-        Bukkit.broadcastMessage("Intersects: " + cache.getBoundingBox().intersects(player.boundingBox.expand(3.0)));
+        Bukkit.broadcastMessage("Current d=" + distance + ", intersects=" + cache.getBoundingBox().expand(0.1).intersects(player.boundingBox.expand(3.0)));
         return false;
     }
 }

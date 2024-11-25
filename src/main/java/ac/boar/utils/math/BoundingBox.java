@@ -24,6 +24,10 @@ public class BoundingBox implements Cloneable {
         this.maxZ = Math.max(z1, z2);
     }
 
+    public Vec3d toVec3d(double width) {
+        return new Vec3d(this.minX + (width / 2D), this.minY, this.maxZ - (width / 2D));
+    }
+
     public static BoundingBox getBoxAt(double x, double y, double z, double width, double height) {
         float f = (float) (width / 2.0f);
         float g = (float) height;
