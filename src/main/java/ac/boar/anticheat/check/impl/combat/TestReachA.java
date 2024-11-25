@@ -57,10 +57,13 @@ public class TestReachA extends PacketCheck {
             distance = 0;
         }
 
-        // I guess this is a TODO, I think im not handling relative movement properly...
+        // I don't think I'm a good anti cheat dev lol, something 100% wrong with how I handle relative.
+        // This also false if move at a rapid speed or teleport, it's 100% going to false.
         if (distance > 3) {
             Bukkit.broadcastMessage("Distance: " + distance);
         }
+
+        Bukkit.broadcastMessage("Intersects: " + cache.getBoundingBox().intersects(player.boundingBox.expand(3.0)));
         return false;
     }
 }

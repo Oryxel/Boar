@@ -62,10 +62,8 @@ public class CompensatedEntity {
             cache.setBoundingBox(cache.getBoundingBox().union(newBox));
         });
 
-        event.getPostTasks().add(() -> {
-            player.sendTransaction();
-            player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> cache.setBoundingBox(newBox));
-        });
+        player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> cache.setBoundingBox(newBox));
+        event.getPostTasks().add(player::sendTransaction);
     }
 
     public void addEntity(final ClientboundAddEntityPacket packet) {
