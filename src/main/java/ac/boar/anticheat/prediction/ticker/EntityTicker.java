@@ -53,10 +53,14 @@ public class EntityTicker {
             }
         }
 
+        Vec3d clientVelocity = player.closetVector.getVelocity().clone();
+
         double offset = player.closetVector.getVelocity().distanceTo(player.actualVelocity);
         // We're aiming for 1e-3 -> 1e-4 accuracy
         if (offset > 1e-4) {
 
+        } else if (offset < 1e-4) {
+            clientVelocity = player.actualVelocity.clone();
         }
     }
 

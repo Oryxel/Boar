@@ -57,7 +57,8 @@ public class TestReachA extends PacketCheck {
             distance = 0;
         }
 
-        Bukkit.broadcastMessage("Current d=" + distance + ", intersects=" + cache.getBoundingBox().expand(0.1).intersects(player.boundingBox.expand(3.0)));
+        boolean intersects = cache.getBoundingBox().expand(0.1).intersects(player.boundingBox.expand(3.0));
+        Bukkit.broadcastMessage("d=" + distance + ", intersects=" + intersects);
         return false;
     }
 }
