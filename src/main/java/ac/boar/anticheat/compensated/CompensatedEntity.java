@@ -61,14 +61,17 @@ public class CompensatedEntity {
         // But if player respond to the transaction AFTER the position packet they 100% already receive the packet.
         player.sendTransaction();
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-            cache.setLastPosition(cache.getPosition().clone());
+            if (cache.getPosition() != null) {
+                cache.setLastPosition(cache.getPosition().clone());
+            }
+
             cache.setBoundingBox(cache.getBoundingBox().union(newBox));
             cache.setPosition(vec3d);
         });
 
         player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () ->  {
             cache.setBoundingBox(newBox);
-            cache.setPosition(null);
+            cache.setLastPosition(null);
         });
         event.getPostTasks().add(player::sendTransaction);
     }

@@ -51,10 +51,15 @@ public class TestReachA extends PacketCheck {
         }
 
         final Vec3d vec3d = new Vec3d(player.x, player.y, player.z);
+        final Vec3d boundingBox = cache.getBoundingBox().toVec3d(cache.getDefinition().width());
 
-        double distance = cache.getBoundingBox().toVec3d(cache.getDefinition().width()).distanceTo(vec3d);
+        double distance = Math.min(boundingBox.distanceTo(vec3d), cache.getPosition().distanceTo(vec3d));
         if (cache.getBoundingBox().contains(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z)) {
             distance = 0;
+        } else {
+            if (cache.getLastPosition() != null) {
+                distance = Math.min(distance, cache.getLastPosition().distanceTo(vec3d));
+            }
         }
 
         boolean intersects = cache.getBoundingBox().expand(0.1).intersects(player.boundingBox.expand(3.0));
