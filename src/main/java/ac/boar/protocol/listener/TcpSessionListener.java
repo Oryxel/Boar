@@ -25,8 +25,9 @@ public final class TcpSessionListener extends SessionAdapter {
         for (final PacketListener listener : JavaPacketEvents.getListeners()) {
             listener.onPacketSend(event);
         }
-
-        listeners.forEach(l -> l.packetReceived(session, packet));
+        if (!event.isCancelled()) {
+            listeners.forEach(l -> l.packetReceived(session, packet));
+        }
 
         event.getPostTasks().forEach(Runnable::run);
         event.getPostTasks().clear();

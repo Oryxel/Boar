@@ -16,4 +16,5 @@ public final class PacketSendEvent {
     private final BoarPlayer player;
     private final Packet packet;
     private final List<Runnable> postTasks = new ArrayList<>();
+    private boolean cancelled;
 }
