@@ -83,8 +83,7 @@ public class BoarPlayer {
         latencyPacket.setTimestamp(++lastSentId);
         latencyPacket.setFromServer(true);
 
-        this.bedrockSession.sendPacketImmediately(latencyPacket);
-
+        this.bedrockSession.sendPacket(latencyPacket);
         this.latencyUtil.getSentTransactions().add(lastSentId);
     }
 

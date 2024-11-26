@@ -54,15 +54,22 @@ public class CompensatedEntity {
 
         final EntityDefinition definition = cache.getDefinition();
         final BoundingBox newBox = BoundingBox.getBoxAt(vec3d.x, vec3d.y, vec3d.z, definition.width(), definition.height());
-
         cache.setUtdPosition(vec3d.clone());
+
+        // We need 2 transaction to check, if player receive the first they could already have received the update packet
+        // Or they lag right before they receive the actual update position packet so we can't be sure
+        // But if player receive the transaction AFTER the position packet they 100% already receive the packet.
         player.sendTransaction();
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
+            cache.setLastPosition(cache.getPosition().clone());
             cache.setBoundingBox(cache.getBoundingBox().union(newBox));
             cache.setPosition(vec3d);
         });
 
-        player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> cache.setBoundingBox(newBox));
+        player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () ->  {
+            cache.setBoundingBox(newBox);
+            cache.setPosition(null);
+        });
         event.getPostTasks().add(player::sendTransaction);
     }
 
