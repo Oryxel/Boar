@@ -46,7 +46,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                 }
             }
 
-            if (player.lastReceivedId - cache.getTransactionId() > 1) {
+            if (player.lastReceivedId <= cache.getTransactionId()) {
                 return;
             }
 
