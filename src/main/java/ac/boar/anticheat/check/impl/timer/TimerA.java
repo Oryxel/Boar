@@ -26,13 +26,13 @@ public class TimerA extends PacketCheck {
             }
 
             if (this.ms == 0) {
-                this.ms = System.nanoTime();
+                this.ms = System.currentTimeMillis();
                 return;
             }
 
-            balance += (long) 4e7;
-            balance -= System.nanoTime() - this.ms;
-
+            balance += 50L;
+            balance -= System.currentTimeMillis() - this.ms;
+            System.out.println(balance);
             this.ms = System.nanoTime();
         }
     }
