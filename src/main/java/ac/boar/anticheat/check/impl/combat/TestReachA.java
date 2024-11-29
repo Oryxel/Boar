@@ -14,6 +14,8 @@ import org.geysermc.geyser.entity.EntityDefinitions;
 
 @CheckInfo(name = "TestReach", type = "A")
 public class TestReachA extends PacketCheck {
+    private static double MAX_REACH = 3.1;
+
     public TestReachA(BoarPlayer player) {
         super(player);
     }
@@ -62,7 +64,7 @@ public class TestReachA extends PacketCheck {
 
         // Distance that we calculated is not reliable, intersects should be more reliable, not a good thing to do tho.
         // Let's do 3.18, I'm not entirely trust this lol.
-        boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.0));
-        return !intersects && distance < 6 && distance > 3.18;
+        boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.1));
+        return !intersects && distance < 6 && distance > MAX_REACH;
     }
 }
