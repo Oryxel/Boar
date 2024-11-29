@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
+import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
 
 import java.util.Queue;
@@ -26,6 +27,10 @@ public final class TeleportUtil {
         this.teleportQueue.add(teleportCache);
     }
 
+    public void forceResyncToLastValid() {
+        this.setbackTo(this.lastKnowValid);
+    }
+
     public void setbackTo(Vec3d vec3d) {
         this.addTeleportToQueue(vec3d, false);
 
@@ -34,13 +39,14 @@ public final class TeleportUtil {
         // If we do not however, server will likely set player back for 'Moved too quickly'
         // Also this (prob) going to prevent respawn tp, if there is one.
 
-        MoveEntityAbsolutePacket packet = new MoveEntityAbsolutePacket();
-        packet.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
-        packet.setPosition(Vector3f.from(vec3d.x, vec3d.y + EntityDefinitions.PLAYER.offset(), vec3d.z));
-        packet.setRotation(player.getSession().getPlayerEntity().getBedrockRotation());
-        packet.setOnGround(false);
-        packet.setTeleported(true);
-        this.player.getBedrockSession().sendPacketImmediately(packet);
+        MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
+        movePlayerPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
+        movePlayerPacket.setPosition(Vector3f.from(vec3d.x, vec3d.y + EntityDefinitions.PLAYER.offset(), vec3d.z));
+        movePlayerPacket.setRotation(player.getSession().getPlayerEntity().getBedrockRotation());
+        movePlayerPacket.setOnGround(false);
+        movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
+        movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
+        this.player.getBedrockSession().sendPacketImmediately(movePlayerPacket);
     }
 
     public TeleportCache getOldestTeleport() {
