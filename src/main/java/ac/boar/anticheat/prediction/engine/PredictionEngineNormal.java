@@ -37,8 +37,13 @@ public class PredictionEngineNormal extends PredictionEngine {
     public Vec3d travel(Vec3d client, Vec3d movementInput) {
         Vector3i blockPos = player.getVelocityAffectingPos();
         float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
+        return this.applyMovementInput(client, movementInput, f);
+    }
+
+    @Override
+    public Vec3d applyEndOfTick(Vec3d vec3d) {
+        float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
         float g = f * 0.91F;
-        Vec3d vec3d = this.applyMovementInput(client, movementInput, f);
         double d = vec3d.y;
         StatusEffect statusEffect = player.getStatusEffect(Effect.LEVITATION);
         if (statusEffect != null) {

@@ -15,6 +15,7 @@ public abstract class PredictionEngine {
     protected final BoarPlayer player;
 
     public abstract Vec3d travel(Vec3d vec3d, Vec3d movementInput);
+    public abstract Vec3d applyEndOfTick(Vec3d vec3d);
 
     protected abstract Vec3d jump(Vec3d vec3d);
     protected abstract boolean canJump();

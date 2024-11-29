@@ -62,6 +62,8 @@ public class EntityTicker {
         } else if (offset < 1e-4) {
             clientVelocity = player.actualVelocity.clone();
         }
+
+        clientVelocity = engine.applyEndOfTick(clientVelocity);
     }
 
     private boolean updateWaterState() {
