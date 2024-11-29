@@ -70,7 +70,7 @@ public class CompensatedEntity {
         player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () ->  {
             cache.setBoundingBox(newBox);
 
-            if (cache.getOldPositions().size() > 3) {
+            if (cache.getOldPositions().size() > 4) {
                 cache.getOldPositions().poll();
             }
         });
