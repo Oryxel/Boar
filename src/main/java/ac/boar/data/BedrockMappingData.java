@@ -69,7 +69,7 @@ public class BedrockMappingData {
                 final JsonArray array = blocks.getAsJsonArray(element);
 
                 if (array.isEmpty()) {
-                    LOGGER.info("Failed to find " + name + " in nbt block definitions.");
+                    LOGGER.info("Failed to find " + name + "~!");
                     continue; // Shouldn't happen but just in case.
                 }
 
