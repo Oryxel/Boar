@@ -28,17 +28,15 @@ public class TestReachA extends PacketCheck {
             }
 
             if (check(player, packet.getRuntimeEntityId())) {
+                Bukkit.broadcastMessage("fail!");
                 event.setCancelled(true);
             }
         }
 
+        // This packet doesn't matter.
         if (event.getPacket() instanceof InteractPacket) {
             final InteractPacket packet = (InteractPacket) event.getPacket();
-            if (packet.getAction() != InteractPacket.Action.DAMAGE) {
-                return;
-            }
-
-            if (check(player, packet.getRuntimeEntityId())) {
+            if (packet.getAction() == InteractPacket.Action.DAMAGE) {
                 event.setCancelled(true);
             }
         }
@@ -51,19 +49,19 @@ public class TestReachA extends PacketCheck {
         }
 
         final Vec3d vec3d = new Vec3d(player.x, player.y, player.z);
-        final Vec3d boundingBox = cache.getBoundingBox().toVec3d(cache.getDefinition().width());
-
-        double distance = Math.min(boundingBox.distanceTo(vec3d), cache.getPosition().distanceTo(vec3d));
+        double distance = cache.getPosition().distanceTo(vec3d);
         if (cache.getBoundingBox().contains(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z)) {
             distance = 0;
-        } else {
-            if (cache.getLastPosition() != null) {
-                distance = Math.min(distance, cache.getLastPosition().distanceTo(vec3d));
-            }
         }
 
-        boolean intersects = cache.getBoundingBox().expand(0.1).intersects(player.boundingBox.expand(3.0));
-        Bukkit.broadcastMessage("d=" + distance + ", intersects=" + intersects);
-        return false;
+        // I gave up, this has to do with bedrock RakNet not syncing properly or whatever
+        // The check is stable for java player on ViaBedrock this is prob bedrock fault, or my own incompetent.
+        for (Vec3d vec3d1 : cache.getOldPositions()) {
+            distance = Math.min(distance, vec3d1.distanceTo(vec3d));
+        }
+
+        // Distance that we calculated is not reliable, intersects should be more reliable, not a good thing to do tho.
+        boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.0));
+        return !intersects && distance < 6 && distance > 3.1;
     }
 }
