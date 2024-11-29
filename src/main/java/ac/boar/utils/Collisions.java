@@ -1,6 +1,7 @@
 package ac.boar.utils;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
+import ac.boar.data.BedrockMappingData;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import com.google.common.collect.Lists;
@@ -8,7 +9,11 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.doubles.DoubleListIterator;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
+import org.cloudburstmc.math.vector.Vector3i;
+import org.geysermc.geyser.level.WorldManager;
+import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.Axis;
+import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,13 +89,34 @@ public class Collisions {
 
         for (int k1 = i; k1 < j; ++k1) {
             for (int l1 = i1; l1 < j1; ++l1) {
-//                for (int i2 = k - 1; i2 < l; ++i2) {
-//                    addCollisionBoxesToList(player, new Vector3i(k1, i2, l1), bb, list);
-//                }
+                for (int i2 = k - 1; i2 < l; ++i2) {
+                    addCollisionBoxesToList(player, Vector3i.from(k1, i2, l1), bb, list);
+                }
             }
         }
 
         return list;
+    }
+
+    // TODO: compensated world
+    private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list) {
+        WorldManager worldManager = player.getSession().getGeyser().getWorldManager();
+        BlockState state = worldManager.blockAt(player.getSession(), vector3i);
+
+        GeyserBedrockBlock definition = player.getSession().getBlockMappings().getBedrockBlock(state);
+        String name = definition.getState().getString("name");
+
+        List<BedrockMappingData.BlockMappedData> mappedData = BedrockMappingData.blockCollisionMappings.get(name);
+        if (mappedData == null || mappedData.isEmpty()) {
+            return;
+        }
+
+        // TODO: block state.
+        for (BoundingBox box : mappedData.get(0).box()) {
+            if (box.intersects(boundingBox)) {
+                list.add(box);
+            }
+        }
     }
 
     private Vec3d adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3d movement) {

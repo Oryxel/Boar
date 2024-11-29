@@ -25,10 +25,11 @@ public class BedrockMappingData {
     public static Logger LOGGER = Logger.getLogger("[Boar - Mapping Phase]");
 
     private static Gson GSON = new Gson();
-    private static Map<Integer, List<BoundingBox>> collisionMap = new HashMap<>();
-    private static Map<String, List<BlockMappedData>> blockCollisionMappings = new HashMap<>();
 
-    private static NbtBlockDefinitionRegistry blockDefinitionRegistry;
+    public static Map<Integer, List<BoundingBox>> collisionMap = new HashMap<>();
+    public static Map<String, List<BlockMappedData>> blockCollisionMappings = new HashMap<>();
+
+    public static NbtBlockDefinitionRegistry blockDefinitionRegistry;
 
     public static void load() {
         {
@@ -75,7 +76,6 @@ public class BedrockMappingData {
                 final List<BlockMappedData> list = new ArrayList<>();
                 for (int i = 0; i < array.size(); i++) {
                     final int collisionId = array.get(i).getAsInt();
-
                     list.add(new BlockMappedData(i, collisionMap.get(collisionId)));
                 }
 
