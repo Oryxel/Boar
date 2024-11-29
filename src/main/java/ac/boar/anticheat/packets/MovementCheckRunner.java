@@ -66,8 +66,11 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // Also, the player will always have to be moving forward to sprint so don't let player do that.
         player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, player.sprinting ? 1 : MathUtil.toValue(packet.getMotion().getY(), 1));
 
+        if (player.lastTickWasTeleport) {
+            return;
+        }
+
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
-        player.lastTickWasTeleport = false;
 
         player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
 

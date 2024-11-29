@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Check {
-    private final BoarPlayer player;
+    protected final BoarPlayer player;
 
     private final String name = getClass().getDeclaredAnnotation(CheckInfo.class).name(),
                 type = getClass().getDeclaredAnnotation(CheckInfo.class).type();
