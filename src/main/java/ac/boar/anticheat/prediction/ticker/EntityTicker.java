@@ -4,6 +4,7 @@ import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
+import ac.boar.utils.Collisions;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
@@ -41,10 +42,12 @@ public class EntityTicker {
 
         engine = new PredictionEngineNormal(player);
 
+        player.movementInput = player.movementInput.multiply(0.98F);
+
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
             final Vec3d bc = engine.travel(vector.getVelocity(), player.movementInput);
-            final Vec3d ac = bc.clone(); // TODO.
+            final Vec3d ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
             if (offset < closetOffset) {

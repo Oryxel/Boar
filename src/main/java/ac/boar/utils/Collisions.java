@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Collisions {
 
-    private static Vec3d adjustMovementForCollisions(Vec3d movement, BoundingBox entityBoundingBox, List<BoundingBox> collisions) {
+    public static Vec3d adjustMovementForCollisions(Vec3d movement, BoundingBox entityBoundingBox, List<BoundingBox> collisions) {
         if (collisions.isEmpty()) {
             return movement;
         } else {
@@ -119,7 +119,7 @@ public class Collisions {
         }
     }
 
-    private Vec3d adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3d movement) {
+    public static Vec3d adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3d movement) {
         List<BoundingBox> list = /* this.getWorld().getEntityCollisions(this, box.stretch(movement)) */ new ArrayList<>();
         Vec3d vec3d = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(movement, box, list);
         boolean bl = movement.x != vec3d.x;

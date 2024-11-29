@@ -63,7 +63,6 @@ public class TestReachA extends PacketCheck {
         }
 
         // Distance that we calculated is not reliable, intersects should be more reliable, not a good thing to do tho.
-        // Let's do 3.18, I'm not entirely trust this lol.
         boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.1));
         return !intersects && distance < 6 && distance > MAX_REACH;
     }
