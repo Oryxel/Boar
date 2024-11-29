@@ -28,9 +28,9 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
             }
 
             if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT)) {
-                player.teleportUtil.getTeleportQueue().poll();
-
                 if (cache.getTransactionId() == player.lastReceivedId) {
+                    player.teleportUtil.getTeleportQueue().poll();
+
                     double distance = packet.getPosition().sub(0, EntityDefinitions.PLAYER.offset(), 0).distanceSquared(cache.getPosition().toVector3f());
 
                     if (distance > (cache.isRelative() ? 0.001 : 0)) {
@@ -39,8 +39,12 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                         }
                     } else {
                         BoarPlugin.LOGGER.info("Accepted teleport!");
-                        cache.setAccepted(true);
                         player.lastTickWasTeleport = true;
+
+                        // Server don't know about this teleport, cancel it.
+                        if (cache.isSilent()) {
+                            event.setCancelled(true);
+                        }
                     }
                     return;
                 }
@@ -57,9 +61,6 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                     break;
                 }
                 player.teleportUtil.getTeleportQueue().poll();
-                if (teleport.isAccepted()) {
-                    return;
-                }
 
                 if (player.teleportUtil.getTeleportQueue().isEmpty()) {
                     player.teleportUtil.setbackTo(cache.getPosition());
@@ -84,7 +85,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
         double newY = packet.getPosition().getY() + (packet.getRelatives().contains(PositionElement.Y) ? player.y : 0);
         double newZ = packet.getPosition().getZ() + (packet.getRelatives().contains(PositionElement.Z) ? player.z : 0);
 
-        player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), !packet.getRelatives().isEmpty());
+        player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), !packet.getRelatives().isEmpty(), false);
         player.teleportUtil.lastKnowValid = new Vec3d(newX, newY, newZ);
     }
 }
