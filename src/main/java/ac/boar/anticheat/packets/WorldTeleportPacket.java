@@ -51,7 +51,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                 }
             }
 
-            if (player.lastReceivedId <= cache.getTransactionId()) {
+            if (player.lastReceivedId < cache.getTransactionId()) {
                 return;
             }
 
@@ -61,8 +61,8 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                 if (player.lastReceivedId < teleport.getTransactionId()) {
                     break;
                 }
-                player.teleportUtil.getTeleportQueue().poll();
 
+                player.teleportUtil.getTeleportQueue().poll();
                 if (player.teleportUtil.getTeleportQueue().isEmpty()) {
                     player.teleportUtil.setbackTo(cache.getPosition());
                 }
