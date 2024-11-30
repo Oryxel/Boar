@@ -32,8 +32,7 @@ public class TimerA extends PacketCheck {
 
             balance += 50L;
             balance -= System.currentTimeMillis() - this.ms;
-            System.out.println(balance);
-            this.ms = System.nanoTime();
+            this.ms = System.currentTimeMillis();
         }
     }
 }

@@ -1,8 +1,12 @@
 package ac.boar.anticheat.prediction.ticker;
 
+import ac.boar.anticheat.check.api.Check;
+import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
+import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
+import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.Collisions;
 import ac.boar.utils.MathUtil;
@@ -13,6 +17,8 @@ import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class EntityTicker {
@@ -56,6 +62,7 @@ public class EntityTicker {
             final Vec3d ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
+            System.out.println(offset + "," + vector.getType());
             if (offset < closetOffset) {
                 closetOffset = offset;
                 player.closetVector = vector;
@@ -67,13 +74,19 @@ public class EntityTicker {
         Vec3d clientVelocity = afterCollision.clone();
 
         player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
-
         double offset = afterCollision.distanceTo(player.actualVelocity);
         // We're aiming for 1e-3 -> 1e-4 accuracy
         if (offset > 1e-4) {
 
         } else if (offset < 1e-4) {
             clientVelocity = player.actualVelocity.clone();
+        }
+
+        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
+            Check v = entry.getValue();
+            if (v instanceof OffsetHandlerCheck) {
+                ((OffsetHandlerCheck) v).onPredictionComplete(offset);
+            }
         }
 
         if (clientVelocity.length() > 1e-9) {
@@ -86,6 +99,11 @@ public class EntityTicker {
 
         if (beforeCollision.z != afterCollision.z) {
             clientVelocity.z = 0;
+        }
+
+        if (player.closetVector.getType() != VectorType.NORMAL) {
+            player.queuedVelocities.remove(player.closetVector.getTransactionId());
+            player.queuedExplosions.remove(player.closetVector.getTransactionId());
         }
 
         player.clientVelocity = engine.applyEndOfTick(clientVelocity);

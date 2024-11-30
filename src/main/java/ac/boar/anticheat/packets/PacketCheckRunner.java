@@ -1,5 +1,6 @@
 package ac.boar.anticheat.packets;
 
+import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
@@ -9,25 +10,29 @@ import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 
+import java.util.Map;
+
 public class PacketCheckRunner implements PacketListener, BedrockPacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         final BoarPlayer player = event.getPlayer();
-        player.checkHolder.forEach((k, v) -> {
+        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
+            Check v = entry.getValue();
             if (v instanceof PacketCheck) {
                 ((PacketCheck) v).onPacketSend(event);
             }
-        });
+        }
     }
 
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
-        player.checkHolder.forEach((k, v) -> {
+        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
+            Check v = entry.getValue();
             if (v instanceof PacketCheck) {
                 ((PacketCheck) v).onPacketReceived(event);
             }
-        });
+        }
 
         player.lastTickWasTeleport = false;
         if (event.getPacket() instanceof PlayerAuthInputPacket) {

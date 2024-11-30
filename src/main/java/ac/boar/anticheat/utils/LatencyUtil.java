@@ -36,6 +36,7 @@ public final class LatencyUtil {
         Map.Entry<Long, Runnable> entry;
         while (iterator.hasNext() && (entry = iterator.next()) != null && entry.getKey() <= id) {
             entry.getValue().run();
+            iterator.remove();
         }
 
         player.lastReceivedId = id;

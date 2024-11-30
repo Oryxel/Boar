@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Vector {
     private Vec3d velocity;
     private VectorType type;
-    public long transactionId = -1; // if this vector is velocity or explosion...
+    private long transactionId = -1; // if this vector is velocity or explosion...
 
     public Vector(Vec3d vec3d, VectorType type) {
         this.type = type;
