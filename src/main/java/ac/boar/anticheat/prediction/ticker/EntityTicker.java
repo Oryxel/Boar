@@ -100,6 +100,10 @@ public class EntityTicker {
             clientVelocity.z = 0;
         }
 
+        if (beforeCollision.y != afterCollision.y) {
+            clientVelocity.y = 0;
+        }
+
         if (player.closetVector.getType() != VectorType.NORMAL) {
             player.queuedVelocities.remove(player.closetVector.getTransactionId());
             player.queuedExplosions.remove(player.closetVector.getTransactionId());
