@@ -57,7 +57,7 @@ public final class TeleportUtil {
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
 
-        this.player.getBedrockSession().sendPacketImmediately(movePlayerPacket);
+        this.player.getBedrockSession().sendPacket(movePlayerPacket);
     }
 
     private void sendVelocity(Vec3d vec3d) {
