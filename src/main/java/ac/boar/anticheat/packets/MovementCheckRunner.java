@@ -82,7 +82,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
-        player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, player.sprinting ? 1 : MathUtil.toValue(packet.getMotion().getY(), 1));
+        player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
 
         if (player.lastTickWasTeleport) {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
@@ -94,9 +94,12 @@ public class MovementCheckRunner implements BedrockPacketListener {
         new PlayerTicker(player).tick();
 
         if (player.actualVelocity.length() > 0) {
-            Bukkit.broadcastMessage("EOT: " + packet.getDelta().toString());
-        }
+            if (player.movementInput.length() > 0) {
+                Bukkit.broadcastMessage("P I: " + player.movementInput.toString());
+                Bukkit.broadcastMessage("A I: " + packet.getMotion().toString());
+            }
 
-        player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
+            Bukkit.broadcastMessage("EOT A: " + packet.getDelta().toString());
+        }
     }
 }

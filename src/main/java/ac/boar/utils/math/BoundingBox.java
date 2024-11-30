@@ -31,7 +31,7 @@ public class BoundingBox implements Cloneable {
     public static BoundingBox getBoxAt(double x, double y, double z, double width, double height) {
         float f = (float) (width / 2.0f);
         float g = (float) height;
-        return new BoundingBox(x - (double)f, y, z - (double)f, x + (double)f, y + (double)g, z + (double)f);
+        return new BoundingBox(x - f, y, z - f, x + f, y + g, z + f);
     }
 
     public double calculateXOffset(BoundingBox other, double offsetX) {

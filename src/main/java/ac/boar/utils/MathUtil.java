@@ -35,10 +35,8 @@ public class MathUtil {
     }
 
     public static double toValue(double value, double target) {
-        if (Double.isNaN(value) || Double.isInfinite(value) && value > 0) {
-            return target;
-        } else if (Double.isInfinite(value) && value < 0) {
-            return -target;
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return 0;
         }
 
         return value == 0 ? 0 : value > 0 ? target : -target;

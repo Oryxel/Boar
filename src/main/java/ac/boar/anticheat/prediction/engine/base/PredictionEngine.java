@@ -23,6 +23,7 @@ public abstract class PredictionEngine {
     public final List<Vector> gatherAllPossibilities() {
         List<Vector> vectors = new ArrayList<>();
         vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
+
         addVelocityToPossibilities(vectors);
         addExplosionToPossibilities(vectors);
 
