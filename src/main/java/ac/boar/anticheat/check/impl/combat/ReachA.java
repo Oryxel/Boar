@@ -12,11 +12,9 @@ import org.cloudburstmc.protocol.bedrock.packet.InteractPacket;
 import org.cloudburstmc.protocol.bedrock.packet.InventoryTransactionPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
 
-@CheckInfo(name = "TestReach", type = "A")
-public class TestReachA extends PacketCheck {
-    private static double MAX_REACH = 3.1;
-
-    public TestReachA(BoarPlayer player) {
+@CheckInfo(name = "Reach", type = "A")
+public class ReachA extends PacketCheck {
+    public ReachA(BoarPlayer player) {
         super(player);
     }
 
@@ -64,6 +62,6 @@ public class TestReachA extends PacketCheck {
 
         // Distance that we calculated is not reliable, intersects should be more reliable, not a good thing to do tho.
         boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.1));
-        return !intersects && distance < 6 && distance > MAX_REACH;
+        return !intersects && distance < 6 && distance > 3.1;
     }
 }

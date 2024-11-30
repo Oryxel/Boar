@@ -1,7 +1,8 @@
 package ac.boar.anticheat.check.api.holder;
 
 import ac.boar.anticheat.check.api.Check;
-import ac.boar.anticheat.check.impl.combat.TestReachA;
+import ac.boar.anticheat.check.impl.combat.ReachA;
+import ac.boar.anticheat.check.impl.prediction.VelocityA;
 import ac.boar.anticheat.check.impl.timer.TimerA;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,9 @@ public class CheckHolder extends HashMap<Class, Check> {
     private final BoarPlayer player;
 
     public void init() {
-        this.put(TestReachA.class, new TestReachA(player));
+        this.put(VelocityA.class, new VelocityA(player));
+
+        this.put(ReachA.class, new ReachA(player));
         this.put(TimerA.class, new TimerA(player));
     }
 }
