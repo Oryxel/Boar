@@ -74,8 +74,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.yaw = packet.getRotation().getY();
         player.pitch = packet.getRotation().getX();
 
-        player.claimedClientVelocity = new Vec3d(packet.getDelta());
-
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
