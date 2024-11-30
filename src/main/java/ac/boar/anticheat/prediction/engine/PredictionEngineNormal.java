@@ -40,7 +40,7 @@ public class PredictionEngineNormal extends PredictionEngine {
 
     @Override
     public Vec3d applyEndOfTick(Vec3d vec3d) {
-        float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
+        float f = player.lastGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
         float g = f * 0.91F;
         double d = vec3d.y;
         StatusEffect statusEffect = player.getStatusEffect(Effect.LEVITATION);
