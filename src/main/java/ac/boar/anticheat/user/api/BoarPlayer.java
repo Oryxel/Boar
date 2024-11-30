@@ -56,7 +56,7 @@ public class BoarPlayer {
     public boolean wasInPowderSnow, inPowderSnow;
     public boolean touchingWater, submergedInWater;
 
-    public Optional<Vector3i> supportingBlockPos;
+    public Optional<Vector3i> supportingBlockPos = Optional.empty();
 
     // End of tick velocity.
     public Vec3d clientVelocity = Vec3d.ZERO, claimedClientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO;
@@ -69,7 +69,7 @@ public class BoarPlayer {
 
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
 
-    public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag;
+    public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
 
     public BoundingBox boundingBox;
 

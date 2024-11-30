@@ -5,9 +5,7 @@ import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.math.vector.Vector3i;
-import org.geysermc.geyser.level.WorldManager;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
-
 
 public class PredictionEngineNormal extends PredictionEngine {
     public PredictionEngineNormal(BoarPlayer player) {
@@ -30,7 +28,7 @@ public class PredictionEngineNormal extends PredictionEngine {
 
     @Override
     public boolean canJump() {
-        return false;
+        return player.onGround;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ac.boar.utils;
+package ac.boar.anticheat.utils;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.data.BedrockMappingData;
@@ -106,6 +106,8 @@ public class Collisions {
         GeyserBedrockBlock definition = player.getSession().getBlockMappings().getBedrockBlock(state);
         String name = definition.getState().getString("name");
 
+        // Yes I know BlockUtils.getCollision exist, but I don't trust it enough, like will it account for block state?
+        // I will check it later, if it does then I will use it.
         List<BedrockMappingData.BlockMappedData> mappedData = BedrockMappingData.blockCollisionMappings.get(name);
         if (mappedData == null || mappedData.isEmpty()) {
             return;
@@ -113,15 +115,31 @@ public class Collisions {
 
         // TODO: block state.
         for (BoundingBox box : mappedData.get(0).box()) {
-            if (box.intersects(boundingBox)) {
-                list.add(box);
+            // Empty.
+            if (box.minX + box.minY + box.minZ + box.maxX + box.maxY + box.maxZ == 0) {
+                continue;
+            }
+
+            BoundingBox bb = new BoundingBox(
+                    vector3i.getX() + box.minX,
+                    vector3i.getY() + box.minY,
+                    vector3i.getZ() + box.minZ, vector3i.getX() + box.maxX, vector3i.getY() + box.maxY,
+                    vector3i.getZ() + box.maxZ);
+
+            if (bb.intersects(boundingBox)) {
+                list.add(bb);
             }
         }
     }
 
+    public static Vec3d adjustMovementForCollisions(BoarPlayer player, Vec3d movement, BoundingBox box, List<BoundingBox> collisions) {
+        List<BoundingBox> list = findCollisionsForMovement(player, collisions, box.stretch(movement));
+        return adjustMovementForCollisions(movement, box, list);
+    }
+
     public static Vec3d adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3d movement) {
         List<BoundingBox> list = /* this.getWorld().getEntityCollisions(this, box.stretch(movement)) */ new ArrayList<>();
-        Vec3d vec3d = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(movement, box, list);
+        Vec3d vec3d = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list);
         boolean bl = movement.x != vec3d.x;
         boolean bl2 = movement.y != vec3d.y;
         boolean bl3 = movement.z != vec3d.z;
