@@ -4,11 +4,12 @@ import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.utils.Collisions;
+import ac.boar.anticheat.utils.Collisions;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
@@ -44,6 +45,7 @@ public class EntityTicker {
 
         player.movementInput = player.movementInput.multiply(0.98F);
 
+        Vec3d beforeCollision = Vec3d.ZERO, afterCollision = Vec3d.ZERO;
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
             final Vec3d bc = engine.travel(vector.getVelocity(), player.movementInput);
@@ -53,12 +55,16 @@ public class EntityTicker {
             if (offset < closetOffset) {
                 closetOffset = offset;
                 player.closetVector = vector;
+                afterCollision = ac;
+                beforeCollision = bc;
             }
         }
 
-        Vec3d clientVelocity = player.closetVector.getVelocity().clone();
+        Vec3d clientVelocity = afterCollision.clone();
 
-        double offset = player.closetVector.getVelocity().distanceTo(player.actualVelocity);
+        player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
+
+        double offset = afterCollision.distanceTo(player.actualVelocity);
         // We're aiming for 1e-3 -> 1e-4 accuracy
         if (offset > 1e-4) {
 
@@ -66,7 +72,19 @@ public class EntityTicker {
             clientVelocity = player.actualVelocity.clone();
         }
 
-        clientVelocity = engine.applyEndOfTick(clientVelocity);
+        if (clientVelocity.length() > 1e-9) {
+            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
+        }
+
+        if (beforeCollision.x != afterCollision.x) {
+            clientVelocity.x = 0;
+        }
+
+        if (beforeCollision.z != afterCollision.z) {
+            clientVelocity.z = 0;
+        }
+
+        player.clientVelocity = engine.applyEndOfTick(clientVelocity);
     }
 
     private boolean updateWaterState() {

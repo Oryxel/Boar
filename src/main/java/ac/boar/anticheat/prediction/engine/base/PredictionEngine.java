@@ -78,8 +78,15 @@ public abstract class PredictionEngine {
             return;
         }
 
+        final List<Vector> list = new ArrayList<>();
         for (Vector vector : vectors) {
-            vector.setVelocity(jump(vector.getVelocity()));
+            Vector v = new Vector(jump(vector.getVelocity()), vector.getType());
+            v.setTransactionId(vector.getTransactionId());
+            list.add(vector);
+            list.add(v);
         }
+
+        vectors.clear();
+        vectors.addAll(list);
     }
 }

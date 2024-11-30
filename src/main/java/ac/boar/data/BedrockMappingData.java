@@ -1,14 +1,11 @@
 package ac.boar.data;
 
-import ac.boar.data.block.NbtBlockDefinitionRegistry;
 import ac.boar.utils.StringUtil;
 import ac.boar.utils.math.BoundingBox;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.cloudburstmc.nbt.NBTInputStream;
-import org.cloudburstmc.nbt.NbtMap;
-import org.cloudburstmc.nbt.NbtType;
 import org.cloudburstmc.nbt.NbtUtils;
 
 import java.io.IOException;
@@ -29,14 +26,7 @@ public class BedrockMappingData {
     public static Map<Integer, List<BoundingBox>> collisionMap = new HashMap<>();
     public static Map<String, List<BlockMappedData>> blockCollisionMappings = new HashMap<>();
 
-    public static NbtBlockDefinitionRegistry blockDefinitionRegistry;
-
     public static void load() {
-        {
-            NbtMap map = (NbtMap) loadGzipNBT("block_palette.1_21_40.nbt");
-            blockDefinitionRegistry = new NbtBlockDefinitionRegistry(map.getList("blocks", NbtType.COMPOUND), false);
-        }
-
         {
             final JsonObject blockCollisions = readJson("1.21.0-block-collisions.json");
 
