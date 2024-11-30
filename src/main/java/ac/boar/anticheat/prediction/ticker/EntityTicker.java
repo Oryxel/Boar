@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class EntityTicker {
-    private final BoarPlayer player;
+    protected final BoarPlayer player;
 
     public void tick() {
         baseTick();
@@ -75,6 +75,8 @@ public class EntityTicker {
         player.lastGround = player.onGround;
         player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
         double offset = afterCollision.distanceTo(player.actualVelocity);
+        offset -= player.extraUncertainOffset;
+        player.extraUncertainOffset = 0;
 
         if (offset < 1e-4) {
             clientVelocity = player.actualVelocity.clone();
@@ -111,6 +113,8 @@ public class EntityTicker {
                 ((OffsetHandlerCheck) v).onPredictionComplete(offset);
             }
         }
+
+        player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
     }
 
     private boolean updateWaterState() {
