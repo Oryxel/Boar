@@ -78,20 +78,21 @@ public class EntityTicker {
         offset -= player.extraUncertainOffset;
         player.extraUncertainOffset = 0;
 
-        if (offset < 1e-4) {
+        if (offset < 5e-4) {
             clientVelocity = player.actualVelocity.clone();
         }
 
         player.predictedVelocity = afterCollision.clone();
 
         if (player.actualVelocity.length() > 0) {
-            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
+            Bukkit.broadcastMessage((offset > 5e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
-            if (offset > 1e-4) {
+            if (offset > 5e-4) {
                 Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z);
             }
         }
 
+        System.out.println(player.closetVector.getVelocity().length());
         if (beforeCollision.x != afterCollision.x) {
             clientVelocity.x = 0;
         }
