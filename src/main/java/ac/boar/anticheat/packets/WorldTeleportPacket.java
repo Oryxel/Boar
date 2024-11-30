@@ -40,6 +40,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                     } else {
                         BoarPlugin.LOGGER.info("Accepted teleport!");
                         player.lastTickWasTeleport = true;
+                        player.clientVelocity = cache.getDeltaMovement();
 
                         // Server don't know about this teleport, cancel it.
                         if (cache.isSilent()) {
@@ -85,7 +86,8 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
         double newY = packet.getPosition().getY() + (packet.getRelatives().contains(PositionElement.Y) ? player.y : 0);
         double newZ = packet.getPosition().getZ() + (packet.getRelatives().contains(PositionElement.Z) ? player.z : 0);
 
-        player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), !packet.getRelatives().isEmpty(), false);
+        player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), new Vec3d(packet.getDeltaMovement().getX(),
+                packet.getDeltaMovement().getY(), packet.getDeltaMovement().getZ()), !packet.getRelatives().isEmpty(), false);
         player.teleportUtil.lastKnowValid = new Vec3d(newX, newY, newZ);
     }
 }

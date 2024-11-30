@@ -5,7 +5,6 @@ import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3d;
-import org.bukkit.Bukkit;
 
 import java.util.Iterator;
 import java.util.Map;

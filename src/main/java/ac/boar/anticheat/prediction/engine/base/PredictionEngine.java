@@ -26,7 +26,6 @@ public abstract class PredictionEngine {
         addVelocityToPossibilities(vectors);
         addExplosionToPossibilities(vectors);
 
-        applyMinimalToPossibilities(vectors);
         addJumpingToPossibilities(vectors);
 
         return vectors;
@@ -48,28 +47,6 @@ public abstract class PredictionEngine {
             final Vector vector = new Vector(entry.getValue(), VectorType.VELOCITY);
             vector.setTransactionId(entry.getKey());
             vectors.add(vector);
-        }
-    }
-
-    private void applyMinimalToPossibilities(final List<Vector> vectors) {
-        for (final Vector vector : vectors) {
-            final Vec3d vec3d = vector.getVelocity();
-            double d = vec3d.x;
-            double e = vec3d.y;
-            double f = vec3d.z;
-            if (Math.abs(vec3d.x) < 0.003) {
-                d = 0.0;
-            }
-
-            if (Math.abs(vec3d.y) < 0.003) {
-                e = 0.0;
-            }
-
-            if (Math.abs(vec3d.z) < 0.003) {
-                f = 0.0;
-            }
-
-            vector.setVelocity(new Vec3d(d, e, f));
         }
     }
 
