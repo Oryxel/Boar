@@ -62,7 +62,6 @@ public class EntityTicker {
             final Vec3d ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
-            System.out.println(offset + "," + vector.getType());
             if (offset < closetOffset) {
                 closetOffset = offset;
                 player.closetVector = vector;
@@ -73,8 +72,13 @@ public class EntityTicker {
 
         Vec3d clientVelocity = afterCollision.clone();
 
+        player.lastGround = player.onGround;
         player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
         double offset = afterCollision.distanceTo(player.actualVelocity);
+
+        if (offset < 1e-4) {
+            clientVelocity = player.actualVelocity.clone();
+        }
 
         for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
             Check v = entry.getValue();
@@ -83,8 +87,12 @@ public class EntityTicker {
             }
         }
 
-        if (clientVelocity.length() > 1e-9) {
-            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
+        if (player.actualVelocity.length() > 0) {
+            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
+
+            if (offset > 1e-4) {
+                Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z);
+            }
         }
 
         if (beforeCollision.x != afterCollision.x) {

@@ -43,7 +43,7 @@ public class BoarPlayer {
     public float lastX, x, lastY, y, lastZ, z;
     public long tick;
 
-    public boolean onGround;
+    public boolean onGround, lastGround;
     public float fallDistance;
 
     public float yaw, pitch;

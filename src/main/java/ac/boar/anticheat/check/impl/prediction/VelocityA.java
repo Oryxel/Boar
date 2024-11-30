@@ -24,14 +24,14 @@ public class VelocityA extends OffsetHandlerCheck {
 
         Iterator<Map.Entry<Long, Vec3d>> iterator = player.queuedVelocities.entrySet().iterator();
 
-        Map.Entry<Long, Vec3d> entry;
-        while (iterator.hasNext() && (entry = iterator.next()) != null) {
-            if (entry.getKey() < player.lastReceivedId) {
-                break;
-            }
-
-            Bukkit.broadcastMessage("fail VelocityA!");
-            iterator.remove();
-        }
+//        Map.Entry<Long, Vec3d> entry;
+//        while (iterator.hasNext() && (entry = iterator.next()) != null) {
+//            if (entry.getKey() < player.lastReceivedId) {
+//                break;
+//            }
+//
+//            Bukkit.broadcastMessage("fail VelocityA!");
+//            iterator.remove();
+//        }
     }
 }

@@ -7,6 +7,7 @@ import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
@@ -86,6 +87,10 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
 
         new PlayerTicker(player).tick();
+
+        if (player.actualVelocity.length() > 0) {
+            Bukkit.broadcastMessage("EOT: " + packet.getDelta().toString());
+        }
 
         player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
 
