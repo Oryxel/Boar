@@ -75,12 +75,6 @@ public class EntityTicker {
 
         player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
         double offset = afterCollision.distanceTo(player.actualVelocity);
-        // We're aiming for 1e-3 -> 1e-4 accuracy
-        if (offset > 1e-4) {
-
-        } else if (offset < 1e-4) {
-            clientVelocity = player.actualVelocity.clone();
-        }
 
         for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
             Check v = entry.getValue();
