@@ -41,19 +41,33 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.z = packet.getPosition().getZ();
 
-        player.lastSprinting = player.sprinting;
-        player.lastSneaking = player.sneaking;
-        player.lastSwimming = player.swimming;
-        player.sprinting = packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING) || packet.getInputData().contains(PlayerAuthInputData.SPRINTING);
-        player.sneaking = packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING) || packet.getInputData().contains(PlayerAuthInputData.SNEAKING);
-
         if (player.boundingBox == null) {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
         }
 
+        player.lastSneaking = player.sneaking;
+
+        if (packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING)) {
+            player.lastSprinting = player.sprinting;
+            player.sprinting = true;
+        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SPRINTING)) {
+            player.lastSprinting = player.sprinting;
+            player.sprinting = false;
+        }
+
+        if (packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING)) {
+            player.lastSneaking = player.sneaking;
+            player.sneaking = true;
+        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SNEAKING)) {
+            player.lastSneaking = player.sneaking;
+            player.sneaking = false;
+        }
+
         if (packet.getInputData().contains(PlayerAuthInputData.START_SWIMMING)) {
+            player.lastSwimming = player.swimming;
             player.swimming = true;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SWIMMING)) {
+            player.lastSwimming = player.swimming;
             player.swimming = false;
         }
 
@@ -64,7 +78,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
-        // Also, the player will always have to be moving forward to sprint so don't let player do that.
+        // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
         player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, player.sprinting ? 1 : MathUtil.toValue(packet.getMotion().getY(), 1));
 
         if (player.lastTickWasTeleport) {
