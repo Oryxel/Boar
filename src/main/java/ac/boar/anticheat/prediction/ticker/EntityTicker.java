@@ -80,12 +80,7 @@ public class EntityTicker {
             clientVelocity = player.actualVelocity.clone();
         }
 
-        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
-            Check v = entry.getValue();
-            if (v instanceof OffsetHandlerCheck) {
-                ((OffsetHandlerCheck) v).onPredictionComplete(offset);
-            }
-        }
+        player.predictedVelocity = afterCollision.clone();
 
         if (player.actualVelocity.length() > 0) {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
@@ -109,6 +104,13 @@ public class EntityTicker {
         }
 
         player.clientVelocity = engine.applyEndOfTick(clientVelocity);
+
+        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
+            Check v = entry.getValue();
+            if (v instanceof OffsetHandlerCheck) {
+                ((OffsetHandlerCheck) v).onPredictionComplete(offset);
+            }
+        }
     }
 
     private boolean updateWaterState() {

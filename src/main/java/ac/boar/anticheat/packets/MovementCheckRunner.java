@@ -34,9 +34,9 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
-        player.lastX = player.tick != 0 ? player.x : packet.getPosition().getX();
-        player.lastY = player.tick != 0 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
-        player.lastZ = player.tick != 0 ? player.z : packet.getPosition().getZ();
+        player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
+        player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
+        player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
 
         player.x = packet.getPosition().getX();
         player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
@@ -80,7 +80,8 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
         player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, player.sprinting ? 1 : MathUtil.toValue(packet.getMotion().getY(), 1));
 
-        if (player.lastTickWasTeleport) {
+        if (player.lastTickWasTeleport || player.teleportUtil.teleportInQueue()) {
+            player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
             return;
         }
 
@@ -93,10 +94,5 @@ public class MovementCheckRunner implements BedrockPacketListener {
         }
 
         player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
-
-        // This is a lot more useful than you think it is.
-        if (player.teleportUtil.teleportInQueue()) {
-            event.setCancelled(true);
-        }
     }
 }
