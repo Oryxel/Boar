@@ -26,7 +26,7 @@ public abstract class PredictionEngine {
         addVelocityToPossibilities(vectors);
         addExplosionToPossibilities(vectors);
 
-        apply003ToPossibilities(vectors);
+        applyMinimalToPossibilities(vectors);
         addJumpingToPossibilities(vectors);
 
         return vectors;
@@ -51,7 +51,7 @@ public abstract class PredictionEngine {
         }
     }
 
-    private void apply003ToPossibilities(final List<Vector> vectors) {
+    private void applyMinimalToPossibilities(final List<Vector> vectors) {
         for (final Vector vector : vectors) {
             final Vec3d vec3d = vector.getVelocity();
             double d = vec3d.x;

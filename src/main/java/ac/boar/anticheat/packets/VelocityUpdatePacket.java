@@ -26,6 +26,10 @@ public class VelocityUpdatePacket implements PacketListener {
             final ClientboundExplodePacket packet = (ClientboundExplodePacket) event.getPacket();
 
             final Vector3d vector3d = packet.getPlayerKnockback();
+            if (vector3d == null) {
+                return;
+            }
+
             player.queuedExplosions.put(player.lastSentId + 1, new Vec3d(vector3d.getX(), vector3d.getY(), vector3d.getZ()));
             event.getPostTasks().add(player::sendTransaction);
         }

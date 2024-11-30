@@ -45,6 +45,10 @@ public class EntityTicker {
 
         player.movementInput = player.movementInput.multiply(0.98F);
 
+        if (player.movementInput.x != 0 && player.movementInput.z != 0) {
+            player.movementInput = player.movementInput.multiply(1D / Math.sqrt(2));
+        }
+
         Vec3d beforeCollision = Vec3d.ZERO, afterCollision = Vec3d.ZERO;
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
