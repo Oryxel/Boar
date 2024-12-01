@@ -6,7 +6,8 @@ good at making anti-cheat too which sounds like an excuse, and it is lol.
 ## Features
 - A packet managing system for GeyserMC
 - A broken prediction engine that only works on normal movement.
-- A reach check that can only detect around 3.2 (not reliable btw)
+- A broken teleport handling system that (sometimes) causes desync.
+- A reach check that can only detect around 3.2 (not reliable btw).
 ## Problems
 - Prediction engine dies everytime sprinting/sneaking status (rapidly) changed.
 - 1 false flag causes a bunch of other flags
