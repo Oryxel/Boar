@@ -87,12 +87,10 @@ public class EntityTicker {
         if (player.actualVelocity.length() > 0) {
             Bukkit.broadcastMessage((offset > 5e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
-            if (offset > 5e-4) {
-                Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z);
-            }
+            Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
+                    "SPRINTING=" + player.sprinting + ", SNEAKING=" + player.sneaking);
         }
 
-        System.out.println(player.closetVector.getVelocity().length());
         if (beforeCollision.x != afterCollision.x) {
             clientVelocity.x = 0;
         }

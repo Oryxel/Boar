@@ -50,29 +50,25 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
         }
 
-        player.lastSneaking = player.sneaking;
-
+        player.lastSprinting = player.sprinting;
         if (packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING)) {
-            player.lastSprinting = player.sprinting;
             player.sprinting = true;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SPRINTING)) {
-            player.lastSprinting = player.sprinting;
             player.sprinting = false;
         }
 
+        player.lastSneaking = player.sneaking;
         if (packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING)) {
-            player.lastSneaking = player.sneaking;
             player.sneaking = true;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SNEAKING)) {
             player.lastSneaking = player.sneaking;
             player.sneaking = false;
         }
 
+        player.lastSwimming = player.swimming;
         if (packet.getInputData().contains(PlayerAuthInputData.START_SWIMMING)) {
-            player.lastSwimming = player.swimming;
             player.swimming = true;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SWIMMING)) {
-            player.lastSwimming = player.swimming;
             player.swimming = false;
         }
 
@@ -92,14 +88,5 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
 
         new PlayerTicker(player).tick();
-
-        if (player.actualVelocity.length() > 0) {
-            if (player.movementInput.length() > 0) {
-                Bukkit.broadcastMessage("P I: " + player.movementInput.toString());
-                Bukkit.broadcastMessage("A I: " + packet.getMotion().toString());
-            }
-
-            Bukkit.broadcastMessage("EOT A: " + packet.getDelta().toString());
-        }
     }
 }

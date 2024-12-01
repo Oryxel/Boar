@@ -17,11 +17,7 @@ public class PredictionA extends OffsetHandlerCheck {
             return;
         }
 
-        if (player.closetVector.getType() != VectorType.NORMAL) {
-            return;
-        }
-
-        if (offset > 1e-4) {
+        if (offset > 5e-4) {
             // player.teleportUtil.setbackTo(player.teleportUtil.lastKnowValid);
         }
     }

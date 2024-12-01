@@ -51,10 +51,11 @@ public class BedrockMappingData {
                             sizeY = collision.get(4).getAsDouble(),
                             sizeZ = collision.get(5).getAsDouble();
 
-                    collisions.add(new BoundingBox(
+                    BoundingBox box = new BoundingBox(
                             middleX - sizeX / 2, middleY - sizeY / 2, middleZ - sizeZ / 2,
                             middleX + sizeX / 2, middleY + sizeY / 2, middleZ + sizeZ / 2
-                    ));
+                    );
+                    collisions.add(box);
                 }
 
                 collisionMap.put(id, collisions);
