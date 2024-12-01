@@ -56,6 +56,8 @@ public class BoarPlayer {
     public boolean wasInPowderSnow, inPowderSnow;
     public boolean touchingWater, submergedInWater;
 
+    public boolean collideX, collideZ;
+
     public Optional<Vector3i> supportingBlockPos = Optional.empty();
 
     public double extraUncertainOffset = 0;
