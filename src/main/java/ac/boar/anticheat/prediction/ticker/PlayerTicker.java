@@ -13,7 +13,7 @@ public class PlayerTicker extends EntityTicker {
 
     @Override
     public void tickMovement() {
-        if (player.sneaking) {
+        if (player.lastSneaking || player.sneaking) {
             player.movementInput = player.movementInput.multiply(0.3);
         }
 

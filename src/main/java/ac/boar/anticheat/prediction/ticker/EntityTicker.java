@@ -92,7 +92,7 @@ public class EntityTicker {
             Bukkit.broadcastMessage((offset > 5e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
-                    "SPRINTING=" + player.sprinting + ", SNEAKING=" + player.sneaking);
+                    "SPRINTING=" + (player.sprinting) + ", SNEAKING=" + (player.sneaking) + ", SS" + player.sinceSprinting + ", SN" + player.sinceSneaking);
         }
 
         if (player.collideX) {
