@@ -12,5 +12,6 @@ import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
 public final class GeyserReceivedEvent {
     private final BoarPlayer player;
     private final BedrockPacket packet;
+    private final boolean immediate;
     private boolean cancelled;
 }

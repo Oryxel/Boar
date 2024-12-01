@@ -20,10 +20,10 @@ public final class TeleportUtil {
     private final Queue<TeleportCache> teleportQueue = new ConcurrentLinkedQueue<>();
     public Vec3d lastKnowValid = Vec3d.ZERO;
 
-    public void addTeleportToQueue(Vec3d vec3d, Vec3d delta, boolean relative, boolean silent) {
-        this.player.sendTransaction();
+    public void addTeleportToQueue(Vec3d vec3d, boolean immediate, boolean silent) {
+        this.player.sendTransaction(immediate);
 
-        final TeleportCache teleportCache = new TeleportCache(vec3d, delta, this.player.lastSentId, relative, silent);
+        final TeleportCache teleportCache = new TeleportCache(vec3d, this.player.lastSentId, silent);
         this.teleportQueue.add(teleportCache);
     }
 
@@ -41,7 +41,7 @@ public final class TeleportUtil {
     }
 
     public void setbackTo(Vec3d vec3d) {
-        this.addTeleportToQueue(vec3d, Vec3d.ZERO, false, true);
+        this.addTeleportToQueue(vec3d, false,true);
 
         // Server won't know about this if we sent it like this, well they don't need to anyway.
         // As long as we handle thing correctly, it won't be a problem
@@ -84,9 +84,8 @@ public final class TeleportUtil {
     @Getter
     @Setter
     public static class TeleportCache {
-        private final Vec3d position, deltaMovement;
+        private final Vec3d position;
         private final long transactionId;
-        private final boolean relative;
         private final boolean silent;
     }
 }

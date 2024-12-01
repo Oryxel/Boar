@@ -19,7 +19,7 @@ public class UpstreamSessionListener extends UpstreamSession {
 
     @Override
     public void sendPacket(@NonNull BedrockPacket packet) {
-        final GeyserReceivedEvent event = new GeyserReceivedEvent(player, packet);
+        final GeyserReceivedEvent event = new GeyserReceivedEvent(player, packet, false);
         for (final GeyserPacketListener listener : GeyserPacketEvents.getListeners()) {
             listener.onPacketReceived(event);
         }
@@ -33,7 +33,7 @@ public class UpstreamSessionListener extends UpstreamSession {
 
     @Override
     public void sendPacketImmediately(@NonNull BedrockPacket packet) {
-        final GeyserReceivedEvent event = new GeyserReceivedEvent(player, packet);
+        final GeyserReceivedEvent event = new GeyserReceivedEvent(player, packet, true);
         for (final GeyserPacketListener listener : GeyserPacketEvents.getListeners()) {
             listener.onPacketReceived(event);
         }

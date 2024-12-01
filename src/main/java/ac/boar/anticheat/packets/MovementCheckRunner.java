@@ -7,7 +7,6 @@ import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3d;
-import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;

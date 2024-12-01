@@ -80,11 +80,20 @@ public class BoarPlayer {
     }
 
     public void sendTransaction() {
+        sendTransaction(false);
+    }
+
+    public void sendTransaction(boolean immediate) {
         final NetworkStackLatencyPacket latencyPacket = new NetworkStackLatencyPacket();
         latencyPacket.setTimestamp(++lastSentId);
         latencyPacket.setFromServer(true);
 
-        this.bedrockSession.sendPacket(latencyPacket);
+        if (immediate) {
+            this.bedrockSession.sendPacketImmediately(latencyPacket);
+        } else {
+            this.bedrockSession.sendPacket(latencyPacket);
+        }
+
         this.latencyUtil.getSentTransactions().add(lastSentId);
     }
 

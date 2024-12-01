@@ -7,6 +7,7 @@ import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.data.BedrockMappingData;
 import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.BedrockPacketEvents;
+import ac.boar.protocol.GeyserPacketEvents;
 import ac.boar.protocol.JavaPacketEvents;
 import lombok.Getter;
 
@@ -32,7 +33,8 @@ public class Boar {
         BedrockPacketEvents.register(new MovementCheckRunner());
         BedrockPacketEvents.register(new PacketCheckRunner());
 
-        JavaPacketEvents.register(new WorldTeleportPacket());
+        GeyserPacketEvents.register(new WorldTeleportPacket());
+
         JavaPacketEvents.register(new EffectUpdatePacket());
         JavaPacketEvents.register(new EntityUpdatePacket());
         JavaPacketEvents.register(new VelocityUpdatePacket());

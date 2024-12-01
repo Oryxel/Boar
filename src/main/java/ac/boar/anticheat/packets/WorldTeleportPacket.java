@@ -5,16 +5,14 @@ import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
-import ac.boar.protocol.event.java.PacketListener;
-import ac.boar.protocol.event.java.PacketSendEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.bedrock.geyser.GeyserReceivedEvent;
 import ac.boar.utils.math.Vec3d;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
+import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
-import org.geysermc.geyser.entity.EntityDefinitions;
-import org.geysermc.mcprotocollib.protocol.data.game.entity.player.PositionElement;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket;
 
-public class WorldTeleportPacket implements BedrockPacketListener, PacketListener {
+public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
@@ -31,16 +29,14 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
                 if (cache.getTransactionId() == player.lastReceivedId) {
                     player.teleportUtil.getTeleportQueue().poll();
 
-                    double distance = packet.getPosition().sub(0, EntityDefinitions.PLAYER.offset(), 0).distanceSquared(cache.getPosition().toVector3f());
-
-                    if (distance > (cache.isRelative() ? 0.001 : 0)) {
+                    double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
+                    if (distance > 0) {
                         if (player.teleportUtil.getTeleportQueue().isEmpty()) {
                             player.teleportUtil.setbackTo(cache.getPosition());
                         }
                     } else {
                         BoarPlugin.LOGGER.info("Accepted teleport!");
                         player.lastTickWasTeleport = true;
-                        player.clientVelocity = cache.getDeltaMovement();
 
                         // Server don't know about this teleport, cancel it.
                         if (cache.isSilent()) {
@@ -71,25 +67,30 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
     }
 
     @Override
-    public void onPacketSend(PacketSendEvent event) {
-        if (!(event.getPacket() instanceof ClientboundPlayerPositionPacket)) {
+    public void onPacketReceived(GeyserReceivedEvent event) {
+        if (!(event.getPacket() instanceof MovePlayerPacket)) {
             return;
         }
 
         final BoarPlayer player = event.getPlayer();
-        final ClientboundPlayerPositionPacket packet = (ClientboundPlayerPositionPacket) event.getPacket();
-        if (!player.getSession().isSpawned()) {
-            player.clientVelocity = Vec3d.ZERO;
+        final MovePlayerPacket packet = (MovePlayerPacket) event.getPacket();
+        if (packet.getMode() != MovePlayerPacket.Mode.TELEPORT && packet.getMode() != MovePlayerPacket.Mode.RESPAWN) {
+            return;
         }
 
-        double newX = packet.getPosition().getX() + (packet.getRelatives().contains(PositionElement.X) ? player.x : 0);
-        double newY = packet.getPosition().getY() + (packet.getRelatives().contains(PositionElement.Y) ? player.y : 0);
-        double newZ = packet.getPosition().getZ() + (packet.getRelatives().contains(PositionElement.Z) ? player.z : 0);
+        if (player.getSession().getPlayerEntity().getGeyserId() != packet.getRuntimeEntityId()) {
+            return;
+        }
 
-        player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), new Vec3d(packet.getDeltaMovement().getX(),
-                packet.getDeltaMovement().getY(), packet.getDeltaMovement().getZ()), !packet.getRelatives().isEmpty(), false);
-        player.teleportUtil.lastKnowValid = new Vec3d(newX, newY, newZ);
+        if (packet.getMode() == MovePlayerPacket.Mode.TELEPORT) {
+            player.teleportUtil.addTeleportToQueue(new Vec3d(packet.getPosition()), event.isImmediate(), false);
+        }
 
-        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> player.queuedVelocities.clear());
+        player.teleportUtil.lastKnowValid = new Vec3d(packet.getPosition());
+
+        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
+            player.queuedVelocities.clear();
+            player.clientVelocity = player.predictedVelocity = Vec3d.ZERO;
+        });
     }
 }
