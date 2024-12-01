@@ -3,6 +3,7 @@ package ac.boar.utils;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.listener.MITMBedrockListener;
 import ac.boar.protocol.listener.TcpSessionListener;
+import ac.boar.protocol.listener.UpstreamSessionListener;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacketHandler;
 import org.geysermc.geyser.api.connection.GeyserConnection;
@@ -20,6 +21,7 @@ public class GeyserUtil {
 
         try {
             BedrockServerSession bedrockSession = getBedrockSession(player, connection);
+            hookUpstreamSession(player, bedrockSession, connection);
             player.setBedrockSession(bedrockSession);
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,5 +69,12 @@ public class GeyserUtil {
 
         session.setPacketHandler(newHandler);
         return session;
+    }
+
+    private static void hookUpstreamSession(BoarPlayer player, BedrockServerSession session, GeyserConnection connection) throws Exception {
+        Class klass = Class.forName("org.geysermc.geyser.session.GeyserSession");
+        Field upstream = klass.getDeclaredField("upstream");
+        upstream.setAccessible(true);
+        upstream.set(connection, new UpstreamSessionListener(player, session));
     }
 }

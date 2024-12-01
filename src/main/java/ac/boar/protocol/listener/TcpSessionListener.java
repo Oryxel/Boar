@@ -1,6 +1,5 @@
 package ac.boar.protocol.listener;
 
-import ac.boar.anticheat.Boar;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import lombok.RequiredArgsConstructor;
 import ac.boar.anticheat.user.api.BoarPlayer;
