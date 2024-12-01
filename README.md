@@ -10,7 +10,7 @@ good at making anti-cheat too which sounds like an excuse, and it is lol.
 - A reach check that can only detect around 3.2 (not reliable btw).
 ## Problems
 - Prediction engine dies everytime sprinting/sneaking status (rapidly) changed.
-- XZ collisions is broken for some reason, I have no idea why.
+- XZ collisions is broken (when "sprinting") which is weird.
 - A lot of stuff is still unimplemented.
 
 ### Credit:
