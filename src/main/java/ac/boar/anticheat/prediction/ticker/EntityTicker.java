@@ -18,6 +18,7 @@ import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
 
+import java.util.Iterator;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -103,9 +104,17 @@ public class EntityTicker {
             clientVelocity.y = 0;
         }
 
-        if (player.closetVector.getType() != VectorType.NORMAL) {
-            player.queuedVelocities.remove(player.closetVector.getTransactionId());
-            player.queuedExplosions.remove(player.closetVector.getTransactionId());
+        if (player.closetVector.getType() == VectorType.VELOCITY) {
+            Iterator<Map.Entry<Long, Vec3d>> iterator = player.queuedVelocities.entrySet().iterator();
+
+            Map.Entry<Long, Vec3d> entry;
+            while (iterator.hasNext() && (entry = iterator.next()) != null) {
+                if (entry.getKey() > player.closetVector.getTransactionId()) {
+                    break;
+                } else {
+                    iterator.remove();
+                }
+            }
         }
 
         player.clientVelocity = engine.applyEndOfTick(clientVelocity);

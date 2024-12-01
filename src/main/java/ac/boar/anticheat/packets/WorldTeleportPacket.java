@@ -79,7 +79,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
         final BoarPlayer player = event.getPlayer();
         final ClientboundPlayerPositionPacket packet = (ClientboundPlayerPositionPacket) event.getPacket();
         if (!player.getSession().isSpawned()) {
-            player.clientVelocity = new Vec3d(0, 0, 0);
+            player.clientVelocity = Vec3d.ZERO;
         }
 
         double newX = packet.getPosition().getX() + (packet.getRelatives().contains(PositionElement.X) ? player.x : 0);
@@ -89,5 +89,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, PacketListene
         player.teleportUtil.addTeleportToQueue(new Vec3d(newX, newY, newZ), new Vec3d(packet.getDeltaMovement().getX(),
                 packet.getDeltaMovement().getY(), packet.getDeltaMovement().getZ()), !packet.getRelatives().isEmpty(), false);
         player.teleportUtil.lastKnowValid = new Vec3d(newX, newY, newZ);
+
+        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> player.queuedVelocities.clear());
     }
 }
