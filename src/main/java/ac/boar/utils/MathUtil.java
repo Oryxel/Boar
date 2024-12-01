@@ -34,6 +34,10 @@ public class MathUtil {
         return value > (double)i ? i + 1 : i;
     }
 
+    public static double fixFTD(float v) {
+        return Double.parseDouble(Float.toString(v));
+    }
+
     public static double toValue(double value, double target) {
         if (Double.isNaN(value) || Double.isInfinite(value)) {
             return 0;

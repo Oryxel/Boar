@@ -85,8 +85,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
-        player.actualVelocity = new Vec3d(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
-
+        player.actualVelocity = new Vec3d(MathUtil.fixFTD(player.x - player.lastX), MathUtil.fixFTD(player.y - player.lastY), MathUtil.fixFTD(player.z - player.lastZ));
         new PlayerTicker(player).tick();
     }
 }
