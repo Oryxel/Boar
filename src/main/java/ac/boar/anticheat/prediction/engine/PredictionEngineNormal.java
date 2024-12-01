@@ -32,10 +32,10 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     @Override
-    public Vec3d travel(Vec3d client, Vec3d movementInput) {
+    public Vec3d travel(boolean sprinting, Vec3d client, Vec3d movementInput) {
         Vector3i blockPos = player.getVelocityAffectingPos();
         float f = player.onGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
-        return this.applyMovementInput(client, movementInput, f);
+        return this.applyMovementInput(sprinting, client, movementInput, f);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class PredictionEngineNormal extends PredictionEngine {
         return new Vec3d(vec3d.x * g, d * 0.98D, vec3d.z * g);
     }
 
-    private Vec3d applyMovementInput(Vec3d client, Vec3d movementInput, float slipperiness) {
-        Vec3d vec3d = client.add(movementInputToVelocity(movementInput, player.getMovementSpeed(slipperiness), player.yaw));
+    private Vec3d applyMovementInput(boolean sprinting, Vec3d client, Vec3d movementInput, float slipperiness) {
+        Vec3d vec3d = client.add(movementInputToVelocity(movementInput, player.getMovementSpeed(sprinting, slipperiness), player.yaw));
         // this.setVelocity(this.applyClimbingSpeed(this.getVelocity())); climbing...
         // this.move(MovementType.SELF, this.getVelocity()); // collision
 //        if ((this.horizontalCollision || this.jumping) && (this.isClimbing() || this.getBlockStateAtPos().isOf(Blocks.POWDER_SNOW) && PowderSnowBlock.canWalkOnPowderSnow(this))) {

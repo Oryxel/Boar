@@ -11,8 +11,16 @@ public class Vector {
     private VectorType type;
     private long transactionId = -1; // if this vector is velocity or explosion...
 
+    public boolean sprinting = false;
+
     public Vector(Vec3d vec3d, VectorType type) {
         this.type = type;
         this.velocity = vec3d;
+    }
+
+    public Vector(Vec3d vec3d, VectorType type, long transactionId) {
+        this.type = type;
+        this.velocity = vec3d;
+        this.transactionId = transactionId;
     }
 }
