@@ -22,6 +22,9 @@ public class VelocityUpdatePacket implements PacketListener {
             event.getPostTasks().add(player::sendTransaction);
         }
 
+        // Normally it's actually addVelocity, but since geyser translate this to set motion so yeah.
+        // Not entirely their fault, they can't track client velocity and add velocity, bedrock doesn't seem to support add motion either.
+        // Just treat it as velocity, since geyser translate it as velocity.
         if (event.getPacket() instanceof ClientboundExplodePacket) {
             final ClientboundExplodePacket packet = (ClientboundExplodePacket) event.getPacket();
 
@@ -30,7 +33,7 @@ public class VelocityUpdatePacket implements PacketListener {
                 return;
             }
 
-            player.queuedExplosions.put(player.lastSentId + 1, new Vec3d(vector3d.getX(), vector3d.getY(), vector3d.getZ()));
+            player.queuedVelocities.put(player.lastSentId + 1, new Vec3d(vector3d.getX(), vector3d.getY(), vector3d.getZ()));
             event.getPostTasks().add(player::sendTransaction);
         }
     }

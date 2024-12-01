@@ -25,22 +25,10 @@ public abstract class PredictionEngine {
         vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
 
         addVelocityToPossibilities(vectors);
-        addExplosionToPossibilities(vectors);
 
         addJumpingToPossibilities(vectors);
 
         return vectors;
-    }
-
-    // Normally it's actually addVelocity, but since geyser translate this to set motion so yeah.
-    // Not entirely their fault, they can't track client velocity and add velocity, bedrock doesn't seem to support add motion either.
-    // We can prob properly translate explosion using the prediction engine but eh not worth it.
-    private void addExplosionToPossibilities(final List<Vector> vectors) {
-        for (final Map.Entry<Long, Vec3d> entry : player.queuedExplosions.entrySet()) {
-            final Vector vector = new Vector(entry.getValue(), VectorType.EXPLOSION);
-            vector.setTransactionId(entry.getKey());
-            vectors.add(vector);
-        }
     }
 
     private void addVelocityToPossibilities(final List<Vector> vectors) {
