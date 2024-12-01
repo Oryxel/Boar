@@ -59,7 +59,7 @@ public class EntityTicker {
         Vec3d beforeCollision = Vec3d.ZERO, afterCollision = Vec3d.ZERO;
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
-            final Vec3d bc = engine.travel(vector.getVelocity(), player.movementInput);
+            final Vec3d bc = Collisions.adjustMovementForSneaking(player, engine.travel(vector.getVelocity(), player.movementInput));
             final Vec3d ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);

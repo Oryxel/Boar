@@ -21,6 +21,62 @@ import java.util.List;
 
 public class Collisions {
 
+    private static boolean isSpaceAroundPlayerEmpty(BoarPlayer player, double offsetX, double offsetZ, float f) {
+        BoundingBox box = player.boundingBox;
+        List<BoundingBox> collisions = legacyBoxCollisions(player, new BoundingBox(box.minX + offsetX,
+                box.minY - f - 9.999999747378752E-6, box.minZ + offsetZ, box.maxX + offsetX, box.minY, box.maxZ + offsetZ));
+
+        return collisions.isEmpty();
+    }
+
+    private static boolean method_30263(BoarPlayer player, float f) {
+        return player.onGround || player.fallDistance < f && !isSpaceAroundPlayerEmpty(player, 0.0, 0.0, f - player.fallDistance);
+    }
+
+    public static Vec3d adjustMovementForSneaking(BoarPlayer player, Vec3d movement) {
+        float f = /* this.getStepHeight() */ 0.6F;
+        if (/* !this.abilities.flying && */ !(movement.y > 0.0) && player.sneaking && method_30263(player, f)) {
+            double d = movement.x;
+            double e = movement.z;
+            double h = Math.signum(d) * 0.05;
+
+            double i;
+            for(i = Math.signum(e) * 0.05; d != 0.0 && isSpaceAroundPlayerEmpty(player, d, 0.0, f); d -= h) {
+                if (Math.abs(d) <= 0.05) {
+                    d = 0.0;
+                    break;
+                }
+            }
+
+            while(e != 0.0 && isSpaceAroundPlayerEmpty(player,0.0, e, f)) {
+                if (Math.abs(e) <= 0.05) {
+                    e = 0.0;
+                    break;
+                }
+
+                e -= i;
+            }
+
+            while(d != 0.0 && e != 0.0 && isSpaceAroundPlayerEmpty(player,d, e, f)) {
+                if (Math.abs(d) <= 0.05) {
+                    d = 0.0;
+                } else {
+                    d -= h;
+                }
+
+                if (Math.abs(e) <= 0.05) {
+                    e = 0.0;
+                } else {
+                    e -= i;
+                }
+            }
+
+            return new Vec3d(d, movement.y, e);
+        } else {
+            return movement;
+        }
+    }
+
     public static Vec3d adjustMovementForCollisions(Vec3d movement, BoundingBox entityBoundingBox, List<BoundingBox> collisions) {
         if (collisions.isEmpty()) {
             return movement;
