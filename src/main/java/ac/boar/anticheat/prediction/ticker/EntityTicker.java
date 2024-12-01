@@ -71,6 +71,9 @@ public class EntityTicker {
             }
         }
 
+        player.collideX = afterCollision.x != beforeCollision.x;
+        player.collideZ = afterCollision.z != beforeCollision.z;
+
         Vec3d clientVelocity = afterCollision.clone();
 
         player.lastGround = player.onGround;
@@ -92,7 +95,7 @@ public class EntityTicker {
                     "SPRINTING=" + player.sprinting + ", SNEAKING=" + player.sneaking);
         }
 
-        if (beforeCollision.x != afterCollision.x) {
+        if (player.collideX) {
             clientVelocity.x = 0;
         }
 
@@ -100,7 +103,7 @@ public class EntityTicker {
             clientVelocity.z = 0;
         }
 
-        if (beforeCollision.y != afterCollision.y) {
+        if (player.collideZ) {
             clientVelocity.y = 0;
         }
 
