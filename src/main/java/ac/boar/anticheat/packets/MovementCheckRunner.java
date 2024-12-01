@@ -56,12 +56,23 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.sprinting = false;
         }
 
+        if (!player.sprinting) {
+            player.sinceSprinting++;
+        } else {
+            player.sinceSprinting = 0;
+        }
+
         player.lastSneaking = player.sneaking;
         if (packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING)) {
             player.sneaking = true;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SNEAKING)) {
-            player.lastSneaking = player.sneaking;
             player.sneaking = false;
+        }
+
+        if (!player.sneaking) {
+            player.sinceSneaking++;
+        } else {
+            player.sinceSneaking = 0;
         }
 
         player.lastSwimming = player.swimming;
