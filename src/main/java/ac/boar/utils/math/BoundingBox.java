@@ -1,5 +1,6 @@
 package ac.boar.utils.math;
 
+import ac.boar.utils.MathUtil;
 import it.unimi.dsi.fastutil.doubles.AbstractDoubleList;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
@@ -26,6 +27,12 @@ public class BoundingBox implements Cloneable {
 
     public Vec3d toVec3d(double width) {
         return new Vec3d(this.minX + (width / 2D), this.minY, this.maxZ - (width / 2D));
+    }
+
+    public static BoundingBox getBoxAt(float x, float y, float z, float width, float height) {
+        float f = width / 2.0f;
+        return new BoundingBox(MathUtil.fixFTD(x - f), MathUtil.fixFTD(y), MathUtil.fixFTD(z - f),
+                MathUtil.fixFTD(x + f), MathUtil.fixFTD(y + height), MathUtil.fixFTD(z + f));
     }
 
     public static BoundingBox getBoxAt(double x, double y, double z, double width, double height) {
