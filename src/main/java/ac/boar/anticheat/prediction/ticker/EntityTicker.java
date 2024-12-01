@@ -59,7 +59,7 @@ public class EntityTicker {
         Vec3d beforeCollision = Vec3d.ZERO, afterCollision = Vec3d.ZERO;
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
-            final Vec3d bc = Collisions.adjustMovementForSneaking(player, engine.travel(vector.getVelocity(), player.movementInput));
+            final Vec3d bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
             final Vec3d ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
@@ -92,7 +92,7 @@ public class EntityTicker {
             Bukkit.broadcastMessage((offset > 5e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
-                    "SPRINTING=" + (player.sprinting) + ", SNEAKING=" + (player.sneaking) + ", SS" + player.sinceSprinting + ", SN" + player.sinceSneaking);
+                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", SS" + player.sinceSprinting + ", SN" + player.sinceSneaking);
         }
 
         if (player.collideX) {
