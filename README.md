@@ -1,5 +1,5 @@
 # Boar
-An dedicated anticheat for GeyserMC project.
+A dedicated anti cheat for GeyserMC project.
 
 ### Credit:
 - https://github.com/PrismarineJS/minecraft-data

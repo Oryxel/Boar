@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.doubles.DoubleListIterator;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.WorldManager;
 import org.geysermc.geyser.level.block.type.BlockState;
@@ -145,6 +146,7 @@ public class Collisions {
         boolean bl3 = movement.z != vec3d.z;
         boolean bl4 = bl2 && movement.y < 0.0;
         if (/*this.getStepHeight() > 0.0F && */ (bl4 || player.onGround) && (bl || bl3)) {
+            Bukkit.broadcastMessage("get!");
             BoundingBox box2 = bl4 ? box.offset(0.0, vec3d.y, 0.0) : box;
             BoundingBox box3 = box2.stretch(movement.x, /*(double) this.getStepHeight()*/ 0.6D, movement.z);
             if (!bl4) {

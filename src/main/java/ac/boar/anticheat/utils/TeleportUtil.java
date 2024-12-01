@@ -27,7 +27,6 @@ public final class TeleportUtil {
         this.teleportQueue.add(teleportCache);
     }
 
-    // This is broken lol..
     public void setBackWithSimulation() {
         setBackWithVelocity(lastKnowValid.add(player.predictedVelocity), player.clientVelocity);
     }
