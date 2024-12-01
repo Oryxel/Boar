@@ -9,7 +9,8 @@ good at making anti-cheat too which sounds like an excuse, and it is lol.
 - A broken teleport handling system that (sometimes) causes desync.
 - A reach check that can only detect around 3.2 (not reliable btw).
 ## Problems
-- Prediction engine dies everytime sprinting/sneaking status (rapidly) changed.
+- Sprint/Sneak handling is broken/desynced.
+- Teleport handling system is broken, and can cause desync.
 - XZ collisions is broken (when "sprinting") which is weird.
 - A lot of stuff is still unimplemented.
 
