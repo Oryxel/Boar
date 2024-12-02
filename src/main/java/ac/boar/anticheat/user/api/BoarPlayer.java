@@ -151,7 +151,8 @@ public class BoarPlayer {
     }
 
     public boolean isClimbing() {
-        return getSession().getGeyser().getWorldManager().blockAt(getSession(), Vector3i.from(x, y, z)).is(Blocks.LADDER);
+        return getSession().getGeyser().getWorldManager().blockAt(getSession(), Vector3i.from(x, y, z)).is(Blocks.LADDER) ||
+                getSession().getGeyser().getWorldManager().blockAt(getSession(), Vector3i.from(lastX, lastY, lastZ)).is(Blocks.LADDER);
     }
 
     public Vector3i getVelocityAffectingPos() {
