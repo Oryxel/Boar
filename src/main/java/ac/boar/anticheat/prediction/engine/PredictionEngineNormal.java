@@ -4,6 +4,7 @@ import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
+import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
@@ -20,7 +21,7 @@ public class PredictionEngineNormal extends PredictionEngine {
             vec3F = new Vec3f(vec3F.x, Math.max(f, vec3F.y), vec3F.z);
             if (player.sprinting) {
                 float g = player.yaw * 0.017453292F;
-                vec3F = vec3F.add(new Vec3f((float) (-Math.sin(g) * 0.2), 0.0F, (float) (Math.cos(g) * 0.2)));
+                vec3F = vec3F.add(new Vec3f(-TrigMath.sin(g) * 0.2F, 0.0F, TrigMath.cos(g) * 0.2F));
             }
         }
         return vec3F;
@@ -76,7 +77,7 @@ public class PredictionEngineNormal extends PredictionEngine {
             return Vec3f.ZERO;
         } else {
             Vec3f vec3F = (d > 1.0 ? movementInput.normalize() : movementInput).mul(speed);
-            float f = (float) Math.sin(yaw * 0.017453292F), g = (float) Math.cos(yaw * 0.017453292F);
+            float f = TrigMath.sin(yaw * 0.017453292F), g = TrigMath.cos(yaw * 0.017453292F);
             return new Vec3f(vec3F.x * g - vec3F.z * f, vec3F.y, vec3F.z * g + vec3F.x * f);
         }
     }

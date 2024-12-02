@@ -13,6 +13,7 @@ import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.cloudburstmc.math.GenericMath;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
@@ -52,7 +53,7 @@ public class EntityTicker {
         player.movementInput = player.movementInput.mul(0.98F);
 
         if (player.movementInput.x != 0 && player.movementInput.z != 0) {
-            player.movementInput = player.movementInput.mul(1D / Math.sqrt(2));
+            player.movementInput = player.movementInput.mul(1F / (float) GenericMath.sqrt(2));
         }
 
         Vec3f beforeCollision = Vec3f.ZERO, afterCollision = Vec3f.ZERO;
@@ -83,14 +84,14 @@ public class EntityTicker {
         offset -= player.extraUncertainOffset;
         player.extraUncertainOffset = 0;
 
-        if (offset < 5e-4) {
+        if (offset < 1e-4) {
             clientVelocity = player.actualVelocity.clone();
         }
 
         player.predictedVelocity = afterCollision.clone();
 
         if (player.actualVelocity.length() > 0) {
-            Bukkit.broadcastMessage((offset > 5e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
+            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
                     "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", SS" + player.sinceSprinting + ", SN" + player.sinceSneaking);
