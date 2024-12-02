@@ -18,6 +18,7 @@ import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
+import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.network.Session;
@@ -60,6 +61,8 @@ public class BoarPlayer {
     public boolean touchingWater, submergedInWater;
 
     public boolean collideX, collideZ, collideY;
+
+    public boolean canClimb, lastCanClimb;
 
     public Optional<Vector3i> supportingBlockPos = Optional.empty();
 
@@ -145,6 +148,10 @@ public class BoarPlayer {
         }
 
         return sprinting ? 0.025999999F : 0.02F;
+    }
+
+    public boolean isClimbing() {
+        return getSession().getGeyser().getWorldManager().blockAt(getSession(), Vector3i.from(x, y, z)).is(Blocks.LADDER);
     }
 
     public Vector3i getVelocityAffectingPos() {

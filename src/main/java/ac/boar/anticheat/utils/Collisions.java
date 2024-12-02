@@ -188,7 +188,6 @@ public class Collisions {
         boolean bl3 = movement.z != vec3F.z;
         boolean bl4 = bl2 && movement.y < 0.0;
         if (player.getStepHeight() > 0.0F && (bl4 || player.onGround) && (bl || bl3)) {
-            Bukkit.broadcastMessage("get!");
             Vec3f vec3f2 = adjustMovementForCollisions(player, new Vec3f(movement.x, player.getStepHeight(), movement.z), box, list);
             Vec3f vec3f3 = adjustMovementForCollisions(player, new Vec3f(0F, player.getStepHeight(), 0F), box.stretch(movement.x, 0F, movement.z), list);
             if (vec3f3.y < player.getStepHeight()) {
@@ -199,7 +198,7 @@ public class Collisions {
             }
 
             if (vec3f2.horizontalLengthSquared() > vec3F.horizontalLengthSquared()) {
-                vec3F = vec3f2.add(adjustMovementForCollisions(player, new Vec3f(0F, -vec3f2.y, 0F), box.offset(vec3f2), list));
+                vec3F = vec3f2.add(adjustMovementForCollisions(player, new Vec3f(0F, -vec3f2.y + movement.y, 0F), box.offset(vec3f2), list));
             }
         }
 

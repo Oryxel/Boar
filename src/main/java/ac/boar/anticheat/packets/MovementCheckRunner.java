@@ -115,6 +115,9 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
+        player.lastCanClimb = player.canClimb;
+        player.canClimb = (player.collideX || player.collideZ) && (player.isClimbing() /* || this.getBlockStateAtPos().isOf(Blocks.POWDER_SNOW) && PowderSnowBlock.canWalkOnPowderSnow(this) */);
+
         player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         new PlayerTicker(player).tick();
 

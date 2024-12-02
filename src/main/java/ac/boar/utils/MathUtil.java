@@ -18,4 +18,8 @@ public class MathUtil {
 
         return value == 0 ? 0 : value > 0 ? target : -target;
     }
+
+    public static float clamp(float value, float min, float max) {
+        return value < min ? min : Math.min(value, max);
+    }
 }
