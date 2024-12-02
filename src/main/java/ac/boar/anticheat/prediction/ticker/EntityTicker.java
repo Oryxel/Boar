@@ -98,6 +98,10 @@ public class EntityTicker {
             clientVelocity.x = 0;
         }
 
+        if (afterCollision.y != beforeCollision.y) {
+            clientVelocity.y = 0;
+        }
+
         if (player.collideZ) {
             clientVelocity.z = 0;
         }
