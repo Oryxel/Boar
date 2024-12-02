@@ -19,7 +19,7 @@ public class PlayerTicker extends EntityTicker {
 
         // Player got instantly moved out of the block instead of slowly move out like when I test on single player.
         // Just give player extra offset, they're supposed to move 1 block anyway.
-        player.extraUncertainOffset += wouldCollideAt(player.lastX, player.lastY, player.lastZ);
+        // player.extraUncertainOffset += wouldCollideAt(player.lastX, player.lastY, player.lastZ);
 
         super.tickMovement();
     }

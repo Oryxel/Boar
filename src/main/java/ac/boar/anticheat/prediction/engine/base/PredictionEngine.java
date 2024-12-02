@@ -27,6 +27,7 @@ public abstract class PredictionEngine {
         addJumpingToPossibilities(vectors);
 
         applyTravelToPossibilities(vectors);
+        addClimbingToPossibilities(vectors);
 
         return vectors;
     }
@@ -45,6 +46,24 @@ public abstract class PredictionEngine {
                 vector1.setSprinting(true);
                 list.add(vector1);
             }
+        }
+
+        vectors.clear();
+        vectors.addAll(list);
+    }
+
+    private void addClimbingToPossibilities(final List<Vector> vectors) {
+        if (!player.lastCanClimb && !player.canClimb) {
+            return;
+        }
+
+        final List<Vector> list = new ArrayList<>();
+        for (Vector vector : vectors) {
+            list.add(vector);
+
+            Vector vector1 = vector.clone();
+            vector1.setVelocity(new Vec3f(vector1.getVelocity().x, 0.20000076F, vector1.getVelocity().z));
+            list.add(vector1);
         }
 
         vectors.clear();

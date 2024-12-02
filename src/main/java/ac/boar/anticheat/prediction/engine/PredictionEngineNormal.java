@@ -3,6 +3,7 @@ package ac.boar.anticheat.prediction.engine;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.user.api.BoarPlayer;
+import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
@@ -62,13 +63,25 @@ public class PredictionEngineNormal extends PredictionEngine {
 
     private Vec3f applyMovementInput(boolean sprinting, Vec3f client, Vec3f movementInput, float slipperiness) {
         Vec3f vec3F = client.add(movementInputToVelocity(movementInput, player.getMovementSpeed(sprinting, slipperiness), player.yaw));
-        // this.setVelocity(this.applyClimbingSpeed(this.getVelocity())); climbing...
-        // this.move(MovementType.SELF, this.getVelocity()); // collision
-//        if ((this.horizontalCollision || this.jumping) && (this.isClimbing() || this.getBlockStateAtPos().isOf(Blocks.POWDER_SNOW) && PowderSnowBlock.canWalkOnPowderSnow(this))) {
-//            vec3f = new Vec3f(vec3f.x, 0.2, vec3f.z);
-//        }
+        vec3F = applyClimbingSpeed(vec3F);
 
         return vec3F;
+    }
+
+    private Vec3f applyClimbingSpeed(Vec3f motion) {
+        if (player.isClimbing()) {
+            // this.onLanding();
+            float d = /* MathUtil.clamp(motion.x, -0.20000076F, 0.20000076F) */ motion.x;
+            float e = /* MathUtil.clamp(motion.z, -0.20000076F, 0.20000076F) */ motion.z;
+            float g = Math.max(motion.y, -0.20000076F);
+            if (g < 0.0 && /* !this.getBlockStateAtPos().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder() */ player.movementInput.z < 0 && (player.sneaking || player.lastSneaking)) {
+                g = 0.0F;
+            }
+
+            motion = new Vec3f(d, g, e);
+        }
+
+        return motion;
     }
 
     protected static Vec3f movementInputToVelocity(Vec3f movementInput, float speed, float yaw) {
