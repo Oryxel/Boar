@@ -1,16 +1,14 @@
 package ac.boar.anticheat.utils;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.data.BedrockMappingData;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
-import org.geysermc.geyser.level.WorldManager;
-import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.Axis;
-import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
+import org.geysermc.geyser.translator.collision.BlockCollision;
+import org.geysermc.geyser.util.BlockUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,21 +151,13 @@ public class Collisions {
 
     // TODO: compensated world
     private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list) {
-        WorldManager worldManager = player.getSession().getGeyser().getWorldManager();
-        BlockState state = worldManager.blockAt(player.getSession(), vector3i);
-
-        GeyserBedrockBlock definition = player.getSession().getBlockMappings().getBedrockBlock(state);
-        String name = definition.getState().getString("name");
-
-        // Yes I know BlockUtils.getCollision exist, but I don't trust it enough, like will it account for block state?
-        // I will check it later, if it does then I will use it.
-        List<BedrockMappingData.BlockMappedData> mappedData = BedrockMappingData.blockCollisionMappings.get(name);
-        if (mappedData == null || mappedData.isEmpty()) {
+        BlockCollision collision = BlockUtils.getCollisionAt(player.getSession(), vector3i);
+        if (collision == null) {
             return;
         }
 
-        // TODO: block state.
-        for (BoundingBox box : mappedData.get(0).box()) {
+        for (org.geysermc.geyser.level.physics.BoundingBox geyserBB : collision.getBoundingBoxes()) {
+            BoundingBox box = new BoundingBox(geyserBB);
             // Empty.
             if (box.minX + box.minY + box.minZ + box.maxX + box.maxY + box.maxZ == 0) {
                 continue;
