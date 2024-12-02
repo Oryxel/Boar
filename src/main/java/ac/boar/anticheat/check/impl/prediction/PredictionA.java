@@ -16,5 +16,8 @@ public class PredictionA extends OffsetHandlerCheck {
             return;
         }
 
+        if (offset > 1e-4) {
+            player.teleportUtil.setBackWithSimulation();
+        }
     }
 }
