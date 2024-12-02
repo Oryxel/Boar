@@ -29,10 +29,10 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
                 player.teleportUtil.getTeleportQueue().poll();
 
                 double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
-                if (distance > 0) {
-                    if (player.teleportUtil.getTeleportQueue().isEmpty()) {
-                        player.teleportUtil.setbackTo(cache.getPosition());
-                    }
+                if (distance > 0.001) {
+//                    if (player.teleportUtil.getTeleportQueue().isEmpty()) {
+//                        player.teleportUtil.setbackTo(cache.getPosition());
+//                    }
                 } else {
                     BoarPlugin.LOGGER.info("Accepted teleport!");
                     player.lastTickWasTeleport = true;
@@ -42,27 +42,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
                         event.setCancelled(true);
                     }
                 }
-
-                return;
             }
-
-            if (player.lastReceivedId - cache.getTransactionId() > 5) {
-                return;
-            }
-
-            // Resync.....
-            TeleportUtil.TeleportCache teleport;
-            while ((teleport = player.teleportUtil.getTeleportQueue().peek()) != null) {
-                if (player.lastReceivedId < teleport.getTransactionId()) {
-                    break;
-                }
-
-                player.teleportUtil.getTeleportQueue().poll();
-                if (player.teleportUtil.getTeleportQueue().isEmpty()) {
-                    player.teleportUtil.setbackTo(cache.getPosition());
-                }
-            }
-
         }
     }
 

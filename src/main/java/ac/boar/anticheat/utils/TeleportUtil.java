@@ -41,7 +41,7 @@ public final class TeleportUtil {
     }
 
     public void setbackTo(Vec3f vec3F) {
-        this.addTeleportToQueue(vec3F, false,true);
+        this.addTeleportToQueue(vec3F, true,true);
 
         // Server won't know about this if we sent it like this, well they don't need to anyway.
         // As long as we handle thing correctly, it won't be a problem
@@ -50,13 +50,13 @@ public final class TeleportUtil {
 
         MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
         movePlayerPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
-        movePlayerPacket.setPosition(Vector3f.from(vec3F.x, vec3F.y + EntityDefinitions.PLAYER.offset(), vec3F.z));
+        movePlayerPacket.setPosition(Vector3f.from(vec3F.x, vec3F.y, vec3F.z));
         movePlayerPacket.setRotation(player.getSession().getPlayerEntity().getBedrockRotation());
         movePlayerPacket.setOnGround(player.onGround);
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
 
-        this.player.getBedrockSession().sendPacket(movePlayerPacket);
+        this.player.getBedrockSession().sendPacketImmediately(movePlayerPacket);
     }
 
     private void sendVelocity(Vec3f vec3F) {
@@ -65,7 +65,6 @@ public final class TeleportUtil {
         motionPacket.setMotion(Vector3f.from(vec3F.x, vec3F.y, vec3F.z));
 
         player.sendTransaction();
-        player.queuedVelocities.put(player.lastSentId, vec3F);
     }
 
     public TeleportCache getOldestTeleport() {
@@ -77,7 +76,7 @@ public final class TeleportUtil {
     }
 
     public boolean teleportInQueue() {
-        return !this.teleportQueue.isEmpty() || !this.player.getSession().isSpawned();
+        return /* !this.teleportQueue.isEmpty() */ false;
     }
 
     @RequiredArgsConstructor

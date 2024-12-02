@@ -9,6 +9,7 @@ import ac.boar.protocol.event.java.PacketListener;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
+import org.geysermc.geyser.entity.EntityDefinitions;
 
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class PacketCheckRunner implements PacketListener, BedrockPacketListener 
                 return;
             }
 
-            player.teleportUtil.lastKnowValid = new Vec3f(player.x, player.y, player.z);
+            player.teleportUtil.lastKnowValid = new Vec3f(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z);
         }
     }
 }
