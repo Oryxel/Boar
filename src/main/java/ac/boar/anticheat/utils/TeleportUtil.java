@@ -51,7 +51,7 @@ public final class TeleportUtil {
         MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
         movePlayerPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
         movePlayerPacket.setPosition(Vector3f.from(vec3F.x, vec3F.y, vec3F.z));
-        movePlayerPacket.setRotation(player.getSession().getPlayerEntity().getBedrockRotation());
+        movePlayerPacket.setRotation(player.bedrockRotation);
         movePlayerPacket.setOnGround(player.onGround);
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
