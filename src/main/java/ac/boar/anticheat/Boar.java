@@ -4,7 +4,6 @@ import ac.boar.anticheat.event.geyser.GeyserSessionJoinEvent;
 import ac.boar.anticheat.event.spigot.PlayerJoinListener;
 import ac.boar.anticheat.packets.*;
 import ac.boar.anticheat.user.BoarPlayerManager;
-import ac.boar.data.BedrockMappingData;
 import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.BedrockPacketEvents;
 import ac.boar.protocol.GeyserPacketEvents;
@@ -21,7 +20,6 @@ public class Boar {
 
     public void init() {
         BoarPlugin.LOGGER.info("Loading mappings.....");
-        BedrockMappingData.load();
 
         BoarPlugin.LOGGER.info("Initialing events....");
         new GeyserSessionJoinEvent();

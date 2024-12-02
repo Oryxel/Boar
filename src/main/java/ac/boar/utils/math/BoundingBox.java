@@ -1,5 +1,7 @@
 package ac.boar.utils.math;
 
+import org.geysermc.geyser.level.physics.Axis;
+
 import java.util.Optional;
 
 public class BoundingBox implements Cloneable {
@@ -18,6 +20,15 @@ public class BoundingBox implements Cloneable {
         this.maxX = Math.max(x1, x2);
         this.maxY = Math.max(y1, y2);
         this.maxZ = Math.max(z1, z2);
+    }
+
+    public BoundingBox(org.geysermc.geyser.level.physics.BoundingBox boundingBox) {
+        this.minX = (float) boundingBox.getMin(Axis.X);
+        this.minY = (float) boundingBox.getMin(Axis.Y);
+        this.minZ = (float) boundingBox.getMin(Axis.Z);
+        this.maxX = (float) boundingBox.getMax(Axis.X);
+        this.maxY = (float) boundingBox.getMax(Axis.Y);
+        this.maxZ = (float) boundingBox.getMax(Axis.Z);
     }
 
     public Vec3f toVec3f(float width) {
