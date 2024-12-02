@@ -51,7 +51,7 @@ public class BoarPlayer {
     public int sinceSprinting, sinceSneaking;
     public boolean sprinting, lastSprinting, sneaking, lastSneaking, swimming, lastSwimming;
 
-    public long lastReceivedId = -1, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
+    public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
     public boolean lastTickWasTeleport;
 
@@ -88,8 +88,13 @@ public class BoarPlayer {
     }
 
     public void sendTransaction(boolean immediate) {
+        lastSentId++;
+        if (lastSentId == Math.abs(GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP)) {
+            lastSentId++;
+        }
+
         final NetworkStackLatencyPacket latencyPacket = new NetworkStackLatencyPacket();
-        latencyPacket.setTimestamp(++lastSentId);
+        latencyPacket.setTimestamp(-lastSentId);
         latencyPacket.setFromServer(true);
 
         if (immediate) {
@@ -99,6 +104,10 @@ public class BoarPlayer {
         }
 
         this.latencyUtil.getSentTransactions().add(lastSentId);
+    }
+
+    public long getMagnitude() {
+        return 1000000L;
     }
 
     public void tick() {

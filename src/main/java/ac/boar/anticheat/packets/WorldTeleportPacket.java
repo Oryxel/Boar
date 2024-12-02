@@ -25,7 +25,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
                 return;
             }
 
-            if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && cache.getTransactionId() == player.lastReceivedId) {
+            if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && player.lastReceivedId >= cache.getTransactionId()) {
                 player.teleportUtil.getTeleportQueue().poll();
 
                 double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
@@ -42,9 +42,11 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
                         event.setCancelled(true);
                     }
                 }
+
+                return;
             }
 
-            if (player.lastReceivedId - cache.getTransactionId() < 2) {
+            if (player.lastReceivedId - cache.getTransactionId() > 5) {
                 return;
             }
 
@@ -60,6 +62,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
                     player.teleportUtil.setbackTo(cache.getPosition());
                 }
             }
+
         }
     }
 
