@@ -6,13 +6,14 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @RequiredArgsConstructor
 public final class LatencyUtil {
     private final BoarPlayer player;
     @Getter
     private final List<Long> sentTransactions = new ArrayList<>();
-    private final Map<Long, Runnable> map = new ConcurrentHashMap<>();
+    private final Map<Long, List<Runnable>> map = new ConcurrentHashMap<>();
 
     public void addTransactionToQueue(long id, Runnable runnable) {
         if (id <= player.lastReceivedId) {
@@ -20,7 +21,14 @@ public final class LatencyUtil {
             return;
         }
 
-        this.map.put(id, runnable);
+        if (!this.map.containsKey(id)) {
+            List<Runnable> list = new CopyOnWriteArrayList<>();
+            list.add(runnable);
+            this.map.put(id, list);
+            return;
+        }
+
+        this.map.get(id).add(runnable);
     }
 
     public void confirmTransaction(long id) {
@@ -30,11 +38,11 @@ public final class LatencyUtil {
 
         this.sentTransactions.remove(id);
 
-        Iterator<Map.Entry<Long, Runnable>> iterator = this.map.entrySet().iterator();
+        Iterator<Map.Entry<Long, List<Runnable>>> iterator = this.map.entrySet().iterator();
 
-        Map.Entry<Long, Runnable> entry;
+        Map.Entry<Long, List<Runnable>> entry;
         while (iterator.hasNext() && (entry = iterator.next()) != null && entry.getKey() <= id) {
-            entry.getValue().run();
+            entry.getValue().forEach(Runnable::run);
             iterator.remove();
         }
 
