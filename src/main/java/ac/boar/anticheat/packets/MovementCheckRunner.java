@@ -11,6 +11,7 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.network.GameProtocol;
 
 public class MovementCheckRunner implements BedrockPacketListener {
     @Override
@@ -105,5 +106,18 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         new PlayerTicker(player).tick();
+
+        packet.setDelta(Vector3f.from(player.clientVelocity.x, player.clientVelocity.y, player.clientVelocity.z));
+        if (!GameProtocol.isPre1_21_30(player.getSession())) {
+            if (packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && !player.collideY) {
+                packet.getInputData().remove(PlayerAuthInputData.VERTICAL_COLLISION);
+            } else if (!packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && player.collideY) {
+                packet.getInputData().add(PlayerAuthInputData.VERTICAL_COLLISION);
+            }
+        }
+
+        if (!packet.getInputData().contains(PlayerAuthInputData.HORIZONTAL_COLLISION) && (player.collideX || player.collideZ)) {
+            packet.getInputData().add(PlayerAuthInputData.HORIZONTAL_COLLISION);
+        }
     }
 }
