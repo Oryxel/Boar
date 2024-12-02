@@ -1,7 +1,7 @@
 package ac.boar.anticheat.utils;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -18,12 +18,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public final class TeleportUtil {
     private final BoarPlayer player;
     private final Queue<TeleportCache> teleportQueue = new ConcurrentLinkedQueue<>();
-    public Vec3d lastKnowValid = Vec3d.ZERO;
+    public Vec3f lastKnowValid = Vec3f.ZERO;
 
-    public void addTeleportToQueue(Vec3d vec3d, boolean immediate, boolean silent) {
+    public void addTeleportToQueue(Vec3f vec3F, boolean immediate, boolean silent) {
         this.player.sendTransaction(immediate);
 
-        final TeleportCache teleportCache = new TeleportCache(vec3d, this.player.lastSentId, silent);
+        final TeleportCache teleportCache = new TeleportCache(vec3F, this.player.lastSentId, silent);
         this.teleportQueue.add(teleportCache);
     }
 
@@ -35,13 +35,13 @@ public final class TeleportUtil {
         setbackTo(this.lastKnowValid);
     }
 
-    public void setBackWithVelocity(Vec3d vec3d, Vec3d motion) {
-        setbackTo(vec3d);
+    public void setBackWithVelocity(Vec3f vec3F, Vec3f motion) {
+        setbackTo(vec3F);
         sendVelocity(motion);
     }
 
-    public void setbackTo(Vec3d vec3d) {
-        this.addTeleportToQueue(vec3d, false,true);
+    public void setbackTo(Vec3f vec3F) {
+        this.addTeleportToQueue(vec3F, false,true);
 
         // Server won't know about this if we sent it like this, well they don't need to anyway.
         // As long as we handle thing correctly, it won't be a problem
@@ -50,7 +50,7 @@ public final class TeleportUtil {
 
         MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
         movePlayerPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
-        movePlayerPacket.setPosition(Vector3f.from(vec3d.x, vec3d.y + EntityDefinitions.PLAYER.offset(), vec3d.z));
+        movePlayerPacket.setPosition(Vector3f.from(vec3F.x, vec3F.y + EntityDefinitions.PLAYER.offset(), vec3F.z));
         movePlayerPacket.setRotation(player.getSession().getPlayerEntity().getBedrockRotation());
         movePlayerPacket.setOnGround(player.onGround);
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
@@ -59,13 +59,13 @@ public final class TeleportUtil {
         this.player.getBedrockSession().sendPacket(movePlayerPacket);
     }
 
-    private void sendVelocity(Vec3d vec3d) {
+    private void sendVelocity(Vec3f vec3F) {
         SetEntityMotionPacket motionPacket = new SetEntityMotionPacket();
         motionPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
-        motionPacket.setMotion(Vector3f.from(vec3d.x, vec3d.y, vec3d.z));
+        motionPacket.setMotion(Vector3f.from(vec3F.x, vec3F.y, vec3F.z));
 
         player.sendTransaction();
-        player.queuedVelocities.put(player.lastSentId, vec3d);
+        player.queuedVelocities.put(player.lastSentId, vec3F);
     }
 
     public TeleportCache getOldestTeleport() {
@@ -84,7 +84,7 @@ public final class TeleportUtil {
     @Getter
     @Setter
     public static class TeleportCache {
-        private final Vec3d position;
+        private final Vec3f position;
         private final long transactionId;
         private final boolean silent;
     }

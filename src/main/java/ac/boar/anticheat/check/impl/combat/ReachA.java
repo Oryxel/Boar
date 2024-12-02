@@ -5,7 +5,7 @@ import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryTransactionType;
 import org.cloudburstmc.protocol.bedrock.packet.InteractPacket;
@@ -48,20 +48,20 @@ public class ReachA extends PacketCheck {
             return true;
         }
 
-        final Vec3d vec3d = new Vec3d(player.x, player.y, player.z);
-        double distance = cache.getPosition().distanceTo(vec3d);
+        final Vec3f vec3F = new Vec3f(player.x, player.y, player.z);
+        double distance = cache.getPosition().distanceTo(vec3F);
         if (cache.getBoundingBox().contains(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z)) {
             distance = 0;
         }
 
         // I gave up, this has to do with bedrock RakNet not syncing properly or whatever
         // The check is stable for java player on ViaBedrock this is prob bedrock fault, or my own incompetent.
-        for (Vec3d vec3d1 : cache.getOldPositions()) {
-            distance = Math.min(distance, vec3d1.distanceTo(vec3d));
+        for (Vec3f vec3F1 : cache.getOldPositions()) {
+            distance = Math.min(distance, vec3F1.distanceTo(vec3F));
         }
 
         // Distance that we calculated is not reliable, intersects should be more reliable, not a good thing to do tho.
-        boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.1));
+        boolean intersects = cache.getBoundingBox().intersects(player.boundingBox.expand(3.18F));
         return !intersects && distance < 6 && distance > 3.1;
     }
 }

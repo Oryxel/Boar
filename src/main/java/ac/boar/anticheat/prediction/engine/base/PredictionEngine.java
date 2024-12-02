@@ -3,7 +3,7 @@ package ac.boar.anticheat.prediction.engine.base;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -14,10 +14,10 @@ import java.util.Map;
 public abstract class PredictionEngine {
     protected final BoarPlayer player;
 
-    public abstract Vec3d travel(boolean sprinting, Vec3d vec3d, Vec3d movementInput);
-    public abstract Vec3d applyEndOfTick(Vec3d vec3d);
+    public abstract Vec3f travel(boolean sprinting, Vec3f vec3F, Vec3f movementInput);
+    public abstract Vec3f applyEndOfTick(Vec3f vec3F);
 
-    protected abstract Vec3d jump(Vec3d vec3d);
+    protected abstract Vec3f jump(Vec3f vec3F);
     protected abstract boolean canJump();
 
     public final List<Vector> gatherAllPossibilities() {
@@ -52,7 +52,7 @@ public abstract class PredictionEngine {
     }
 
     private void addVelocityToPossibilities(final List<Vector> vectors) {
-        for (final Map.Entry<Long, Vec3d> entry : player.queuedVelocities.entrySet()) {
+        for (final Map.Entry<Long, Vec3f> entry : player.queuedVelocities.entrySet()) {
             final Vector vector = new Vector(entry.getValue(), VectorType.VELOCITY, entry.getKey());
             vectors.add(vector);
         }

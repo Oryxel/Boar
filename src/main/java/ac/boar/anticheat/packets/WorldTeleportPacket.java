@@ -6,8 +6,8 @@ import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.bedrock.geyser.GeyserReceivedEvent;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
+import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
@@ -67,7 +67,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
     }
 
     @Override
-    public void onPacketReceived(GeyserReceivedEvent event) {
+    public void onPacketSend(GeyserSendEvent event) {
         if (!(event.getPacket() instanceof MovePlayerPacket)) {
             return;
         }
@@ -83,14 +83,14 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
         }
 
         if (packet.getMode() == MovePlayerPacket.Mode.TELEPORT) {
-            player.teleportUtil.addTeleportToQueue(new Vec3d(packet.getPosition()), event.isImmediate(), false);
+            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), event.isImmediate(), false);
         }
 
-        player.teleportUtil.lastKnowValid = new Vec3d(packet.getPosition());
+        player.teleportUtil.lastKnowValid = new Vec3f(packet.getPosition());
 
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
             player.queuedVelocities.clear();
-            player.clientVelocity = player.predictedVelocity = Vec3d.ZERO;
+            player.clientVelocity = player.predictedVelocity = Vec3f.ZERO;
         });
     }
 }

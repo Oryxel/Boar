@@ -9,7 +9,7 @@ import ac.boar.anticheat.utils.LatencyUtil;
 import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.utils.GeyserUtil;
 import ac.boar.utils.math.BoundingBox;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -65,12 +65,12 @@ public class BoarPlayer {
     public double extraUncertainOffset = 0;
 
     // End of tick velocity.
-    public Vec3d clientVelocity = Vec3d.ZERO, actualVelocity = Vec3d.ZERO, predictedVelocity = Vec3d.ZERO;
-    public Vec3d movementInput = Vec3d.ZERO;
+    public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
+    public Vec3f movementInput = Vec3f.ZERO;
 
-    public Vector closetVector = new Vector(Vec3d.ZERO, VectorType.NORMAL);
+    public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
 
-    public Map<Long, Vec3d> queuedVelocities = new ConcurrentHashMap<>();
+    public Map<Long, Vec3f> queuedVelocities = new ConcurrentHashMap<>();
 
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
 
@@ -181,16 +181,20 @@ public class BoarPlayer {
         return 1.0F;
     }
 
-    public double getEffectiveGravity() {
-        return clientVelocity.y <= 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity();
+    public float getEffectiveGravity() {
+        return (float) (clientVelocity.y <= 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity());
     }
 
-    public final double getFinalGravity() {
-        return 0.08D;
+    public final float getFinalGravity() {
+        return 0.08F;
     }
 
     public void onLanding() {
         this.fallDistance = 0.0F;
+    }
+
+    public float getStepHeight() {
+        return 0.6F;
     }
 
 }

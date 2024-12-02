@@ -1,44 +1,36 @@
 package ac.boar.anticheat.packets;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.java.PacketListener;
-import ac.boar.protocol.event.java.PacketSendEvent;
-import ac.boar.utils.math.Vec3d;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundEntityPositionSyncPacket;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundMoveEntityPosPacket;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundMoveEntityPosRotPacket;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundRemoveEntitiesPacket;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.spawn.ClientboundAddEntityPacket;
+import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
+import ac.boar.utils.math.Vec3f;
+import org.cloudburstmc.protocol.bedrock.packet.AddEntityPacket;
+import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
+import org.cloudburstmc.protocol.bedrock.packet.MoveEntityDeltaPacket;
+import org.cloudburstmc.protocol.bedrock.packet.RemoveEntityPacket;
 
-public class EntityUpdatePacket implements PacketListener {
+public class EntityUpdatePacket implements GeyserPacketListener {
     @Override
-    public void onPacketSend(PacketSendEvent event) {
+    public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();
 
-        if (event.getPacket() instanceof ClientboundAddEntityPacket) {
-            player.compensatedEntity.addEntity((ClientboundAddEntityPacket) event.getPacket());
+        if (event.getPacket() instanceof AddEntityPacket) {
+            player.compensatedEntity.addEntity((AddEntityPacket) event.getPacket());
         }
 
-        if (event.getPacket() instanceof ClientboundRemoveEntitiesPacket) {
-            final ClientboundRemoveEntitiesPacket packet = (ClientboundRemoveEntitiesPacket) event.getPacket();
-            for (int i : packet.getEntityIds()) {
-                player.compensatedEntity.removeEntity(i);
-            }
+        if (event.getPacket() instanceof MoveEntityAbsolutePacket) {
+            final MoveEntityAbsolutePacket absolute = (MoveEntityAbsolutePacket) event.getPacket();
+            player.compensatedEntity.queuePositionUpdate(event, absolute.getRuntimeEntityId(), new Vec3f(absolute.getPosition()));
         }
 
-        if (event.getPacket() instanceof ClientboundEntityPositionSyncPacket) {
-            final ClientboundEntityPositionSyncPacket packet = (ClientboundEntityPositionSyncPacket) event.getPacket();
-            player.compensatedEntity.queuePositionUpdate(event, packet.getId(), new Vec3d(packet.getPosition().getX(), packet.getPosition().getY(), packet.getPosition().getZ()));
+        if (event.getPacket() instanceof MoveEntityDeltaPacket) {
+            final MoveEntityDeltaPacket delta = (MoveEntityDeltaPacket) event.getPacket();
+            player.compensatedEntity.queuePositionUpdate(event, delta.getRuntimeEntityId(), new Vec3f(delta.getX(), delta.getY(), delta.getZ()));
         }
 
-        if (event.getPacket() instanceof ClientboundMoveEntityPosRotPacket) {
-            final ClientboundMoveEntityPosRotPacket packet = (ClientboundMoveEntityPosRotPacket) event.getPacket();
-            player.compensatedEntity.queueRelativeUpdate(event, packet.getEntityId(), packet.getMoveX(), packet.getMoveY(), packet.getMoveZ());
-        }
-
-        if (event.getPacket() instanceof ClientboundMoveEntityPosPacket) {
-            final ClientboundMoveEntityPosPacket packet = (ClientboundMoveEntityPosPacket) event.getPacket();
-            player.compensatedEntity.queueRelativeUpdate(event, packet.getEntityId(), packet.getMoveX(), packet.getMoveY(), packet.getMoveZ());
+        if (event.getPacket() instanceof RemoveEntityPacket) {
+            final RemoveEntityPacket remove = (RemoveEntityPacket) event.getPacket();
+            player.compensatedEntity.removeEntity(remove.getUniqueEntityId());
         }
     }
 }
