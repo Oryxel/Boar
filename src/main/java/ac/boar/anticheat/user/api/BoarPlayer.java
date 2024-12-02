@@ -13,6 +13,7 @@ import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
@@ -67,6 +68,8 @@ public class BoarPlayer {
     // End of tick velocity.
     public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
+
+    public Vector3f bedrockRotation = Vector3f.ZERO;
 
     public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
 
