@@ -51,24 +51,32 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
         }
 
+        // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
+        // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
+        player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
+
         player.lastSprinting = player.sprinting;
         if (packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING)) {
-            player.sprinting = true;
+            // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
+            // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
+            // Even if we're wrong about this, correct player movement.
+            player.sprinting = player.movementInput.z > 0;
         } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SPRINTING)) {
             player.sprinting = false;
+        }
+
+        player.lastSneaking = player.sneaking;
+        if (packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING)) {
+            player.sneaking = true;
+            player.sprinting = false;
+        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SNEAKING)) {
+            player.sneaking = false;
         }
 
         if (!player.sprinting) {
             player.sinceSprinting++;
         } else {
             player.sinceSprinting = 0;
-        }
-
-        player.lastSneaking = player.sneaking;
-        if (packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING)) {
-            player.sneaking = true;
-        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SNEAKING)) {
-            player.sneaking = false;
         }
 
         if (!player.sneaking) {
@@ -86,10 +94,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         player.yaw = packet.getRotation().getY();
         player.pitch = packet.getRotation().getX();
-
-        // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
-        // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
-        player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
 
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
         // Or the player sprinting status is just de-synced...
