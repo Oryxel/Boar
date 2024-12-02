@@ -25,25 +25,22 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
                 return;
             }
 
-            if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT)) {
-                if (cache.getTransactionId() == player.lastReceivedId) {
-                    player.teleportUtil.getTeleportQueue().poll();
+            if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && cache.getTransactionId() == player.lastReceivedId) {
+                player.teleportUtil.getTeleportQueue().poll();
 
-                    double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
-                    if (distance > 0) {
-                        if (player.teleportUtil.getTeleportQueue().isEmpty()) {
-                            player.teleportUtil.setbackTo(cache.getPosition());
-                        }
-                    } else {
-                        BoarPlugin.LOGGER.info("Accepted teleport!");
-                        player.lastTickWasTeleport = true;
-
-                        // Server don't know about this teleport, cancel it.
-                        if (cache.isSilent()) {
-                            event.setCancelled(true);
-                        }
+                double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
+                if (distance > 0) {
+                    if (player.teleportUtil.getTeleportQueue().isEmpty()) {
+                        player.teleportUtil.setbackTo(cache.getPosition());
                     }
-                    return;
+                } else {
+                    BoarPlugin.LOGGER.info("Accepted teleport!");
+                    player.lastTickWasTeleport = true;
+
+                    // Server don't know about this teleport, cancel it.
+                    if (cache.isSilent()) {
+                        event.setCancelled(true);
+                    }
                 }
             }
 
@@ -87,7 +84,6 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
         }
 
         player.teleportUtil.lastKnowValid = new Vec3f(packet.getPosition());
-
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
             player.queuedVelocities.clear();
             player.clientVelocity = player.predictedVelocity = Vec3f.ZERO;

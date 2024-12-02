@@ -2,7 +2,6 @@ package ac.boar.anticheat.check.impl.prediction;
 
 import ac.boar.anticheat.check.api.CheckInfo;
 import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
-import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 
 @CheckInfo(name = "Prediction")
@@ -17,8 +16,5 @@ public class PredictionA extends OffsetHandlerCheck {
             return;
         }
 
-        if (offset > 5e-4) {
-            // player.teleportUtil.setbackTo(player.teleportUtil.lastKnowValid);
-        }
     }
 }
