@@ -58,7 +58,7 @@ public class BoarPlayer {
     public boolean wasInPowderSnow, inPowderSnow;
     public boolean touchingWater, submergedInWater;
 
-    public boolean collideX, collideZ;
+    public boolean collideX, collideZ, collideY;
 
     public Optional<Vector3i> supportingBlockPos = Optional.empty();
 

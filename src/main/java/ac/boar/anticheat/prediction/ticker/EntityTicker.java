@@ -73,10 +73,12 @@ public class EntityTicker {
         player.collideX = afterCollision.x != beforeCollision.x;
         player.collideZ = afterCollision.z != beforeCollision.z;
 
+        player.collideY = afterCollision.y != beforeCollision.y;
+
         Vec3f clientVelocity = afterCollision.clone();
 
         player.lastGround = player.onGround;
-        player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
+        player.onGround = beforeCollision.y < 0 && player.collideY;
         double offset = afterCollision.distanceTo(player.actualVelocity);
         offset -= player.extraUncertainOffset;
         player.extraUncertainOffset = 0;
@@ -98,7 +100,7 @@ public class EntityTicker {
             clientVelocity.x = 0;
         }
 
-        if (afterCollision.y != beforeCollision.y) {
+        if (player.collideY) {
             clientVelocity.y = 0;
         }
 
