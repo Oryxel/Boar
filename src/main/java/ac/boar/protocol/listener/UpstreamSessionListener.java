@@ -3,7 +3,7 @@ package ac.boar.protocol.listener;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.GeyserPacketEvents;
 import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.bedrock.geyser.GeyserReceivedEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
@@ -19,9 +19,9 @@ public class UpstreamSessionListener extends UpstreamSession {
 
     @Override
     public void sendPacket(@NonNull BedrockPacket packet) {
-        final GeyserReceivedEvent event = new GeyserReceivedEvent(player, packet, false);
+        final GeyserSendEvent event = new GeyserSendEvent(player, packet, false);
         for (final GeyserPacketListener listener : GeyserPacketEvents.getListeners()) {
-            listener.onPacketReceived(event);
+            listener.onPacketSend(event);
         }
 
         if (event.isCancelled()) {
@@ -29,13 +29,16 @@ public class UpstreamSessionListener extends UpstreamSession {
         }
 
         super.sendPacket(packet);
+
+        event.getPostTasks().forEach(Runnable::run);
+        event.getPostTasks().clear();
     }
 
     @Override
     public void sendPacketImmediately(@NonNull BedrockPacket packet) {
-        final GeyserReceivedEvent event = new GeyserReceivedEvent(player, packet, true);
+        final GeyserSendEvent event = new GeyserSendEvent(player, packet, true);
         for (final GeyserPacketListener listener : GeyserPacketEvents.getListeners()) {
-            listener.onPacketReceived(event);
+            listener.onPacketSend(event);
         }
 
         if (event.isCancelled()) {
@@ -43,5 +46,8 @@ public class UpstreamSessionListener extends UpstreamSession {
         }
 
         super.sendPacketImmediately(packet);
+
+        event.getPostTasks().forEach(Runnable::run);
+        event.getPostTasks().clear();
     }
 }

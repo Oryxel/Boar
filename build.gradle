@@ -27,7 +27,6 @@ dependencies {
     compileOnly(libs.protocol)
     compileOnly(libs.spigot.api)
     compileOnly(libs.geyser.core)
-    compileOnly(libs.fastutil)
 
     implementation(libs.lombok)
 

@@ -2,15 +2,13 @@ package ac.boar.anticheat.compensated;
 
 import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.java.PacketSendEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.utils.math.BoundingBox;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.cloudburstmc.protocol.bedrock.packet.AddEntityPacket;
 import org.geysermc.geyser.entity.EntityDefinition;
-import org.geysermc.geyser.entity.type.Entity;
-import org.geysermc.geyser.registry.Registries;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.spawn.ClientboundAddEntityPacket;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,34 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public class CompensatedEntity {
     private final BoarPlayer player;
-    private final Map<Integer, EntityCache> map = new ConcurrentHashMap<>();
-
-    public Entity getGeyserEntity(long id) {
-        return player.getSession().getEntityCache().getEntityByGeyserId(id);
-    }
+    private final Map<Long, EntityCache> map = new ConcurrentHashMap<>();
 
     public EntityCache getEntityCache(long id) {
-        Entity entity = getGeyserEntity(id);
-        if (entity == null) {
-            return null;
-        }
-
-        final EntityCache cache = this.map.get(entity.javaId());
-        return cache;
+        return this.map.get(id);
     }
 
-    public void queueRelativeUpdate(PacketSendEvent event, int id, double relX, double relY, double relZ) {
-        final EntityCache cache = this.map.get(id);
-        if (cache == null) {
-            return;
-        }
-
-        final Vec3d pos = cache.getUtdPosition();
-        final Vec3d vec3d = new Vec3d(pos.getX() + relX, pos.getY() + relY, pos.getZ() + relZ);
-        queuePositionUpdate(event, id, vec3d);
-    }
-
-    public void queuePositionUpdate(PacketSendEvent event, int id, Vec3d vec3d) {
+    public void queuePositionUpdate(GeyserSendEvent event, long id, Vec3f vec3f) {
         final EntityCache cache = this.map.get(id);
         if (cache == null) {
             return;
@@ -55,16 +32,16 @@ public class CompensatedEntity {
         cache.getOldPositions().add(cache.getUtdPosition().clone());
 
         final EntityDefinition definition = cache.getDefinition();
-        final BoundingBox newBox = BoundingBox.getBoxAt(vec3d.x, vec3d.y, vec3d.z, definition.width(), definition.height());
-        cache.setUtdPosition(vec3d.clone());
+        final BoundingBox newBox = BoundingBox.getBoxAt(vec3f.x, vec3f.y, vec3f.z, definition.width(), definition.height());
+        cache.setUtdPosition(vec3f.clone());
 
         // We need 2 transaction to check, if player receive the first they could already have received the update packet
         // Or they lag right before they receive the actual update position packet so we can't be sure
         // But if player respond to the transaction AFTER the position packet they 100% already receive the packet.
-        player.sendTransaction();
+        player.sendTransaction(event.isImmediate());
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
             cache.setBoundingBox(cache.getBoundingBox().union(newBox));
-            cache.setPosition(vec3d);
+            cache.setPosition(vec3f);
         });
 
         player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () ->  {
@@ -75,25 +52,25 @@ public class CompensatedEntity {
             }
         });
 
-        event.getPostTasks().add(player::sendTransaction);
+        event.getPostTasks().add(() -> player.sendTransaction(event.isImmediate()));
     }
 
-    public void addEntity(final ClientboundAddEntityPacket packet) {
-        final EntityDefinition<?> definition = Registries.ENTITY_DEFINITIONS.get(packet.getType());
+    public void addEntity(final AddEntityPacket packet) {
+        final EntityDefinition<?> definition = player.getSession().getEntityCache().getEntityByGeyserId(packet.getRuntimeEntityId()).getDefinition();
         if (definition == null) {
             return;
         }
 
-        final EntityCache cache = new EntityCache(packet.getType(), definition);
-        cache.setPosition(new Vec3d(packet.getX(), packet.getY(), packet.getZ()));
+        final EntityCache cache = new EntityCache(definition.entityType(), definition);
+        cache.setPosition(new Vec3f(packet.getPosition()));
         cache.setUtdPosition(cache.getPosition().clone());
-        cache.setBoundingBox(BoundingBox.getBoxAt(packet.getX(), packet.getY(), packet.getZ(), definition.width(), definition.height()));
-        this.map.put(packet.getEntityId(), cache);
+        cache.setBoundingBox(BoundingBox.getBoxAt(packet.getPosition().getX(), packet.getPosition().getY(), packet.getPosition().getZ(), definition.width(), definition.height()));
+        this.map.put(packet.getRuntimeEntityId(), cache);
 
         player.sendTransaction();
     }
 
-    public void removeEntity(final int id) {
+    public void removeEntity(final long id) {
         this.map.remove(id);
     }
 }

@@ -6,7 +6,8 @@ import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
+import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
@@ -87,14 +88,14 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
-        player.movementInput = new Vec3d(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
+        player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
 
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
         // Or the player sprinting status is just de-synced...
-        if (player.movementInput.z > 0 && player.sprinting) {
+        if (player.movementInput.z < 0 && player.sprinting) {
             player.lastSprinting = true;
             player.sprinting = false;
-            player.sinceSprinting++;
+            player.sinceSprinting = 1;
         }
 
         if (player.lastTickWasTeleport) {
@@ -102,7 +103,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
-        player.actualVelocity = new Vec3d(MathUtil.fixFTD(player.x - player.lastX), MathUtil.fixFTD(player.y - player.lastY), MathUtil.fixFTD(player.z - player.lastZ));
+        player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         new PlayerTicker(player).tick();
     }
 }

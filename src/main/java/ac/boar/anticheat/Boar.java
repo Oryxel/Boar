@@ -34,10 +34,10 @@ public class Boar {
         BedrockPacketEvents.register(new PacketCheckRunner());
 
         GeyserPacketEvents.register(new WorldTeleportPacket());
+        GeyserPacketEvents.register(new EntityUpdatePacket());
+        GeyserPacketEvents.register(new VelocityUpdatePacket());
 
         JavaPacketEvents.register(new EffectUpdatePacket());
-        JavaPacketEvents.register(new EntityUpdatePacket());
-        JavaPacketEvents.register(new VelocityUpdatePacket());
         JavaPacketEvents.register(new PacketCheckRunner());
 
         this.playerManager = new BoarPlayerManager();

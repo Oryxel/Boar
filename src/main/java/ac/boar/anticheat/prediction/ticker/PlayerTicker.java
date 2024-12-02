@@ -14,7 +14,7 @@ public class PlayerTicker extends EntityTicker {
     @Override
     public void tickMovement() {
         if (player.lastSneaking || player.sneaking) {
-            player.movementInput = player.movementInput.multiply(0.3);
+            player.movementInput = player.movementInput.mul(0.3);
         }
 
         // Player got instantly moved out of the block instead of slowly move out like when I test on single player.

@@ -2,7 +2,6 @@ package ac.boar.anticheat.prediction.ticker;
 
 import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
-import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
@@ -11,7 +10,7 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.Collisions;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
@@ -50,17 +49,17 @@ public class EntityTicker {
 
         engine = new PredictionEngineNormal(player);
 
-        player.movementInput = player.movementInput.multiply(0.98F);
+        player.movementInput = player.movementInput.mul(0.98F);
 
         if (player.movementInput.x != 0 && player.movementInput.z != 0) {
-            player.movementInput = player.movementInput.multiply(1D / Math.sqrt(2));
+            player.movementInput = player.movementInput.mul(1D / Math.sqrt(2));
         }
 
-        Vec3d beforeCollision = Vec3d.ZERO, afterCollision = Vec3d.ZERO;
+        Vec3f beforeCollision = Vec3f.ZERO, afterCollision = Vec3f.ZERO;
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : engine.gatherAllPossibilities()) {
-            final Vec3d bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
-            final Vec3d ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
+            final Vec3f bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
+            final Vec3f ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
             if (offset < closetOffset) {
@@ -74,7 +73,7 @@ public class EntityTicker {
         player.collideX = afterCollision.x != beforeCollision.x;
         player.collideZ = afterCollision.z != beforeCollision.z;
 
-        Vec3d clientVelocity = afterCollision.clone();
+        Vec3f clientVelocity = afterCollision.clone();
 
         player.lastGround = player.onGround;
         player.onGround = beforeCollision.y < 0 && afterCollision.y != beforeCollision.y;
@@ -99,18 +98,14 @@ public class EntityTicker {
             clientVelocity.x = 0;
         }
 
-        if (beforeCollision.z != afterCollision.z) {
+        if (player.collideZ) {
             clientVelocity.z = 0;
         }
 
-        if (player.collideZ) {
-            clientVelocity.y = 0;
-        }
-
         if (player.closetVector.getType() == VectorType.VELOCITY) {
-            Iterator<Map.Entry<Long, Vec3d>> iterator = player.queuedVelocities.entrySet().iterator();
+            Iterator<Map.Entry<Long, Vec3f>> iterator = player.queuedVelocities.entrySet().iterator();
 
-            Map.Entry<Long, Vec3d> entry;
+            Map.Entry<Long, Vec3f> entry;
             while (iterator.hasNext() && (entry = iterator.next()) != null) {
                 if (entry.getKey() > player.closetVector.getTransactionId()) {
                     break;
@@ -214,7 +209,7 @@ public class EntityTicker {
         if (this.isRegionUnloaded()) {
             return false;
         } else {
-            BoundingBox box = player.boundingBox.contract(0.001);
+            BoundingBox box = player.boundingBox.contract(0.001F);
             int i = MathUtil.floor(box.minX);
             int j = MathUtil.ceil(box.maxX);
             int k = MathUtil.floor(box.minY);
@@ -224,7 +219,7 @@ public class EntityTicker {
             double d = 0.0;
             boolean bl = this.isPushedByFluids();
             boolean bl2 = false;
-            Vec3d vec3d = Vec3d.ZERO;
+            Vec3f vec3F = Vec3f.ZERO;
             int o = 0;
             Vector3i vector3i;
 
@@ -241,12 +236,12 @@ public class EntityTicker {
 //                                bl2 = true;
 //                                d = Math.max(e - box.minY, d);
 //                                if (bl) {
-//                                    Vec3d vec3d2 = fluidState.getVelocity(this.getWorld(), mutable);
+//                                    Vec3f vec3f2 = fluidState.getVelocity(this.getWorld(), mutable);
 //                                    if (d < 0.4) {
-//                                        vec3d2 = vec3d2.multiply(d);
+//                                        vec3f2 = vec3f2.mul(d);
 //                                    }
 //
-//                                    vec3d = vec3d.add(vec3d2);
+//                                    vec3f = vec3f.add(vec3f2);
 //                                    ++o;
 //                                }
 //                            }
@@ -255,22 +250,22 @@ public class EntityTicker {
                 }
             }
 
-            if (vec3d.length() > 0.0) {
+            if (vec3F.length() > 0.0) {
                 if (o > 0) {
-                    vec3d = vec3d.multiply(1.0 / (double)o);
+                    vec3F = vec3F.mul(1.0 / (double)o);
                 }
 
 //                if (!(this instanceof PlayerEntity)) {
-//                    vec3d = vec3d.normalize();
+//                    vec3f = vec3f.normalize();
 //                }
 
-                Vec3d vec3d3 = player.clientVelocity;
-                vec3d = vec3d.multiply(speed);
-                if (Math.abs(vec3d3.x) < 0.003 && Math.abs(vec3d3.z) < 0.003 && vec3d.length() < 0.0045000000000000005) {
-                    vec3d = vec3d.normalize().multiply(0.0045000000000000005);
+                Vec3f vec3f3 = player.clientVelocity;
+                vec3F = vec3F.mul(speed);
+                if (Math.abs(vec3f3.x) < 0.003 && Math.abs(vec3f3.z) < 0.003 && vec3F.length() < 0.0045000000000000005) {
+                    vec3F = vec3F.normalize().mul(0.0045000000000000005);
                 }
 
-                player.clientVelocity = player.clientVelocity.add(vec3d3);
+                player.clientVelocity = player.clientVelocity.add(vec3f3);
             }
 
             player.fluidHeight.put(tag, d);

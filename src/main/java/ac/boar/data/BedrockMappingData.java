@@ -44,16 +44,16 @@ public class BedrockMappingData {
                 for (int i = 0; i < array.size(); i++) {
                     final JsonArray collision = array.get(i).getAsJsonArray();
 
-                    double middleX = collision.get(0).getAsDouble(),
-                            middleY = collision.get(1).getAsDouble(),
-                            middleZ = collision.get(2).getAsDouble();
-                    double sizeX = collision.get(3).getAsDouble(),
-                            sizeY = collision.get(4).getAsDouble(),
-                            sizeZ = collision.get(5).getAsDouble();
+                    float middleX = collision.get(0).getAsFloat(),
+                            middleY = collision.get(1).getAsFloat(),
+                            middleZ = collision.get(2).getAsFloat();
+                    float sizeX = collision.get(3).getAsFloat(),
+                            sizeY = collision.get(4).getAsFloat(),
+                            sizeZ = collision.get(5).getAsFloat();
 
                     BoundingBox box = new BoundingBox(
-                            middleX - sizeX / 2, middleY - sizeY / 2, middleZ - sizeZ / 2,
-                            middleX + sizeX / 2, middleY + sizeY / 2, middleZ + sizeZ / 2
+                            middleX - sizeX / 2F, middleY - sizeY / 2F, middleZ - sizeZ / 2F,
+                            middleX + sizeX / 2F, middleY + sizeY / 2F, middleZ + sizeZ / 2F
                     );
                     collisions.add(box);
                 }

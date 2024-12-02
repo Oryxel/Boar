@@ -1,7 +1,7 @@
 package ac.boar.anticheat.compensated.cache;
 
 import ac.boar.utils.math.BoundingBox;
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class EntityCache {
     private final EntityType type;
     private final EntityDefinition definition;
-    private Vec3d position = Vec3d.ZERO, utdPosition = Vec3d.ZERO;
+    private Vec3f position = Vec3f.ZERO, utdPosition = Vec3f.ZERO;
     private BoundingBox boundingBox = new BoundingBox(0, 0, 0, 0, 0, 0);
 
-    private Queue<Vec3d> oldPositions = new ConcurrentLinkedQueue<>();
+    private Queue<Vec3f> oldPositions = new ConcurrentLinkedQueue<>();
 }

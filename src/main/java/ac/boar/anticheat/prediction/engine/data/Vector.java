@@ -1,26 +1,26 @@
 package ac.boar.anticheat.prediction.engine.data;
 
-import ac.boar.utils.math.Vec3d;
+import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Vector {
-    private Vec3d velocity;
+    private Vec3f velocity;
     private VectorType type;
     private long transactionId = -1; // if this vector is velocity or explosion...
 
     public boolean sprinting = false;
 
-    public Vector(Vec3d vec3d, VectorType type) {
+    public Vector(Vec3f vec3F, VectorType type) {
         this.type = type;
-        this.velocity = vec3d;
+        this.velocity = vec3F;
     }
 
-    public Vector(Vec3d vec3d, VectorType type, long transactionId) {
+    public Vector(Vec3f vec3F, VectorType type, long transactionId) {
         this.type = type;
-        this.velocity = vec3d;
+        this.velocity = vec3F;
         this.transactionId = transactionId;
     }
 }

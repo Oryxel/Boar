@@ -1,22 +1,17 @@
 package ac.boar.utils.math;
 
-import ac.boar.utils.MathUtil;
-import it.unimi.dsi.fastutil.doubles.AbstractDoubleList;
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
-
 import java.util.Optional;
 
 public class BoundingBox implements Cloneable {
-    private static final double EPSILON = 1.0E-7;
-    public double minX;
-    public double minY;
-    public double minZ;
-    public double maxX;
-    public double maxY;
-    public double maxZ;
+    private static final float EPSILON = 1.0E-7F;
+    public float minX;
+    public float minY;
+    public float minZ;
+    public float maxX;
+    public float maxY;
+    public float maxZ;
 
-    public BoundingBox(double x1, double y1, double z1, double x2, double y2, double z2) {
+    public BoundingBox(float x1, float y1, float z1, float x2, float y2, float z2) {
         this.minX = Math.min(x1, x2);
         this.minY = Math.min(y1, y2);
         this.minZ = Math.min(z1, z2);
@@ -25,32 +20,25 @@ public class BoundingBox implements Cloneable {
         this.maxZ = Math.max(z1, z2);
     }
 
-    public Vec3d toVec3d(double width) {
-        return new Vec3d(this.minX + (width / 2D), this.minY, this.maxZ - (width / 2D));
+    public Vec3f toVec3f(float width) {
+        return new Vec3f(this.minX + (width / 2F), this.minY, this.maxZ - (width / 2F));
     }
 
     public static BoundingBox getBoxAt(float x, float y, float z, float width, float height) {
         float f = width / 2.0f;
-        return new BoundingBox(MathUtil.fixFTD(x - f), MathUtil.fixFTD(y), MathUtil.fixFTD(z - f),
-                MathUtil.fixFTD(x + f), MathUtil.fixFTD(y + height), MathUtil.fixFTD(z + f));
+        return new BoundingBox(x - f, y, z - f, x + f, y + height, z + f);
     }
 
-    public static BoundingBox getBoxAt(double x, double y, double z, double width, double height) {
-        float f = (float) (width / 2.0f);
-        float g = (float) height;
-        return new BoundingBox(x - f, y, z - f, x + f, y + g, z + f);
-    }
-
-    public double calculateXOffset(BoundingBox other, double offsetX) {
+    public float calculateXOffset(BoundingBox other, float offsetX) {
         if (other.maxY > this.minY && other.minY < this.maxY && other.maxZ > this.minZ && other.minZ < this.maxZ) {
             if (offsetX > 0.0D && other.maxX <= this.minX) {
-                double d1 = this.minX - other.maxX;
+                float d1 = this.minX - other.maxX;
 
                 if (d1 < offsetX) {
                     offsetX = d1;
                 }
             } else if (offsetX < 0.0D && other.minX >= this.maxX) {
-                double d0 = this.maxX - other.minX;
+                float d0 = this.maxX - other.minX;
 
                 if (d0 > offsetX) {
                     offsetX = d0;
@@ -60,16 +48,16 @@ public class BoundingBox implements Cloneable {
         return offsetX;
     }
 
-    public double calculateYOffset(BoundingBox other, double offsetY) {
+    public float calculateYOffset(BoundingBox other, float offsetY) {
         if (other.maxX > this.minX && other.minX < this.maxX && other.maxZ > this.minZ && other.minZ < this.maxZ) {
             if (offsetY > 0.0D && other.maxY <= this.minY) {
-                double d1 = this.minY - other.maxY;
+                float d1 = this.minY - other.maxY;
 
                 if (d1 < offsetY) {
                     offsetY = d1;
                 }
             } else if (offsetY < 0.0D && other.minY >= this.maxY) {
-                double d0 = this.maxY - other.minY;
+                float d0 = this.maxY - other.minY;
 
                 if (d0 > offsetY) {
                     offsetY = d0;
@@ -79,16 +67,16 @@ public class BoundingBox implements Cloneable {
         return offsetY;
     }
 
-    public double calculateZOffset(BoundingBox other, double offsetZ) {
+    public float calculateZOffset(BoundingBox other, float offsetZ) {
         if (other.maxX > this.minX && other.minX < this.maxX && other.maxY > this.minY && other.minY < this.maxY) {
             if (offsetZ > 0.0D && other.maxZ <= this.minZ) {
-                double d1 = this.minZ - other.maxZ;
+                float d1 = this.minZ - other.maxZ;
 
                 if (d1 < offsetZ) {
                     offsetZ = d1;
                 }
             } else if (offsetZ < 0.0D && other.minZ >= this.maxZ) {
-                double d0 = this.maxZ - other.minZ;
+                float d0 = this.maxZ - other.minZ;
 
                 if (d0 > offsetZ) {
                     offsetZ = d0;
@@ -99,27 +87,27 @@ public class BoundingBox implements Cloneable {
         return offsetZ;
     }
 
-    public BoundingBox withMinX(double minX) {
+    public BoundingBox withMinX(float minX) {
         return new BoundingBox(minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 
-    public BoundingBox withMinY(double minY) {
+    public BoundingBox withMinY(float minY) {
         return new BoundingBox(this.minX, minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 
-    public BoundingBox withMinZ(double minZ) {
+    public BoundingBox withMinZ(float minZ) {
         return new BoundingBox(this.minX, this.minY, minZ, this.maxX, this.maxY, this.maxZ);
     }
 
-    public BoundingBox withMaxX(double maxX) {
+    public BoundingBox withMaxX(float maxX) {
         return new BoundingBox(this.minX, this.minY, this.minZ, maxX, this.maxY, this.maxZ);
     }
 
-    public BoundingBox withMaxY(double maxY) {
+    public BoundingBox withMaxY(float maxY) {
         return new BoundingBox(this.minX, this.minY, this.minZ, this.maxX, maxY, this.maxZ);
     }
 
-    public BoundingBox withMaxZ(double maxZ) {
+    public BoundingBox withMaxZ(float maxZ) {
         return new BoundingBox(this.minX, this.minY, this.minZ, this.maxX, this.maxY, maxZ);
     }
 
@@ -146,29 +134,13 @@ public class BoundingBox implements Cloneable {
         }
     }
 
-    public int hashCode() {
-        long l = Double.doubleToLongBits(this.minX);
-        int i = (int)(l ^ l >>> 32);
-        l = Double.doubleToLongBits(this.minY);
-        i = 31 * i + (int)(l ^ l >>> 32);
-        l = Double.doubleToLongBits(this.minZ);
-        i = 31 * i + (int)(l ^ l >>> 32);
-        l = Double.doubleToLongBits(this.maxX);
-        i = 31 * i + (int)(l ^ l >>> 32);
-        l = Double.doubleToLongBits(this.maxY);
-        i = 31 * i + (int)(l ^ l >>> 32);
-        l = Double.doubleToLongBits(this.maxZ);
-        i = 31 * i + (int)(l ^ l >>> 32);
-        return i;
-    }
-
-    public BoundingBox shrink(double x, double y, double z) {
-        double d = this.minX;
-        double e = this.minY;
-        double f = this.minZ;
-        double g = this.maxX;
-        double h = this.maxY;
-        double i = this.maxZ;
+    public BoundingBox shrink(float x, float y, float z) {
+        float d = this.minX;
+        float e = this.minY;
+        float f = this.minZ;
+        float g = this.maxX;
+        float h = this.maxY;
+        float i = this.maxZ;
         if (x < 0.0) {
             d -= x;
         } else if (x > 0.0) {
@@ -190,17 +162,17 @@ public class BoundingBox implements Cloneable {
         return new BoundingBox(d, e, f, g, h, i);
     }
 
-    public BoundingBox stretch(Vec3d scale) {
+    public BoundingBox stretch(Vec3f scale) {
         return this.stretch(scale.x, scale.y, scale.z);
     }
 
-    public BoundingBox stretch(double x, double y, double z) {
-        double d = this.minX;
-        double e = this.minY;
-        double f = this.minZ;
-        double g = this.maxX;
-        double h = this.maxY;
-        double i = this.maxZ;
+    public BoundingBox stretch(float x, float y, float z) {
+        float d = this.minX;
+        float e = this.minY;
+        float f = this.minZ;
+        float g = this.maxX;
+        float h = this.maxY;
+        float i = this.maxZ;
         if (x < 0.0) {
             d += x;
         } else if (x > 0.0) {
@@ -222,45 +194,45 @@ public class BoundingBox implements Cloneable {
         return new BoundingBox(d, e, f, g, h, i);
     }
 
-    public BoundingBox expand(double x, double y, double z) {
-        double d = this.minX - x;
-        double e = this.minY - y;
-        double f = this.minZ - z;
-        double g = this.maxX + x;
-        double h = this.maxY + y;
-        double i = this.maxZ + z;
+    public BoundingBox expand(float x, float y, float z) {
+        float d = this.minX - x;
+        float e = this.minY - y;
+        float f = this.minZ - z;
+        float g = this.maxX + x;
+        float h = this.maxY + y;
+        float i = this.maxZ + z;
         return new BoundingBox(d, e, f, g, h, i);
     }
 
-    public BoundingBox expand(double value) {
+    public BoundingBox expand(float value) {
         return this.expand(value, value, value);
     }
 
     public BoundingBox intersection(BoundingBox BoundingBox) {
-        double d = Math.max(this.minX, BoundingBox.minX);
-        double e = Math.max(this.minY, BoundingBox.minY);
-        double f = Math.max(this.minZ, BoundingBox.minZ);
-        double g = Math.min(this.maxX, BoundingBox.maxX);
-        double h = Math.min(this.maxY, BoundingBox.maxY);
-        double i = Math.min(this.maxZ, BoundingBox.maxZ);
+        float d = Math.max(this.minX, BoundingBox.minX);
+        float e = Math.max(this.minY, BoundingBox.minY);
+        float f = Math.max(this.minZ, BoundingBox.minZ);
+        float g = Math.min(this.maxX, BoundingBox.maxX);
+        float h = Math.min(this.maxY, BoundingBox.maxY);
+        float i = Math.min(this.maxZ, BoundingBox.maxZ);
         return new BoundingBox(d, e, f, g, h, i);
     }
 
     public BoundingBox union(BoundingBox BoundingBox) {
-        double d = Math.min(this.minX, BoundingBox.minX);
-        double e = Math.min(this.minY, BoundingBox.minY);
-        double f = Math.min(this.minZ, BoundingBox.minZ);
-        double g = Math.max(this.maxX, BoundingBox.maxX);
-        double h = Math.max(this.maxY, BoundingBox.maxY);
-        double i = Math.max(this.maxZ, BoundingBox.maxZ);
+        float d = Math.min(this.minX, BoundingBox.minX);
+        float e = Math.min(this.minY, BoundingBox.minY);
+        float f = Math.min(this.minZ, BoundingBox.minZ);
+        float g = Math.max(this.maxX, BoundingBox.maxX);
+        float h = Math.max(this.maxY, BoundingBox.maxY);
+        float i = Math.max(this.maxZ, BoundingBox.maxZ);
         return new BoundingBox(d, e, f, g, h, i);
     }
 
-    public BoundingBox offset(double x, double y, double z) {
+    public BoundingBox offset(float x, float y, float z) {
         return new BoundingBox(this.minX + x, this.minY + y, this.minZ + z, this.maxX + x, this.maxY + y, this.maxZ + z);
     }
 
-    public BoundingBox offset(Vec3d vec) {
+    public BoundingBox offset(Vec3f vec) {
         return this.offset(vec.x, vec.y, vec.z);
     }
 
@@ -268,72 +240,72 @@ public class BoundingBox implements Cloneable {
         return this.intersects(BoundingBox.minX, BoundingBox.minY, BoundingBox.minZ, BoundingBox.maxX, BoundingBox.maxY, BoundingBox.maxZ);
     }
 
-    public boolean intersects(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+    public boolean intersects(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return this.minX < maxX && this.maxX > minX && this.minY < maxY && this.maxY > minY && this.minZ < maxZ && this.maxZ > minZ;
     }
 
-    public boolean intersects(Vec3d pos1, Vec3d pos2) {
+    public boolean intersects(Vec3f pos1, Vec3f pos2) {
         return this.intersects(Math.min(pos1.x, pos2.x), Math.min(pos1.y, pos2.y), Math.min(pos1.z, pos2.z), Math.max(pos1.x, pos2.x), Math.max(pos1.y, pos2.y), Math.max(pos1.z, pos2.z));
     }
 
-    public boolean contains(Vec3d pos) {
+    public boolean contains(Vec3f pos) {
         return this.contains(pos.x, pos.y, pos.z);
     }
 
-    public boolean contains(double x, double y, double z) {
+    public boolean contains(float x, float y, float z) {
         return x >= this.minX && x < this.maxX && y >= this.minY && y < this.maxY && z >= this.minZ && z < this.maxZ;
     }
 
-    public double getAverageSideLength() {
-        double d = this.getLengthX();
-        double e = this.getLengthY();
-        double f = this.getLengthZ();
-        return (d + e + f) / 3.0;
+    public float getAverageSideLength() {
+        float d = this.getLengthX();
+        float e = this.getLengthY();
+        float f = this.getLengthZ();
+        return (d + e + f) / 3.0F;
     }
 
-    public double getLengthX() {
+    public float getLengthX() {
         return this.maxX - this.minX;
     }
 
-    public double getLengthY() {
+    public float getLengthY() {
         return this.maxY - this.minY;
     }
 
-    public double getLengthZ() {
+    public float getLengthZ() {
         return this.maxZ - this.minZ;
     }
 
-    public BoundingBox contract(double x, double y, double z) {
+    public BoundingBox contract(float x, float y, float z) {
         return this.expand(-x, -y, -z);
     }
 
-    public BoundingBox contract(double value) {
+    public BoundingBox contract(float value) {
         return this.expand(-value);
     }
 
-    public Optional<Vec3d> raycast(Vec3d from, Vec3d to) {
+    public Optional<Vec3f> raycast(Vec3f from, Vec3f to) {
         return raycast(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, from, to);
     }
 
-    public static Optional<Vec3d> raycast(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Vec3d from, Vec3d to) {
-        double[] ds = new double[]{1.0};
-        double d = to.x - from.x;
-        double e = to.y - from.y;
-        double f = to.z - from.z;
+    public static Optional<Vec3f> raycast(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Vec3f from, Vec3f to) {
+        float[] ds = new float[]{1.0F};
+        float d = to.x - from.x;
+        float e = to.y - from.y;
+        float f = to.z - from.z;
         Direction direction = traceCollisionSide(minX, minY, minZ, maxX, maxY, maxZ, from, ds, null, d, e, f);
         if (direction == null) {
             return Optional.empty();
         } else {
-            double g = ds[0];
+            float g = ds[0];
             return Optional.of(from.add(g * d, g * e, g * f));
         }
     }
 
-    private static Direction traceCollisionSide(BoundingBox BoundingBox, Vec3d intersectingVector, double[] traceDistanceResult, Direction approachDirection, double deltaX, double deltaY, double deltaZ) {
+    private static Direction traceCollisionSide(BoundingBox BoundingBox, Vec3f intersectingVector, float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ) {
         return traceCollisionSide(BoundingBox.minX, BoundingBox.minY, BoundingBox.minZ, BoundingBox.maxX, BoundingBox.maxY, BoundingBox.maxZ, intersectingVector, traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ);
     }
 
-    private static Direction traceCollisionSide(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Vec3d intersectingVector, double[] traceDistanceResult, Direction approachDirection, double deltaX, double deltaY, double deltaZ) {
+    private static Direction traceCollisionSide(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Vec3f intersectingVector, float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ) {
         if (deltaX > 1.0E-7) {
             approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ, minX, minY, maxY, minZ, maxZ, Direction.WEST, intersectingVector.x, intersectingVector.y, intersectingVector.z);
         } else if (deltaX < -1.0E-7) {
@@ -355,10 +327,10 @@ public class BoundingBox implements Cloneable {
         return approachDirection;
     }
 
-    private static Direction traceCollisionSide(double[] traceDistanceResult, Direction approachDirection, double deltaX, double deltaY, double deltaZ, double begin, double minX, double maxX, double minZ, double maxZ, Direction resultDirection, double startX, double startY, double startZ) {
-        double d = (begin - startX) / deltaX;
-        double e = startY + d * deltaY;
-        double f = startZ + d * deltaZ;
+    private static Direction traceCollisionSide(float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ, float begin, float minX, float maxX, float minZ, float maxZ, Direction resultDirection, float startX, float startY, float startZ) {
+        float d = (begin - startX) / deltaX;
+        float e = startY + d * deltaY;
+        float f = startZ + d * deltaZ;
         if (0.0 < d && d < traceDistanceResult[0] && minX - 1.0E-7 < e && e < maxX + 1.0E-7 && minZ - 1.0E-7 < f && f < maxZ + 1.0E-7) {
             traceDistanceResult[0] = d;
             return resultDirection;
@@ -375,60 +347,28 @@ public class BoundingBox implements Cloneable {
         return Double.isNaN(this.minX) || Double.isNaN(this.minY) || Double.isNaN(this.minZ) || Double.isNaN(this.maxX) || Double.isNaN(this.maxY) || Double.isNaN(this.maxZ);
     }
 
-    public Vec3d getMinPos() {
-        return new Vec3d(this.minX, this.minY, this.minZ);
+    public Vec3f getMinPos() {
+        return new Vec3f(this.minX, this.minY, this.minZ);
     }
 
-    public Vec3d getMaxPos() {
-        return new Vec3d(this.maxX, this.maxY, this.maxZ);
+    public Vec3f getMaxPos() {
+        return new Vec3f(this.maxX, this.maxY, this.maxZ);
     }
 
-    public static BoundingBox of(Vec3d center, double dx, double dy, double dz) {
-        return new BoundingBox(center.x - dx / 2.0, center.y - dy / 2.0, center.z - dz / 2.0, center.x + dx / 2.0, center.y + dy / 2.0, center.z + dz / 2.0);
+    public static BoundingBox of(Vec3f center, float dx, float dy, float dz) {
+        return new BoundingBox(center.x - dx / 2.0F, center.y - dy / 2.0F, center.z - dz / 2.0F, center.x + dx / 2.0F, center.y + dy / 2.0F, center.z + dz / 2.0F);
     }
 
-    public DoubleList getPointPositions() {
-        return gather(minX, minY, minZ, maxX, maxY, maxZ);
-    }
-
-    public static DoubleList gather(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-        if (maxX - minX < 1.0E-7 || maxY - minY < 1.0E-7 || maxZ - minZ < 1.0E-7) {
-            return DoubleList.of();
-        }
-        int i = findRequiredBitResolution(minX, maxX);
-        int j = findRequiredBitResolution(minY, maxY);
-        int k = findRequiredBitResolution(minZ, maxZ);
-        if (i < 0 || j < 0 || k < 0) {
-            return DoubleArrayList.wrap(new double[]{minY, maxY});
-        }
-        if (i == 0 && j == 0 && k == 0) {
-            return DoubleArrayList.wrap(new double[]{0, 1});
-        }
-
-        int m = 1 << j;
-        return new AbstractDoubleList() {
-            @Override
-            public double getDouble(int i) {
-                return i / m;
-            }
-
-            @Override
-            public int size() {
-                return m + 1;
-            }
-        };
-    }
-
-    protected static int findRequiredBitResolution(double min, double max) {
+    protected static int findRequiredBitResolution(float min, float max) {
         if (min < -1.0E-7 || max > 1.0000001) {
             return -1;
         }
         for (int i = 0; i <= 3; ++i) {
             int j = 1 << i;
-            double d = min * (double)j;
-            double e = max * (double)j;
-            boolean bl = Math.abs(d - (double)Math.round(d)) < 1.0E-7 * (double)j;
-            boolean bl2 = Math.abs(e - (double)Math.round(e)) < 1.0E-7 * (double)j;
+            float d = min * (float)j;
+            float e = max * (float)j;
+            boolean bl = Math.abs(d - (float)Math.round(d)) < 1.0E-7 * (float)j;
+            boolean bl2 = Math.abs(e - (float)Math.round(e)) < 1.0E-7 * (float)j;
             if (!bl || !bl2) continue;
             return i;
         }
