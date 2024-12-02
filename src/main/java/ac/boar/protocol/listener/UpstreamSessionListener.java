@@ -6,7 +6,9 @@ import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
 import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
+import org.cloudburstmc.protocol.bedrock.data.AuthoritativeMovementMode;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
+import org.cloudburstmc.protocol.bedrock.packet.StartGamePacket;
 import org.geysermc.geyser.session.UpstreamSession;
 
 public class UpstreamSessionListener extends UpstreamSession {
@@ -26,6 +28,13 @@ public class UpstreamSessionListener extends UpstreamSession {
 
         if (event.isCancelled()) {
             return;
+        }
+
+        if (packet instanceof StartGamePacket) {
+            StartGamePacket startGamePacket = (StartGamePacket) event.getPacket();
+
+            startGamePacket.setAuthoritativeMovementMode(AuthoritativeMovementMode.SERVER_WITH_REWIND);
+            startGamePacket.setRewindHistorySize(5);
         }
 
         super.sendPacket(packet);
