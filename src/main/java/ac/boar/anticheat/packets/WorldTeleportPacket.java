@@ -47,6 +47,8 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
             return;
         }
 
+        // This is not precise as java, since it being sent this tick instead of right away, we can't check for 0
+        // I will use 0.1 just to be safe, I have seen it reach 2e-6 in some cases, but I haven't test enough to know.
         double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
         if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && distance < 0.1) {
             BoarPlugin.LOGGER.info("Accepted teleport, d=" + distance);
