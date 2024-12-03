@@ -2,6 +2,7 @@ package ac.boar.anticheat.user.api;
 
 import ac.boar.anticheat.check.api.holder.CheckHolder;
 import ac.boar.anticheat.compensated.CompensatedEntity;
+import ac.boar.anticheat.data.PlayerAbilities;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
@@ -83,6 +84,8 @@ public class BoarPlayer {
     public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
 
     public BoundingBox boundingBox;
+
+    public PlayerAbilities abilities = new PlayerAbilities();
 
     public void init() {
         GeyserUtil.hookBedrockSession(this);

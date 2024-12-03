@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.cloudburstmc.math.GenericMath;
 import org.cloudburstmc.math.vector.Vector3i;
+import org.cloudburstmc.protocol.bedrock.data.Ability;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
 
@@ -49,6 +50,10 @@ public class EntityTicker {
 //        }
 
         engine = new PredictionEngineNormal(player);
+        if (player.abilities.getAbilities().contains(Ability.MAY_FLY)) {
+            player.clientVelocity = engine.applyEndOfTick(player.actualVelocity);
+            return;
+        }
 
         player.movementInput = player.movementInput.mul(0.98F);
 
