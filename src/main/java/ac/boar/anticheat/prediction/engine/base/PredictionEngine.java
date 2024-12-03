@@ -5,6 +5,7 @@ import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public abstract class PredictionEngine {
     }
 
     private void addJumpingToPossibilities(List<Vector> vectors) {
-        if (!canJump()) {
+        if (!canJump() || !player.inputData.contains(PlayerAuthInputData.START_JUMPING)) {
             return;
         }
 

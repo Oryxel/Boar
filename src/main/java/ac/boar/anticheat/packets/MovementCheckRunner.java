@@ -41,6 +41,9 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
+        player.inputData.clear();
+        player.inputData.addAll(packet.getInputData());
+
         player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
         player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
