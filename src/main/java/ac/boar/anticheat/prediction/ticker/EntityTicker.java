@@ -20,6 +20,7 @@ import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Fluid;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -61,9 +62,10 @@ public class EntityTicker {
             player.movementInput = player.movementInput.mul(1F / (float) GenericMath.sqrt(2));
         }
 
+        List<Vector> possibilities = engine.gatherAllPossibilities();
         Vec3f beforeCollision = Vec3f.ZERO, afterCollision = Vec3f.ZERO;
         double closetOffset = Double.MAX_VALUE;
-        for (Vector vector : engine.gatherAllPossibilities()) {
+        for (Vector vector : possibilities) {
             final Vec3f bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
             final Vec3f ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
@@ -99,7 +101,8 @@ public class EntityTicker {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
-                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", SS" + player.sinceSprinting + ", SN" + player.sinceSneaking);
+                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", SS" + player.sinceSprinting +
+                    ", SN" + player.sinceSneaking + ", PS" + possibilities.size());
         }
 
         if (player.collideX) {

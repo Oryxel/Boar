@@ -17,6 +17,7 @@ import lombok.Setter;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.BedrockSession;
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.level.block.Blocks;
@@ -80,6 +81,8 @@ public class BoarPlayer {
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
     public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
     public BoundingBox boundingBox;
+
+    public Set<PlayerAuthInputData> inputData = new HashSet<>();
 
     public PlayerAbilities abilities = new PlayerAbilities();
 
