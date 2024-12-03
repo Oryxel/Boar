@@ -18,6 +18,7 @@ public class LatencyPacket implements BedrockPacketListener {
             return;
         }
 
-        event.getPlayer().latencyUtil.confirmTransaction(Math.abs(id / event.getPlayer().getMagnitude()));
+        boolean cancelled = event.getPlayer().latencyUtil.confirmTransaction(Math.abs(id / event.getPlayer().getMagnitude()));
+        event.setCancelled(cancelled);
     }
 }

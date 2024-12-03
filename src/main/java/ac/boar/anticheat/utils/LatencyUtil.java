@@ -31,9 +31,9 @@ public final class LatencyUtil {
         this.map.get(id).add(runnable);
     }
 
-    public void confirmTransaction(long id) {
+    public boolean confirmTransaction(long id) {
         if (!this.sentTransactions.contains(id)) {
-            return;
+            return false;
         }
 
         this.sentTransactions.remove(id);
@@ -48,5 +48,6 @@ public final class LatencyUtil {
 
         player.lastReceivedId = id;
         player.lastRespondTime = System.currentTimeMillis();
+        return true;
     }
 }
