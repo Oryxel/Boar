@@ -2,6 +2,7 @@ package ac.boar.anticheat.prediction.ticker;
 
 import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
+import ac.boar.anticheat.prediction.engine.PredictionEngineElytra;
 import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
@@ -42,6 +43,11 @@ public class EntityTicker {
 
     public void tickMovement() {
         PredictionEngine engine;
+        if (player.gliding) {
+            engine = new PredictionEngineElytra(player);
+        } else {
+            engine = new PredictionEngineNormal(player);
+        }
 //        if ((this.isTouchingWater() || this.isInLava()) && this.shouldSwimInFluids() && !this.canWalkOnFluid(fluidState)) {
 //            this.travelInFluid(movementInput);
 //        } else if (this.isGliding()) {
@@ -50,7 +56,6 @@ public class EntityTicker {
 //            this.travelMidAir(movementInput);
 //        }
 
-        engine = new PredictionEngineNormal(player);
         if (player.abilities.getAbilities().contains(Ability.MAY_FLY)) {
             player.clientVelocity = engine.applyEndOfTick(player.actualVelocity);
             return;
