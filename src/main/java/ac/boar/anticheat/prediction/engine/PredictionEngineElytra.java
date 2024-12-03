@@ -51,7 +51,7 @@ public class PredictionEngineElytra extends PredictionEngine {
             oldVelocity = oldVelocity.add((vec3d.x / d * e - oldVelocity.x) * 0.1F, 0.0F, (vec3d.z / d * e - oldVelocity.z) * 0.1F);
         }
 
-        return oldVelocity.mul(0.9900000095367432F, 0.9800000190734863F, 0.9900000095367432F);
+        return oldVelocity.mul(0.99F, 0.98F, 0.99F);
     }
 
     @Override
