@@ -65,6 +65,14 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
         player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
 
+        player.lastGliding = player.gliding;
+        if (packet.getInputData().contains(PlayerAuthInputData.START_GLIDING)) {
+            // TODO: prevent player from spoofing this.
+            player.gliding = true;
+        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_GLIDING)) {
+            player.gliding = false;
+        }
+
         player.lastSprinting = player.sprinting;
         if (packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING)) {
             // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)

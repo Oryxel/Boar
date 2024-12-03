@@ -54,6 +54,7 @@ public class BoarPlayer {
 
     public int sinceSprinting, sinceSneaking;
     public boolean sprinting, lastSprinting, sneaking, lastSneaking, swimming, lastSwimming;
+    public boolean gliding, lastGliding;
 
     public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
