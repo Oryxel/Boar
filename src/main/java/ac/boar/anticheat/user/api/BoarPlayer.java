@@ -147,7 +147,7 @@ public class BoarPlayer {
 
     public float getMovementSpeed(boolean sprinting, float slipperiness) {
         if (onGround) {
-            return /* this.getMovementSpeed() */ (0.1F * (sprinting ? 1.3F : 1)) * (0.21600002F / (slipperiness * slipperiness * slipperiness));
+            return /* this.getMovementSpeed() */ (abilities.getWalkSpeed() * (sprinting ? 1.3F : 1)) * (0.21600002F / (slipperiness * slipperiness * slipperiness));
         }
 
         return sprinting ? 0.025999999F : 0.02F;
