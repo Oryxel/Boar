@@ -31,7 +31,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
 
         // We can't check for player.lastReceivedId == cache.getTransactionId() bedrock teleport seems to be different.
         // Player doesn't seem to respond right away, instead it just simply set position and add HANDLE_TELEPORT to next tick.
-        // This seems to be the case after debugging (if im right) and also it seems like it what ViaBedrock does.
+        // This seems to be the case after debugging and also it seems like it what ViaBedrock does.
         // Which also means player will accept the latest teleport they got, not in order each by each like java!
         TeleportUtil.TeleportCache temp = null;
         TeleportUtil.TeleportCache cache = null;
