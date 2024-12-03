@@ -18,6 +18,10 @@ public class VelocityA extends OffsetHandlerCheck {
 
     @Override
     public void onPredictionComplete(double offset) {
+        if (System.currentTimeMillis() - player.joinedTime < 5000L) {
+            return;
+        }
+
         if (player.closetVector.getType() == VectorType.VELOCITY) {
             return;
         }
