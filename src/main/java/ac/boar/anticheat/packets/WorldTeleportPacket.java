@@ -12,37 +12,58 @@ import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 
+import java.util.Queue;
+
 public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
+        if (!(event.getPacket() instanceof PlayerAuthInputPacket)) {
+            return;
+        }
 
-        if (event.getPacket() instanceof PlayerAuthInputPacket) {
-            final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
+        final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
 
-            final TeleportUtil.TeleportCache cache = player.teleportUtil.getOldestTeleport();
-            if (cache == null) {
+        Queue<TeleportUtil.TeleportCache> queue = player.teleportUtil.getTeleportQueue();
+        if (queue.isEmpty()) {
+            return;
+        }
+
+        // We can't check for player.lastReceivedId == cache.getTransactionId() bedrock teleport seems to be different.
+        // Player doesn't seem to respond right away, instead it just simply set position and add HANDLE_TELEPORT to next tick.
+        // This seems to be the case after debugging (if im right) and also it seems like it what ViaBedrock does.
+        // Which also means player will accept the latest teleport they got, not in order each by each like java!
+        TeleportUtil.TeleportCache temp = null;
+        TeleportUtil.TeleportCache cache = null;
+        while ((temp = queue.peek()) != null) {
+            if (player.lastReceivedId < temp.getTransactionId()) {
+                break;
+            }
+
+            cache = queue.poll();
+        }
+
+        if (cache == null) {
+            return;
+        }
+
+        double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
+        if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && distance < 0.1) {
+            BoarPlugin.LOGGER.info("Accepted teleport, d=" + distance);
+            player.lastTickWasTeleport = true;
+
+            // Server don't know about this teleport, cancel it.
+            if (cache.isSilent()) {
+                event.setCancelled(true);
+            }
+        } else {
+            // This is not the latest teleport, just ignore this one, we only force player to accept the latest one.
+            // We don't want to teleport player to old teleport position when they're supposed to teleport to the latest tone.
+            if (!queue.isEmpty()) {
                 return;
             }
-
-            if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && player.lastReceivedId >= cache.getTransactionId()) {
-                player.teleportUtil.getTeleportQueue().poll();
-
-                double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
-                if (distance > 0.001) {
-//                    if (player.teleportUtil.getTeleportQueue().isEmpty()) {
-//                        player.teleportUtil.setbackTo(cache.getPosition());
-//                    }
-                } else {
-                    BoarPlugin.LOGGER.info("Accepted teleport!");
-                    player.lastTickWasTeleport = true;
-
-                    // Server don't know about this teleport, cancel it.
-                    if (cache.isSilent()) {
-                        event.setCancelled(true);
-                    }
-                }
-            }
+            // Set player back to where they're supposed to be position.
+            player.teleportUtil.setbackTo(cache.getPosition());
         }
     }
 
