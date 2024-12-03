@@ -76,13 +76,9 @@ public class BoarPlayer {
     public Vector3f bedrockRotation = Vector3f.ZERO;
 
     public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
-
     public Map<Long, Vec3f> queuedVelocities = new ConcurrentHashMap<>();
-
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
-
     public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
-
     public BoundingBox boundingBox;
 
     public PlayerAbilities abilities = new PlayerAbilities();
@@ -102,6 +98,7 @@ public class BoarPlayer {
             lastSentId++;
         }
 
+        // We have to send negative values since geyser translate positive one.
         final NetworkStackLatencyPacket latencyPacket = new NetworkStackLatencyPacket();
         latencyPacket.setTimestamp(-lastSentId);
         latencyPacket.setFromServer(true);
