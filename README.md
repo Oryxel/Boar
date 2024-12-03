@@ -2,6 +2,8 @@
 A dedicated anti cheat for GeyserMC project.
 - Warning: This anti-cheat is really terrible and so is the code, I'm not 
 good at making anti-cheat too which sounds like an excuse, and it is lol.
+- I also don't guarantee anything about performance or false lol. I don't even think I will ever
+finish this.
 
 ## Features
 - A packet managing system for GeyserMC
