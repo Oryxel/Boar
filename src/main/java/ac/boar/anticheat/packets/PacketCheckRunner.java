@@ -7,9 +7,6 @@ import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.protocol.event.java.PacketListener;
 import ac.boar.protocol.event.java.PacketSendEvent;
-import ac.boar.utils.math.Vec3f;
-import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
-import org.geysermc.geyser.entity.EntityDefinitions;
 
 import java.util.Map;
 
@@ -33,20 +30,6 @@ public class PacketCheckRunner implements PacketListener, BedrockPacketListener 
             if (v instanceof PacketCheck) {
                 ((PacketCheck) v).onPacketReceived(event);
             }
-        }
-
-        player.lastTickWasTeleport = false;
-        if (event.getPacket() instanceof PlayerAuthInputPacket) {
-            // Cancel this, player supposed to teleport anyway this position doesn't matter.
-            if (player.teleportUtil.teleportInQueue()) {
-                event.setCancelled(true);
-            }
-
-            if (event.isCancelled() || player.teleportUtil.teleportInQueue()) {
-                return;
-            }
-
-            player.teleportUtil.lastKnowValid = new Vec3f(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z);
         }
     }
 }

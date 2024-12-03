@@ -30,10 +30,13 @@ public class Boar {
         BedrockPacketEvents.register(new WorldTeleportPacket());
         BedrockPacketEvents.register(new MovementCheckRunner());
         BedrockPacketEvents.register(new PacketCheckRunner());
+        BedrockPacketEvents.register(new FinalPassthroughPacketListener());
 
         GeyserPacketEvents.register(new WorldTeleportPacket());
         GeyserPacketEvents.register(new EntityUpdatePacket());
         GeyserPacketEvents.register(new VelocityUpdatePacket());
+        GeyserPacketEvents.register(new AbilitiesUpdatePacket());
+        GeyserPacketEvents.register(new FinalPassthroughPacketListener());
 
         JavaPacketEvents.register(new EffectUpdatePacket());
         JavaPacketEvents.register(new PacketCheckRunner());
