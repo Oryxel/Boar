@@ -35,13 +35,13 @@ public class PacketCheckRunner implements PacketListener, BedrockPacketListener 
             }
         }
 
-        // This is a lot more useful than you think it is.
-        if (player.teleportUtil.teleportInQueue()) {
-            event.setCancelled(true);
-        }
-
         player.lastTickWasTeleport = false;
         if (event.getPacket() instanceof PlayerAuthInputPacket) {
+            // Cancel this, player supposed to teleport anyway this position doesn't matter.
+            if (player.teleportUtil.teleportInQueue()) {
+                event.setCancelled(true);
+            }
+
             if (event.isCancelled() || player.teleportUtil.teleportInQueue()) {
                 return;
             }

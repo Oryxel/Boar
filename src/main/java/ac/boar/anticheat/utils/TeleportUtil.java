@@ -27,17 +27,8 @@ public final class TeleportUtil {
         this.teleportQueue.add(teleportCache);
     }
 
-    public void setBackWithSimulation() {
-        setBackWithVelocity(lastKnowValid.add(player.predictedVelocity), player.clientVelocity);
-    }
-
     public void forceResyncToLastValid() {
         setbackTo(this.lastKnowValid);
-    }
-
-    public void setBackWithVelocity(Vec3f vec3F, Vec3f motion) {
-        setbackTo(vec3F);
-        sendVelocity(motion);
     }
 
     public void setbackTo(Vec3f vec3F) {
@@ -67,16 +58,8 @@ public final class TeleportUtil {
         player.sendTransaction();
     }
 
-    public TeleportCache getOldestTeleport() {
-        if (this.teleportQueue.isEmpty()) {
-            return null;
-        }
-
-        return this.teleportQueue.peek();
-    }
-
     public boolean teleportInQueue() {
-        return /* !this.teleportQueue.isEmpty() */ false;
+        return !this.teleportQueue.isEmpty();
     }
 
     @RequiredArgsConstructor
