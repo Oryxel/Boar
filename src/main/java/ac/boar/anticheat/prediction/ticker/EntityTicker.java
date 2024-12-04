@@ -85,7 +85,6 @@ public class EntityTicker {
 
         player.collideX = afterCollision.x != beforeCollision.x;
         player.collideZ = afterCollision.z != beforeCollision.z;
-
         player.collideY = afterCollision.y != beforeCollision.y;
 
         Vec3f clientVelocity = afterCollision.clone();

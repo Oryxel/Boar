@@ -161,11 +161,6 @@ public class Collisions {
 
         for (org.geysermc.geyser.level.physics.BoundingBox geyserBB : collision.getBoundingBoxes()) {
             BoundingBox box = new BoundingBox(geyserBB);
-            // Empty.
-            System.out.println(box.minX + box.minY + box.minZ + box.maxX + box.maxY + box.maxZ);
-            if (box.minX + box.minY + box.minZ + box.maxX + box.maxY + box.maxZ == 0) {
-                continue;
-            }
 
             BoundingBox bb = new BoundingBox(
                     vector3i.getX() + box.minX,

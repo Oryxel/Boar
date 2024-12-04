@@ -7,6 +7,7 @@ import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
@@ -56,7 +57,13 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
         }
 
+        player.sinceTeleport++;
         if (player.lastTickWasTeleport) {
+            player.sinceTeleport = 0;
+            return;
+        }
+
+        if (player.sinceTeleport < 2) {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
             return;
         }
