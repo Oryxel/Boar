@@ -4,7 +4,10 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
+import it.unimi.dsi.fastutil.floats.FloatArraySet;
+import it.unimi.dsi.fastutil.floats.FloatArrays;
+import it.unimi.dsi.fastutil.floats.FloatList;
+import it.unimi.dsi.fastutil.floats.FloatListIterator;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.physics.Axis;
 import org.geysermc.geyser.translator.collision.BlockCollision;
@@ -159,6 +162,7 @@ public class Collisions {
         for (org.geysermc.geyser.level.physics.BoundingBox geyserBB : collision.getBoundingBoxes()) {
             BoundingBox box = new BoundingBox(geyserBB);
             // Empty.
+            System.out.println(box.minX + box.minY + box.minZ + box.maxX + box.maxY + box.maxZ);
             if (box.minX + box.minY + box.minZ + box.maxX + box.maxY + box.maxZ == 0) {
                 continue;
             }
@@ -188,20 +192,46 @@ public class Collisions {
         boolean bl3 = movement.z != vec3F.z;
         boolean bl4 = bl2 && movement.y < 0.0;
         if (player.getStepHeight() > 0.0F && (bl4 || player.onGround) && (bl || bl3)) {
-            Vec3f vec3f2 = adjustMovementForCollisions(player, new Vec3f(movement.x, player.getStepHeight(), movement.z), box, list);
-            Vec3f vec3f3 = adjustMovementForCollisions(player, new Vec3f(0F, player.getStepHeight(), 0F), box.stretch(movement.x, 0F, movement.z), list);
-            if (vec3f3.y < player.getStepHeight()) {
-                Vec3f vec3f4 = adjustMovementForCollisions(player, new Vec3f(movement.x, 0F, movement.z), box.offset(vec3f3), list).add(vec3f3);
-                if (vec3f4.horizontalLengthSquared() > vec3f2.horizontalLengthSquared()) {
-                    vec3f2 = vec3f4;
-                }
+            BoundingBox box2 = bl4 ? box.offset(0, vec3F.y, 0) : box;
+            BoundingBox box3 = box2.stretch(movement.x, player.getStepHeight(), movement.z);
+            if (!bl4) {
+                box3 = box3.stretch(0, -9.999999747378752E-6F, 0);
             }
 
-            if (vec3f2.horizontalLengthSquared() > vec3F.horizontalLengthSquared()) {
-                vec3F = vec3f2.add(adjustMovementForCollisions(player, new Vec3f(0F, -vec3f2.y + movement.y, 0F), box.offset(vec3f2), list));
+            List<BoundingBox> list2 = findCollisionsForMovement(player, list, box3);
+            float f = vec3F.y;
+            float[] fs = collectStepHeights(box2, list2, 0.6F, f);
+            float[] var14 = fs;
+            int var15 = fs.length;
+
+            for (int var16 = 0; var16 < var15; ++var16) {
+                float g = var14[var16];
+                Vec3f vec3f2 = adjustMovementForCollisions(new Vec3f(movement.x, g, movement.z), box2, list2);
+                if (vec3f2.horizontalLengthSquared() > vec3F.horizontalLengthSquared()) {
+                    float d = box.minY - box2.minY;
+                    return vec3f2.add(0.0F, -d, 0.0F);
+                }
             }
         }
 
         return vec3F;
+    }
+
+    private static float[] collectStepHeights(BoundingBox collisionBox, List<BoundingBox> collisions, float f, float stepHeight) {
+        FloatArraySet floatSet = new FloatArraySet(4);
+        block0: for (BoundingBox bb : collisions) {
+            FloatList floatList = bb.getPointPositions();
+            FloatListIterator floatListIterator = floatList.iterator();
+            while (floatListIterator.hasNext()) {
+                double d = floatListIterator.next();
+                float g = (float)(d - collisionBox.minY);
+                if (g < 0.0f || g == stepHeight) continue;
+                if (g > f) continue block0;
+                floatSet.add(g);
+            }
+        }
+        float[] fs = floatSet.toFloatArray();
+        FloatArrays.unstableSort(fs);
+        return fs;
     }
 }
