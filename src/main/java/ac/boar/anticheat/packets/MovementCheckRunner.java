@@ -135,8 +135,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
         new PlayerTicker(player).tick();
 
-        Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
-
         // Possible patch for no-fall exploit on GeyserMC since geyser just check for delta.y > 0 and VERTICAL_COLLISION
         packet.setDelta(Vector3f.from(player.clientVelocity.x, player.clientVelocity.y, player.clientVelocity.z));
         if (packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && !player.collideY) {
