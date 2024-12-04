@@ -1,5 +1,8 @@
 package ac.boar.utils.math;
 
+import it.unimi.dsi.fastutil.floats.AbstractFloatList;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import org.geysermc.geyser.level.physics.Axis;
 
 import java.util.Optional;
@@ -38,6 +41,38 @@ public class BoundingBox implements Cloneable {
     public static BoundingBox getBoxAt(float x, float y, float z, float width, float height) {
         float f = width / 2.0f;
         return new BoundingBox(x - f, y, z - f, x + f, y + height, z + f);
+    }
+
+    public FloatList getPointPositions() {
+        return gather(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    public static FloatList gather(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        if (maxX - minX < 1.0E-7 || maxY - minY < 1.0E-7 || maxZ - minZ < 1.0E-7) {
+            return FloatList.of();
+        }
+        int i = findRequiredBitResolution(minX, maxX);
+        int j = findRequiredBitResolution(minY, maxY);
+        int k = findRequiredBitResolution(minZ, maxZ);
+        if (i < 0 || j < 0 || k < 0) {
+            return FloatArrayList.wrap(new float[]{minY, maxY});
+        }
+        if (i == 0 && j == 0 && k == 0) {
+            return FloatArrayList.wrap(new float[]{0, 1});
+        }
+
+        int m = 1 << j;
+        return new AbstractFloatList() {
+            @Override
+            public float getFloat(int i) {
+                return i / m;
+            }
+
+            @Override
+            public int size() {
+                return m + 1;
+            }
+        };
     }
 
     public float calculateXOffset(BoundingBox other, float offsetX) {
