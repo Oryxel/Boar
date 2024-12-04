@@ -14,8 +14,8 @@ public class FinalPassthroughPacketListener implements GeyserPacketListener, Bed
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
 
-        player.lastTickWasTeleport = false;
         if (event.getPacket() instanceof PlayerAuthInputPacket) {
+            player.lastTickWasTeleport = false;
             // This packet doesn't matter, player supposed to be in the teleported position by now.
             // Cancel it don't let any position pass through unless they properly accept it.
             // Geyser also do this, but we made it stricter by checking for lastReceivedId, player can't accept it if they're still lagging.

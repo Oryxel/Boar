@@ -30,12 +30,17 @@ public class VelocityA extends OffsetHandlerCheck {
 
         Map.Entry<Long, Vec3f> entry;
         while (iterator.hasNext() && (entry = iterator.next()) != null) {
-            if (player.lastReceivedId - entry.getKey() < 2) {
+            if (player.lastReceivedId < entry.getKey()) {
                 break;
+            }
+            iterator.remove();
+
+            double distance = Math.min(entry.getValue().distanceTo(player.predictedVelocity), entry.getValue().distanceTo(player.closetVector.getVelocity()));
+            if (distance < 0.0001) {
+                continue;
             }
 
             Bukkit.broadcastMessage("fail VelocityA!");
-            iterator.remove();
         }
     }
 }

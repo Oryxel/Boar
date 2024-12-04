@@ -65,7 +65,7 @@ public class BoundingBox implements Cloneable {
         return new AbstractFloatList() {
             @Override
             public float getFloat(int i) {
-                return i / m;
+                return i / (float) m;
             }
 
             @Override
@@ -109,6 +109,7 @@ public class BoundingBox implements Cloneable {
                     offsetY = d0;
                 }
             }
+
         }
         return offsetY;
     }
