@@ -45,13 +45,15 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.inputData.clear();
         player.inputData.addAll(packet.getInputData());
 
-        player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
-        player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
-        player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
+        if (player.sinceTeleport != 2) {
+            player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
+            player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
+            player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
 
-        player.x = packet.getPosition().getX();
-        player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
-        player.z = packet.getPosition().getZ();
+            player.x = packet.getPosition().getX();
+            player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
+            player.z = packet.getPosition().getZ();
+        }
 
         if (player.boundingBox == null) {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
