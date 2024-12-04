@@ -6,6 +6,9 @@ import ac.boar.utils.GeyserUtil;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 
 public class LatencyPacket implements BedrockPacketListener {
+    // https://github.com/GeyserMC/Geyser/blob/d2051c22422e586347cb3a473f4c90b19519bcc3/core/src/main/java/org/geysermc/geyser/translator/protocol/bedrock/BedrockNetworkStackLatencyTranslator.java#L52
+    // Issues with NetworkStackLatencyPacket mentioned in GeyserMC, I will check this out later when I have the time.
+
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         if (!(event.getPacket() instanceof NetworkStackLatencyPacket)) {
