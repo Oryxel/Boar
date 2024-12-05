@@ -143,7 +143,7 @@ public class EntityTicker {
             }
         }
 
-        player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
+        player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), player.getHeight());
     }
 
     private boolean updateWaterState() {

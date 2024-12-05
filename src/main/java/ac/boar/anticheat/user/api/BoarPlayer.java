@@ -20,6 +20,7 @@ import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.session.GeyserSession;
@@ -145,6 +146,14 @@ public class BoarPlayer {
 
     public GeyserSession getSession() {
         return (GeyserSession) connection;
+    }
+
+    public float getHeight() {
+        if (sneaking) {
+            return 1.5F;
+        } else {
+            return EntityDefinitions.PLAYER.height();
+        }
     }
 
     public float getMovementSpeed(boolean sprinting, float slipperiness) {
