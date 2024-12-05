@@ -1,4 +1,4 @@
-package ac.boar.anticheat.utils;
+package ac.boar.anticheat.utils.collisions;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.BoundingBox;
@@ -9,7 +9,9 @@ import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.floats.FloatListIterator;
 import org.cloudburstmc.math.vector.Vector3i;
+import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.Axis;
+import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.collision.BlockCollision;
 import org.geysermc.geyser.util.BlockUtils;
 
@@ -154,7 +156,20 @@ public class Collisions {
 
     // TODO: compensated world
     private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list) {
-        BlockCollision collision = BlockUtils.getCollisionAt(player.getSession(), vector3i);
+        GeyserSession session = player.getSession();
+        BlockState state = session.getGeyser().getWorldManager().blockAt(session, vector3i);
+        List<BoundingBox> boxes = BedrockCollision.getBoundingBox(state);
+        if (!boxes.isEmpty()) {
+            for (BoundingBox box : boxes) {
+                box = box.offset(new Vec3f(vector3i));
+                if (box.intersects(boundingBox)) {
+                    list.add(box);
+                }
+            }
+            return;
+        }
+
+        BlockCollision collision = BlockUtils.getCollision(state.javaId());
         if (collision == null) {
             return;
         }
