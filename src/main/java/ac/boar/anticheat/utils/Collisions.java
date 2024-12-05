@@ -154,7 +154,6 @@ public class Collisions {
 
     // TODO: compensated world
     private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list) {
-        // The bounding box list seems to be... inaccurate, cauldron, lantern, ... TODO: fix
         BlockCollision collision = BlockUtils.getCollisionAt(player.getSession(), vector3i);
         if (collision == null) {
             return;
