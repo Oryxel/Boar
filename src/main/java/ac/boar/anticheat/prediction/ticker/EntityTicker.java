@@ -8,7 +8,7 @@ import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.anticheat.utils.Collisions;
+import ac.boar.anticheat.utils.collisions.Collisions;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
@@ -143,6 +143,9 @@ public class EntityTicker {
             }
         }
 
+        if (player.actualVelocity.length() > 0) {
+            Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
+        }
         player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), player.getHeight());
     }
 
