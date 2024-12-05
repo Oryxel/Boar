@@ -2,6 +2,7 @@ package ac.boar.utils.math;
 
 import org.cloudburstmc.math.GenericMath;
 import org.cloudburstmc.math.vector.Vector3f;
+import org.cloudburstmc.math.vector.Vector3i;
 
 public class Vec3f implements Cloneable {
     public static Vec3f ZERO = Vec3f.from(0, 0, 0);
@@ -18,6 +19,12 @@ public class Vec3f implements Cloneable {
         this.x = vector3f.getX();
         this.y = vector3f.getY();
         this.z = vector3f.getZ();
+    }
+
+    public Vec3f(Vector3i vector3i) {
+        this.x = vector3i.getX();
+        this.y = vector3i.getY();
+        this.z = vector3i.getZ();
     }
 
     public float distanceTo(Vec3f vec) {

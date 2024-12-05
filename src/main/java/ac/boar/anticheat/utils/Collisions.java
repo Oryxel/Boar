@@ -161,16 +161,10 @@ public class Collisions {
         }
 
         for (org.geysermc.geyser.level.physics.BoundingBox geyserBB : collision.getBoundingBoxes()) {
-            BoundingBox box = new BoundingBox(geyserBB);
+            BoundingBox box = new BoundingBox(geyserBB).offset(new Vec3f(vector3i));
 
-            BoundingBox bb = new BoundingBox(
-                    vector3i.getX() + box.minX,
-                    vector3i.getY() + box.minY,
-                    vector3i.getZ() + box.minZ, vector3i.getX() + box.maxX, vector3i.getY() + box.maxY,
-                    vector3i.getZ() + box.maxZ);
-
-            if (bb.intersects(boundingBox)) {
-                list.add(bb);
+            if (box.intersects(boundingBox)) {
+                list.add(box);
             }
         }
     }
