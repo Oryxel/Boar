@@ -28,10 +28,6 @@ public class BedrockCollision {
             return boxes;
         }
 
-        if (state.is(Blocks.DIRT_PATH)) {
-            return List.of(new BoundingBox(0, 0, 0, 1, 1, 1));
-        }
-
         if (state.block() instanceof TrapDoorBlock) {
             final BoundingBox EAST_SHAPE = new BoundingBox(0, 0, 0, 0.1825F, 1, 1);
             final BoundingBox WEST_SHAPE = new BoundingBox(0.8175F, 0, 0, 1, 1, 1);
