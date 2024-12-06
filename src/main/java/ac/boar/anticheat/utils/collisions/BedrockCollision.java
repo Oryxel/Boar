@@ -5,6 +5,7 @@ import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.property.Properties;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.block.type.DoorBlock;
+import org.geysermc.geyser.level.block.type.TrapDoorBlock;
 import org.geysermc.geyser.level.physics.Direction;
 
 import java.util.ArrayList;
@@ -29,6 +30,30 @@ public class BedrockCollision {
 
         if (state.is(Blocks.DIRT_PATH)) {
             return List.of(new BoundingBox(0, 0, 0, 1, 1, 1));
+        }
+
+        if (state.block() instanceof TrapDoorBlock) {
+            final BoundingBox EAST_SHAPE = new BoundingBox(0, 0, 0, 0.1825F, 1, 1);
+            final BoundingBox WEST_SHAPE = new BoundingBox(0.8175F, 0, 0, 1, 1, 1);
+            final BoundingBox SOUTH_SHAPE = new BoundingBox(0, 0, 0, 1, 1, 0.1825F);
+            final BoundingBox NORTH_SHAPE = new BoundingBox(0, 0, 0.8175F, 1, 1, 1);
+
+            final BoundingBox OPEN_BOTTOM_SHAPE = new BoundingBox(0, 0, 0, 1, 0.1825F, 1);
+            final BoundingBox OPEN_TOP_SHAPE = new BoundingBox(0, 0.8175F, 0, 1, 1, 1);
+
+            BoundingBox box;
+            if (!state.getValue(Properties.OPEN)) {
+                box = state.getValue(Properties.HALF).equalsIgnoreCase("top") ? OPEN_TOP_SHAPE : OPEN_BOTTOM_SHAPE;
+            } else {
+                switch (state.getValue(Properties.HORIZONTAL_FACING)) {
+                    case SOUTH -> box = SOUTH_SHAPE;
+                    case WEST -> box = WEST_SHAPE;
+                    case EAST -> box = EAST_SHAPE;
+                    default -> box = NORTH_SHAPE;
+                }
+            }
+
+            return List.of(box);
         }
 
         if (state.block() instanceof DoorBlock) {
