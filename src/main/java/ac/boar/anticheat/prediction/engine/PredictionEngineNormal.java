@@ -94,7 +94,7 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     private Vec3f applyClimbingSpeed(Vec3f motion) {
-        if (player.isClimbing()) {
+        if (player.lastCanClimb) {
             // this.onLanding();
             float d = /* MathUtil.clamp(motion.x, -0.20000076F, 0.20000076F) */ motion.x;
             float e = /* MathUtil.clamp(motion.z, -0.20000076F, 0.20000076F) */ motion.z;
