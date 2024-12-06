@@ -14,7 +14,7 @@ import java.util.List;
 public class BedrockCollision {
     public static List<BoundingBox> getBoundingBox(BlockState state) {
         if (state.is(Blocks.ENDER_CHEST)) {
-            return List.of(new BoundingBox(0F, 0F, 0F, 0.95F, 0.95F, 0.95F));
+            return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
         }
 
         if (state.is(Blocks.CAULDRON)) {
