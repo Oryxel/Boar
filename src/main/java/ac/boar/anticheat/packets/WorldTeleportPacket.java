@@ -8,7 +8,6 @@ import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
 import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.utils.math.Vec3f;
-import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
