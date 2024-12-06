@@ -12,7 +12,8 @@ finish this.
 ## Problems
 - Player can clip into walls (they will glitch back anyway, but it will still cause false) mentioned in [3370](https://github.com/GeyserMC/Geyser/issues/3370) and [4269](https://github.com/GeyserMC/Geyser/issues/4269)
 - Prediction engine accuracy is yuck and can be even worse if player movement is too fast or in other cases.
-- Teleport handling system is broken (partially fixed)
+- Collision is wrong and broken (different bounding boxes, collisions is wrong on block edge, sneaking on edge is wrong)
+- Teleport system is broken (partially fixed)
 - A lot of stuff is still unimplemented.
 
 ### Credit:
