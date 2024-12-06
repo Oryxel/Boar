@@ -64,7 +64,7 @@ public class EntityTicker {
         player.movementInput = player.movementInput.mul(0.98F);
 
         if (player.movementInput.x != 0 && player.movementInput.z != 0) {
-            player.movementInput = player.movementInput.mul(1F / (float) GenericMath.sqrt(2));
+            player.movementInput = player.movementInput.mul(0.70710677F);
         }
 
         List<Vector> possibilities = engine.gatherAllPossibilities();
