@@ -44,7 +44,7 @@ public final class TeleportUtil {
         packet.setDelta(vec3f.toVector3f());
         packet.setPosition(lastKnowValid.toVector3f());
         packet.setTick(player.tick);
-        packet.setOnGround(player.lastGround);
+        packet.setOnGround(player.onGround);
         packet.setPredictionType(PredictionType.PLAYER);
         this.player.getBedrockSession().sendPacketImmediately(packet);
 

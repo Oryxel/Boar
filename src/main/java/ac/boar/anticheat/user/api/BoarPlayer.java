@@ -59,7 +59,7 @@ public class BoarPlayer {
 
     public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
-    public boolean lastTickWasTeleport;
+    public boolean lastTickWasTeleport, lastTeleportWasSimulation;
     public int sinceTeleport;
 
     public boolean wasInPowderSnow, inPowderSnow;
