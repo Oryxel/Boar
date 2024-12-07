@@ -1,6 +1,5 @@
 package ac.boar.anticheat.utils;
 
-import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
@@ -10,8 +9,6 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PredictionType;
 import org.cloudburstmc.protocol.bedrock.packet.CorrectPlayerMovePredictionPacket;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
-import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket;
-import org.geysermc.geyser.entity.EntityDefinitions;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -23,11 +20,17 @@ public final class TeleportUtil {
     private final Queue<TeleportCache> teleportQueue = new ConcurrentLinkedQueue<>();
     public Vec3f lastKnowValid = Vec3f.ZERO;
 
-    public void addTeleportToQueue(Vec3f vec3F, boolean immediate, boolean silent) {
+    public void addTeleportToQueue(Vec3f vec3F, Vec3f velocity, boolean immediate, boolean simulation) {
         this.player.sendTransaction(immediate);
 
-        final TeleportCache teleportCache = new TeleportCache(vec3F, this.player.lastSentId, silent);
+        final TeleportCache teleportCache = new TeleportCache(vec3F, this.player.lastSentId, simulation);
         this.teleportQueue.add(teleportCache);
+
+        player.teleportUtil.lastKnowValid = new Vec3f(vec3F.toVector3f());
+        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
+            player.queuedVelocities.clear();
+            player.clientVelocity = velocity;
+        });
     }
 
     public void setbackWithVelocity(long id) {
@@ -45,16 +48,10 @@ public final class TeleportUtil {
         packet.setPredictionType(PredictionType.PLAYER);
         this.player.getBedrockSession().sendPacketImmediately(packet);
 
-        player.lastX = lastKnowValid.x;
-        player.lastY = lastKnowValid.y;
-        player.lastZ = lastKnowValid.z;
-
-        player.clientVelocity = vec3f;
+        this.addTeleportToQueue(lastKnowValid, vec3f, true, true);
     }
 
     public void setbackTo(Vec3f vec3F) {
-        this.addTeleportToQueue(vec3F, true,true);
-
         // Server won't know about this if we sent it like this, well they don't need to anyway.
         // As long as we handle thing correctly, it won't be a problem
         // If we do not however, server will likely set player back for 'Moved too quickly'
@@ -67,6 +64,7 @@ public final class TeleportUtil {
         movePlayerPacket.setOnGround(player.onGround);
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
+        this.addTeleportToQueue(vec3F, Vec3f.ZERO, true, false);
 
         this.player.getBedrockSession().sendPacketImmediately(movePlayerPacket);
     }
@@ -81,6 +79,6 @@ public final class TeleportUtil {
     public static class TeleportCache {
         private final Vec3f position;
         private final long transactionId;
-        private final boolean silent;
+        private final boolean simulation;
     }
 }

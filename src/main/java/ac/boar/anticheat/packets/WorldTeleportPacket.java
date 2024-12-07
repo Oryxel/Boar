@@ -50,14 +50,9 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
         // This is not precise as java, since it being sent this tick instead of right away (also because of floating point I think?), we can't check for 0
         // I will use 0.1 just to be safe, I have seen it reach 2e-6 in some cases, but I haven't test enough to know.
         double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
-        if (packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) && distance < 0.1) {
+        if ((packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) || cache.isSimulation()) && distance < 0.1) {
             BoarPlugin.LOGGER.info("Accepted teleport, d=" + distance);
             player.lastTickWasTeleport = true;
-
-            // Server don't know about this teleport, cancel it.
-            if (cache.isSilent()) {
-                event.setCancelled(true);
-            }
         } else {
             // This is not the latest teleport, just ignore this one, we only force player to accept the latest one.
             // We don't want to teleport player to old teleport position when they're supposed to teleport to the latest tone.
@@ -86,13 +81,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
         }
 
         if (packet.getMode() == MovePlayerPacket.Mode.TELEPORT) {
-            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), event.isImmediate(), false);
+            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), Vec3f.ZERO, event.isImmediate(), false);
         }
-
-        player.teleportUtil.lastKnowValid = new Vec3f(packet.getPosition());
-        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-            player.queuedVelocities.clear();
-            player.clientVelocity = player.predictedVelocity = Vec3f.ZERO;
-        });
     }
 }
