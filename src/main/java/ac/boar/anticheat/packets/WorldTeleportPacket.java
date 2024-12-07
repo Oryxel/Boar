@@ -53,6 +53,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
         if ((packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) || cache.isSimulation()) && distance < 0.1) {
             BoarPlugin.LOGGER.info("Accepted teleport, d=" + distance);
             player.lastTickWasTeleport = true;
+            player.lastTeleportWasSimulation = cache.isSimulation();
         } else {
             // This is not the latest teleport, just ignore this one, we only force player to accept the latest one.
             // We don't want to teleport player to old teleport position when they're supposed to teleport to the latest tone.

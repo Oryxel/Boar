@@ -60,7 +60,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
-        if (player.sinceTeleport < 2) {
+        if (player.sinceTeleport < (player.lastTeleportWasSimulation ? 3 : 2)) {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
             return;
         }
