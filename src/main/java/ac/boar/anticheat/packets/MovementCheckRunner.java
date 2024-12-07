@@ -24,10 +24,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.tick();
 
         final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
-        if (packet.getTick() != packet.getTick()) {
-            player.getSession().disconnect("Invalid movement packet!");
-            return;
-        }
+        player.tick = packet.getTick();
 
         // This DOES happen, sometimes it failed to add the adapter, force player to rejoin...
         if (player.getJavaSession() == null) {
@@ -44,11 +41,10 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.inputData.clear();
         player.inputData.addAll(packet.getInputData());
 
-        if (player.sinceTeleport != 2) {
-            player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
-            player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
-            player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
-
+        player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
+        player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
+        player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
+        if (player.sinceTeleport != 1) {
             player.x = packet.getPosition().getX();
             player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
             player.z = packet.getPosition().getZ();
