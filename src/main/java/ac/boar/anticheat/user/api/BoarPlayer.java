@@ -81,6 +81,8 @@ public class BoarPlayer {
 
     public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
     public Map<Long, Vec3f> queuedVelocities = new ConcurrentHashMap<>();
+    public Map<Long, Vec3f> postPredictionVelocities = new ConcurrentHashMap<>();
+
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
     public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
     public BoundingBox boundingBox;

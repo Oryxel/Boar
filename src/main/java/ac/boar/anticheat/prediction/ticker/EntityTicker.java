@@ -81,6 +81,10 @@ public class EntityTicker {
                 afterCollision = ac;
                 beforeCollision = bc;
             }
+
+            if (vector.getType() == VectorType.VELOCITY) {
+                player.postPredictionVelocities.put(vector.getTransactionId(), ac);
+            }
         }
 
         player.collideX = afterCollision.x != beforeCollision.x;
@@ -147,6 +151,8 @@ public class EntityTicker {
             Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
         }
         player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), player.getHeight());
+
+        player.postPredictionVelocities.clear();
     }
 
     private boolean updateWaterState() {

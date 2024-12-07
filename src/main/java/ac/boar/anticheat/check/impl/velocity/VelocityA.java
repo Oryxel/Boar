@@ -40,6 +40,9 @@ public class VelocityA extends OffsetHandlerCheck {
                 continue;
             }
 
+            if (player.queuedVelocities.isEmpty()) {
+                player.teleportUtil.setbackWithVelocity(entry.getKey());
+            }
             Bukkit.broadcastMessage("fail VelocityA!");
         }
     }
