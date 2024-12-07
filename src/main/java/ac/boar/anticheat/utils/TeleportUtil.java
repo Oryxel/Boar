@@ -31,6 +31,8 @@ public final class TeleportUtil {
         setbackTo(this.lastKnowValid);
     }
 
+
+    // TODO: use CorrectPlayerMovePredictionPacket instead.
     public void setbackTo(Vec3f vec3F) {
         this.addTeleportToQueue(vec3F, true,true);
 
@@ -54,6 +56,7 @@ public final class TeleportUtil {
         SetEntityMotionPacket motionPacket = new SetEntityMotionPacket();
         motionPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
         motionPacket.setMotion(Vector3f.from(vec3F.x, vec3F.y, vec3F.z));
+        this.player.getBedrockSession().sendPacketImmediately(motionPacket);
 
         player.sendTransaction();
     }
