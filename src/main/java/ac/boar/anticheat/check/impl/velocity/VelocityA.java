@@ -35,8 +35,8 @@ public class VelocityA extends OffsetHandlerCheck {
             }
             iterator.remove();
 
-            double distance = Math.min(entry.getValue().distanceTo(player.predictedVelocity), entry.getValue().distanceTo(player.closetVector.getVelocity()));
-            if (distance < 0.0001) {
+            double distance = entry.getValue().distanceTo(player.closetVector.getVelocity());
+            if (distance < 0.001) {
                 continue;
             }
 
