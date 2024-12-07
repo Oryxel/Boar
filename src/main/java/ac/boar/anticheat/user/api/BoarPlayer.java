@@ -125,8 +125,6 @@ public class BoarPlayer {
     }
 
     public void tick() {
-        this.tick++;
-
         List<Effect> ranOutStatus = new ArrayList<>();
         for (Map.Entry<Effect, StatusEffect> entry : this.statusMap.entrySet()) {
             entry.getValue().tick();
