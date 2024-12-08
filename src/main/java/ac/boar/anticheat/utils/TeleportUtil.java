@@ -58,7 +58,7 @@ public final class TeleportUtil {
         // Also this (prob) going to prevent respawn tp, if there is one.
 
         MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
-        movePlayerPacket.setRuntimeEntityId(player.getSession().getPlayerEntity().getGeyserId());
+        movePlayerPacket.setRuntimeEntityId(player.runtimeEntityId);
         movePlayerPacket.setPosition(Vector3f.from(vec3F.x, vec3F.y, vec3F.z));
         movePlayerPacket.setRotation(player.bedrockRotation);
         movePlayerPacket.setOnGround(player.onGround);

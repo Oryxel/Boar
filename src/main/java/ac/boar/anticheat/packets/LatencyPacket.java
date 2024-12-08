@@ -1,7 +1,7 @@
 package ac.boar.anticheat.packets;
 
-import ac.boar.protocol.event.bedrock.BedrockPacketListener;
-import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
+import ac.boar.protocol.event.BedrockPacketListener;
+import ac.boar.protocol.event.PacketReceivedEvent;
 import ac.boar.utils.GeyserUtil;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 
@@ -16,7 +16,7 @@ public class LatencyPacket implements BedrockPacketListener {
         }
 
         long id = packet.getTimestamp();
-        if (id >= 0 || ((double) id / GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP) % 10 == 0 || ((double) GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP / id) % 10 == 0) {
+        if (id >= 0 || ((double) id / -GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP) % 10 == 0 || ((double) -GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP / id) % 10 == 0) {
             return;
         }
 

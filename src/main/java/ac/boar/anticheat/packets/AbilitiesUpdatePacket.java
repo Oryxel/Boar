@@ -1,8 +1,8 @@
 package ac.boar.anticheat.packets;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.geyser.GeyserSendEvent;
 import org.cloudburstmc.protocol.bedrock.data.AbilityLayer;
 import org.cloudburstmc.protocol.bedrock.data.AttributeData;
 import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket;
@@ -14,7 +14,7 @@ public class AbilitiesUpdatePacket implements GeyserPacketListener {
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();
         if (event.getPacket() instanceof UpdateAbilitiesPacket updateAbilitiesPacket) {
-            if (updateAbilitiesPacket.getUniqueEntityId() != player.getSession().getPlayerEntity().getGeyserId()) {
+            if (updateAbilitiesPacket.getUniqueEntityId() != player.runtimeEntityId) {
                 return;
             }
 
@@ -32,7 +32,7 @@ public class AbilitiesUpdatePacket implements GeyserPacketListener {
         }
 
         if (event.getPacket() instanceof UpdateAttributesPacket updateAttributesPacket) {
-            if (updateAttributesPacket.getRuntimeEntityId() != player.getSession().getPlayerEntity().getGeyserId()) {
+            if (updateAttributesPacket.getRuntimeEntityId() != player.runtimeEntityId) {
                 return;
             }
 

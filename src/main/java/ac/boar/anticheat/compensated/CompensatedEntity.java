@@ -2,7 +2,7 @@ package ac.boar.anticheat.compensated;
 
 import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.geyser.GeyserSendEvent;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import lombok.Getter;

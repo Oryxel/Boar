@@ -3,10 +3,10 @@ package ac.boar.anticheat.packets;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.plugin.BoarPlugin;
-import ac.boar.protocol.event.bedrock.BedrockPacketListener;
-import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
-import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.BedrockPacketListener;
+import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.geyser.GeyserSendEvent;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
@@ -74,7 +74,7 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
             return;
         }
 
-        if (player.getSession().getPlayerEntity().getGeyserId() != packet.getRuntimeEntityId()) {
+        if (player.runtimeEntityId != packet.getRuntimeEntityId()) {
             return;
         }
 

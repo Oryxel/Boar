@@ -1,6 +1,6 @@
 package ac.boar.protocol;
 
-import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.geyser.GeyserPacketListener;
 import lombok.Getter;
 
 import java.util.List;

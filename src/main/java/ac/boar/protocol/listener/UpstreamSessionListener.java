@@ -2,8 +2,8 @@ package ac.boar.protocol.listener;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.GeyserPacketEvents;
-import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.geyser.GeyserSendEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
 import org.cloudburstmc.protocol.bedrock.data.AuthoritativeMovementMode;
@@ -35,6 +35,8 @@ public class UpstreamSessionListener extends UpstreamSession {
 
             startGamePacket.setAuthoritativeMovementMode(AuthoritativeMovementMode.SERVER_WITH_REWIND);
             startGamePacket.setRewindHistorySize(20);
+
+            player.runtimeEntityId = startGamePacket.getRuntimeEntityId();
             getSession().sendPacket(startGamePacket);
             return;
         }
