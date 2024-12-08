@@ -117,6 +117,10 @@ public class Collisions {
         BoundingBox box = boundingBox.clone();
 
         for (BoundingBox bb : collision) {
+            if (Math.abs(d) < 1.0E-7) {
+                return 0;
+            }
+
             if (axis == Axis.X) {
                 d = bb.calculateXOffset(box, d);
             } else if (axis == Axis.Y) {
