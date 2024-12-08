@@ -27,7 +27,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 - Why the **FUCK** position (and everything else) stored in floating point. (I hate this)
 - A lot of bounding boxes is different, ~~step motion seems to be different (not sure)~~?
-- Sprinting/Sneaking status client doesn't seem to match up with player movement
+- Sprinting/Sneaking status client sent doesn't seem to match up with player movement
 - NetworkStackLatency (ping packet), is deprecated, and might be removed soon (hope not).
 - CorrectPlayerMovePrediction is weird, the velocity player actually moves seems to be different from
   the one we sent, (it's not EOT or anything, it's just that...?), this is a TODO.
