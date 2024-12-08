@@ -4,6 +4,7 @@ import ac.boar.utils.math.BoundingBox;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.property.Properties;
 import org.geysermc.geyser.level.block.type.BlockState;
+import org.geysermc.geyser.level.block.type.ChestBlock;
 import org.geysermc.geyser.level.block.type.DoorBlock;
 import org.geysermc.geyser.level.block.type.TrapDoorBlock;
 import org.geysermc.geyser.level.physics.Direction;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class BedrockCollision {
     public static List<BoundingBox> getBoundingBox(BlockState state) {
-        if (state.is(Blocks.ENDER_CHEST)) {
+        if (state.block() instanceof ChestBlock || state.is(Blocks.ENDER_CHEST)) {
             return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
         }
 
