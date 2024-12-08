@@ -149,13 +149,13 @@ public class BoundingBox implements Cloneable {
 
     public float calculateXOffset(BoundingBox other, float offsetX) {
         if (other.maxY > this.minY && other.minY < this.maxY && other.maxZ > this.minZ && other.minZ < this.maxZ) {
-            if (offsetX > 0.0D && other.maxX <= this.minX) {
+            if (offsetX > 0.0D) {
                 float d1 = this.minX - other.maxX;
 
                 if (d1 < offsetX) {
                     offsetX = d1;
                 }
-            } else if (offsetX < 0.0D && other.minX >= this.maxX) {
+            } else if (offsetX < 0.0D) {
                 float d0 = this.maxX - other.minX;
 
                 if (d0 > offsetX) {
@@ -168,13 +168,13 @@ public class BoundingBox implements Cloneable {
 
     public float calculateYOffset(BoundingBox other, float offsetY) {
         if (other.maxX > this.minX && other.minX < this.maxX && other.maxZ > this.minZ && other.minZ < this.maxZ) {
-            if (offsetY > 0.0D && other.maxY <= this.minY) {
+            if (offsetY > 0.0D) {
                 float d1 = this.minY - other.maxY;
 
                 if (d1 < offsetY) {
                     offsetY = d1;
                 }
-            } else if (offsetY < 0.0D && other.minY >= this.maxY) {
+            } else if (offsetY < 0.0D) {
                 float d0 = this.maxY - other.minY;
 
                 if (d0 > offsetY) {
@@ -188,13 +188,13 @@ public class BoundingBox implements Cloneable {
 
     public float calculateZOffset(BoundingBox other, float offsetZ) {
         if (other.maxX > this.minX && other.minX < this.maxX && other.maxY > this.minY && other.minY < this.maxY) {
-            if (offsetZ > 0.0D && other.maxZ <= this.minZ) {
+            if (offsetZ > 0.0D) {
                 float d1 = this.minZ - other.maxZ;
 
                 if (d1 < offsetZ) {
                     offsetZ = d1;
                 }
-            } else if (offsetZ < 0.0D && other.minZ >= this.maxZ) {
+            } else if (offsetZ < 0.0D) {
                 float d0 = this.maxZ - other.minZ;
 
                 if (d0 > offsetZ) {
