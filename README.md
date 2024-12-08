@@ -2,10 +2,9 @@
 
 A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
-- Warning: This anti-cheat is really terrible and so is the code, I'm not
-  good at making anti-cheat too which sounds like an excuse, and it is lol.
-- I also don't guarantee anything about performance or false lol. I don't even think I will ever
-  finish this.
+- Warning: This anti-cheat is not the best thing ever, I believed that a lot of other people
+  could've done it much better (Polar developers, or any developer that have work on a prediction ac before).
+- I can't guarantee I will ever finish this, or anything performance-related, falses, lag compatibility.
 
 ## Features
 
@@ -25,6 +24,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 - A lot of stuff is still unimplemented.
 
 #### Things to note about Bedrock (for me - or any contributors)
+
 - Why the **FUCK** position (and everything else) stored in floating point. (I hate this)
 - A lot of bounding boxes is different, ~~step motion seems to be different (not sure)~~?
 - Sprinting/Sneaking status client doesn't seem to match up with player movement
@@ -33,7 +33,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
   the one we sent, (it's not EOT or anything, it's just that...?), this is a TODO.
 - Sneaking collisions calculation currently is wrong on both Bedrock (and Java - ViaBedrock).
 - Push out of block is instant, not slowly like on single-player world or on Java? (prob geyser teleport.)
-- I don't trust my way of hooking and reading packet sent from/to client enough, it might not work 
+- I don't trust my way of hooking and reading packet sent from/to client enough, it might not work
   sometimes (although that never happened).
 
 ### Credit:
