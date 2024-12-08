@@ -23,8 +23,7 @@ public class Collisions {
     private static boolean isSpaceAroundPlayerEmpty(BoarPlayer player, float offsetX, float offsetZ, float f) {
         BoundingBox lv = player.boundingBox;
         List<BoundingBox> collisions = legacyBoxCollisions(player, new BoundingBox(
-                lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ)
-                .expand(0.5F));
+                lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ));
 
         return collisions.isEmpty();
     }
