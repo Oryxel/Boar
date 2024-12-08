@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class BedrockPacketEvents {
     @Getter
-    private static List<BedrockPacketListener> listeners = new CopyOnWriteArrayList<>();
+    private static final List<BedrockPacketListener> listeners = new CopyOnWriteArrayList<>();
 
     public static void register(final BedrockPacketListener listener) {
         BedrockPacketEvents.listeners.add(listener);

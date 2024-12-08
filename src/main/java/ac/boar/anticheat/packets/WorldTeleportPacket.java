@@ -18,11 +18,9 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
-        if (!(event.getPacket() instanceof PlayerAuthInputPacket)) {
+        if (!(event.getPacket() instanceof PlayerAuthInputPacket packet)) {
             return;
         }
-
-        final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
 
         Queue<TeleportUtil.TeleportCache> queue = player.teleportUtil.getTeleportQueue();
         if (queue.isEmpty()) {
@@ -67,12 +65,11 @@ public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketL
 
     @Override
     public void onPacketSend(GeyserSendEvent event) {
-        if (!(event.getPacket() instanceof MovePlayerPacket)) {
+        if (!(event.getPacket() instanceof MovePlayerPacket packet)) {
             return;
         }
 
         final BoarPlayer player = event.getPlayer();
-        final MovePlayerPacket packet = (MovePlayerPacket) event.getPacket();
         if (packet.getMode() != MovePlayerPacket.Mode.TELEPORT && packet.getMode() != MovePlayerPacket.Mode.RESPAWN) {
             return;
         }

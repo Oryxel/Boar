@@ -10,6 +10,9 @@ public class PacketCheck extends Check {
         super(player);
     }
 
-    public void onPacketReceived(final PacketReceivedEvent event) {}
-    public void onPacketSend(final PacketSendEvent event) {}
+    public void onPacketReceived(final PacketReceivedEvent event) {
+    }
+
+    public void onPacketSend(final PacketSendEvent event) {
+    }
 }

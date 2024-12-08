@@ -27,6 +27,14 @@ public class Vec3f implements Cloneable {
         this.z = vector3i.getZ();
     }
 
+    public static Vec3f from(float x, float y, float z) {
+        return new Vec3f(x, y, z);
+    }
+
+    public static Vec3f from(double x, double y, double z) {
+        return new Vec3f((float) x, (float) y, (float) z);
+    }
+
     public float distanceTo(Vec3f vec) {
         return (float) Math.sqrt(squaredDistanceTo(vec));
     }
@@ -48,14 +56,6 @@ public class Vec3f implements Cloneable {
 
     public Vector3f toVector3f() {
         return Vector3f.from(this.x, this.y, this.z);
-    }
-
-    public static Vec3f from(float x, float y, float z) {
-        return new Vec3f(x, y, z);
-    }
-
-    public static Vec3f from(double x, double y, double z) {
-        return new Vec3f((float) x, (float) y, (float) z);
     }
 
     public float getX() {
@@ -91,7 +91,7 @@ public class Vec3f implements Cloneable {
     }
 
     public Vec3f sub(double x, double y, double z) {
-        return this.sub((float)x, (float)y, (float)z);
+        return this.sub((float) x, (float) y, (float) z);
     }
 
     public Vec3f sub(float v, float v1, float v2) {
@@ -99,7 +99,7 @@ public class Vec3f implements Cloneable {
     }
 
     public Vec3f mul(double a) {
-        return this.mul((float)a);
+        return this.mul((float) a);
     }
 
     public Vec3f mul(float a) {
@@ -141,11 +141,11 @@ public class Vec3f implements Cloneable {
     }
 
     public Vec3f floor() {
-        return Vec3f.from((float)GenericMath.floor(this.getX()), (float)GenericMath.floor(this.getY()), (float)GenericMath.floor(this.getZ()));
+        return Vec3f.from((float) GenericMath.floor(this.getX()), (float) GenericMath.floor(this.getY()), (float) GenericMath.floor(this.getZ()));
     }
 
     public Vec3f round() {
-        return Vec3f.from((float)Math.round(this.getX()), (float)Math.round(this.getY()), (float)Math.round(this.getZ()));
+        return Vec3f.from((float) Math.round(this.getX()), (float) Math.round(this.getY()), (float) Math.round(this.getZ()));
     }
 
     public Vec3f abs() {

@@ -5,13 +5,13 @@ import org.cloudburstmc.math.TrigMath;
 
 public final class MathUtil {
     public static int floor(float value) {
-        int i = (int)value;
-        return value < (float)i ? i - 1 : i;
+        int i = (int) value;
+        return value < (float) i ? i - 1 : i;
     }
 
     public static int ceil(float value) {
-        int i = (int)value;
-        return value > (float)i ? i + 1 : i;
+        int i = (int) value;
+        return value > (float) i ? i + 1 : i;
     }
 
     public static float toValue(float value, float target) {

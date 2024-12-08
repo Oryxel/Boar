@@ -4,7 +4,6 @@ import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
@@ -16,6 +15,17 @@ import java.util.List;
 public class PredictionEngineNormal extends PredictionEngine {
     public PredictionEngineNormal(BoarPlayer player) {
         super(player);
+    }
+
+    protected static Vec3f movementInputToVelocity(Vec3f movementInput, float speed, float yaw) {
+        double d = movementInput.lengthSquared();
+        if (d < 1.0E-7) {
+            return Vec3f.ZERO;
+        } else {
+            Vec3f vec3F = (d > 1.0 ? movementInput.normalize() : movementInput).mul(speed);
+            float f = TrigMath.sin(yaw * 0.017453292F), g = TrigMath.cos(yaw * 0.017453292F);
+            return new Vec3f(vec3F.x * g - vec3F.z * f, vec3F.y, vec3F.z * g + vec3F.x * f);
+        }
     }
 
     @Override
@@ -107,16 +117,5 @@ public class PredictionEngineNormal extends PredictionEngine {
         }
 
         return motion;
-    }
-
-    protected static Vec3f movementInputToVelocity(Vec3f movementInput, float speed, float yaw) {
-        double d = movementInput.lengthSquared();
-        if (d < 1.0E-7) {
-            return Vec3f.ZERO;
-        } else {
-            Vec3f vec3F = (d > 1.0 ? movementInput.normalize() : movementInput).mul(speed);
-            float f = TrigMath.sin(yaw * 0.017453292F), g = TrigMath.cos(yaw * 0.017453292F);
-            return new Vec3f(vec3F.x * g - vec3F.z * f, vec3F.y, vec3F.z * g + vec3F.x * f);
-        }
     }
 }

@@ -18,18 +18,15 @@ public class EntityUpdatePacket implements GeyserPacketListener {
             player.compensatedEntity.addEntity((AddEntityPacket) event.getPacket());
         }
 
-        if (event.getPacket() instanceof MoveEntityAbsolutePacket) {
-            final MoveEntityAbsolutePacket absolute = (MoveEntityAbsolutePacket) event.getPacket();
+        if (event.getPacket() instanceof MoveEntityAbsolutePacket absolute) {
             player.compensatedEntity.queuePositionUpdate(event, absolute.getRuntimeEntityId(), new Vec3f(absolute.getPosition()));
         }
 
-        if (event.getPacket() instanceof MoveEntityDeltaPacket) {
-            final MoveEntityDeltaPacket delta = (MoveEntityDeltaPacket) event.getPacket();
+        if (event.getPacket() instanceof MoveEntityDeltaPacket delta) {
             player.compensatedEntity.queuePositionUpdate(event, delta.getRuntimeEntityId(), new Vec3f(delta.getX(), delta.getY(), delta.getZ()));
         }
 
-        if (event.getPacket() instanceof RemoveEntityPacket) {
-            final RemoveEntityPacket remove = (RemoveEntityPacket) event.getPacket();
+        if (event.getPacket() instanceof RemoveEntityPacket remove) {
             player.compensatedEntity.removeEntity(remove.getUniqueEntityId());
         }
     }

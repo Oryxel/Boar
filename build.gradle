@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor (libs.lombok)
+    annotationProcessor(libs.lombok)
 
     compileOnly(libs.bedrock.connection)
     compileOnly(libs.protocol)

@@ -13,8 +13,7 @@ public class VelocityUpdatePacket implements GeyserPacketListener {
 
         // Yes only this, there no packet for explosion (for bedrock), geyser also translate explosion directly to SetEntityMotionPacket
         // Not really how it works on java, but doesn't matter, not ours problems
-        if (event.getPacket() instanceof SetEntityMotionPacket) {
-            final SetEntityMotionPacket packet = (SetEntityMotionPacket) event.getPacket();
+        if (event.getPacket() instanceof SetEntityMotionPacket packet) {
             if (packet.getRuntimeEntityId() != player.getSession().getPlayerEntity().getGeyserId()) {
                 return;
             }

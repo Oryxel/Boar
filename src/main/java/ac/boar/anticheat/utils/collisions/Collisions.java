@@ -40,14 +40,14 @@ public class Collisions {
             float h = Math.signum(d) * 0.05F;
 
             float i;
-            for(i = Math.signum(e) * 0.05F; d != 0.0 && isSpaceAroundPlayerEmpty(player, d, 0.0F, f); d -= h) {
+            for (i = Math.signum(e) * 0.05F; d != 0.0 && isSpaceAroundPlayerEmpty(player, d, 0.0F, f); d -= h) {
                 if (Math.abs(d) <= 0.05) {
                     d = 0.0F;
                     break;
                 }
             }
 
-            while(e != 0.0 && isSpaceAroundPlayerEmpty(player,0.0F, e, f)) {
+            while (e != 0.0 && isSpaceAroundPlayerEmpty(player, 0.0F, e, f)) {
                 if (Math.abs(e) <= 0.05) {
                     e = 0.0F;
                     break;
@@ -56,7 +56,7 @@ public class Collisions {
                 e -= i;
             }
 
-            while(d != 0.0 && e != 0.0 && isSpaceAroundPlayerEmpty(player,d, e, f)) {
+            while (d != 0.0 && e != 0.0 && isSpaceAroundPlayerEmpty(player, d, e, f)) {
                 if (Math.abs(d) <= 0.05) {
                     d = 0.0F;
                 } else {
@@ -223,12 +223,13 @@ public class Collisions {
 
     private static float[] collectStepHeights(BoundingBox collisionBox, List<BoundingBox> collisions, float f, float stepHeight) {
         FloatArraySet floatSet = new FloatArraySet(4);
-        block0: for (BoundingBox bb : collisions) {
+        block0:
+        for (BoundingBox bb : collisions) {
             FloatList floatList = bb.getPointPositions();
             FloatListIterator floatListIterator = floatList.iterator();
             while (floatListIterator.hasNext()) {
                 double d = floatListIterator.next();
-                float g = (float)(d - collisionBox.minY);
+                float g = (float) (d - collisionBox.minY);
                 if (g < 0.0f || g == stepHeight) continue;
                 if (g > f) continue block0;
                 floatSet.add(g);
