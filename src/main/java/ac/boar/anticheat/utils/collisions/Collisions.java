@@ -21,9 +21,10 @@ import java.util.List;
 public class Collisions {
 
     private static boolean isSpaceAroundPlayerEmpty(BoarPlayer player, float offsetX, float offsetZ, float f) {
-        BoundingBox box = player.boundingBox;
-        List<BoundingBox> collisions = legacyBoxCollisions(player, new BoundingBox(box.minX + offsetX,
-                box.minY - f - 9.999999747378752E-6F, box.minZ + offsetZ, box.maxX + offsetX, box.minY, box.maxZ + offsetZ));
+        BoundingBox lv = player.boundingBox;
+        List<BoundingBox> collisions = legacyBoxCollisions(player, new BoundingBox(
+                lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ)
+                .expand(0.5F));
 
         return collisions.isEmpty();
     }
