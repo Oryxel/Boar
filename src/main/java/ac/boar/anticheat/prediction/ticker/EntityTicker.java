@@ -246,7 +246,7 @@ public class EntityTicker {
             double d = 0.0;
             boolean bl = this.isPushedByFluids();
             boolean bl2 = false;
-            Vec3f vec3F = Vec3f.ZERO;
+            Vec3f vec3f = Vec3f.ZERO;
             int o = 0;
             Vector3i vector3i;
 
@@ -277,9 +277,9 @@ public class EntityTicker {
                 }
             }
 
-            if (vec3F.length() > 0.0) {
+            if (vec3f.length() > 0.0) {
                 if (o > 0) {
-                    vec3F = vec3F.mul(1.0 / (double) o);
+                    vec3f = vec3f.mul(1.0 / (double) o);
                 }
 
 //                if (!(this instanceof PlayerEntity)) {
@@ -287,9 +287,9 @@ public class EntityTicker {
 //                }
 
                 Vec3f vec3f3 = player.clientVelocity;
-                vec3F = vec3F.mul(speed);
-                if (Math.abs(vec3f3.x) < 0.003 && Math.abs(vec3f3.z) < 0.003 && vec3F.length() < 0.0045000000000000005) {
-                    vec3F = vec3F.normalize().mul(0.0045000000000000005);
+                vec3f = vec3f.mul(speed);
+                if (Math.abs(vec3f3.x) < 0.003 && Math.abs(vec3f3.z) < 0.003 && vec3f.length() < 0.0045000000000000005) {
+                    vec3f = vec3f.normalize().mul(0.0045000000000000005);
                 }
 
                 player.clientVelocity = player.clientVelocity.add(vec3f3);

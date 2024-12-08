@@ -194,20 +194,20 @@ public class Collisions {
 
     public static Vec3f adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3f movement) {
         List<BoundingBox> list = /* this.getWorld().getEntityCollisions(this, box.stretch(movement)) */ new ArrayList<>();
-        Vec3f vec3F = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list);
-        boolean bl = movement.x != vec3F.x;
-        boolean bl2 = movement.y != vec3F.y;
-        boolean bl3 = movement.z != vec3F.z;
+        Vec3f vec3f = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list);
+        boolean bl = movement.x != vec3f.x;
+        boolean bl2 = movement.y != vec3f.y;
+        boolean bl3 = movement.z != vec3f.z;
         boolean bl4 = bl2 && movement.y < 0.0;
         if (player.getStepHeight() > 0.0F && (bl4 || player.onGround) && (bl || bl3)) {
-            BoundingBox box2 = bl4 ? box.offset(0, vec3F.y, 0) : box;
+            BoundingBox box2 = bl4 ? box.offset(0, vec3f.y, 0) : box;
             BoundingBox box3 = box2.stretch(movement.x, player.getStepHeight(), movement.z);
             if (!bl4) {
                 box3 = box3.stretch(0, -9.999999747378752E-6F, 0);
             }
 
             List<BoundingBox> list2 = findCollisionsForMovement(player, list, box3);
-            float f = vec3F.y;
+            float f = vec3f.y;
             float[] fs = collectStepHeights(box2, list2, 0.6F, f);
             float[] var14 = fs;
             int var15 = fs.length;
@@ -215,14 +215,14 @@ public class Collisions {
             for (int var16 = 0; var16 < var15; ++var16) {
                 float g = var14[var16];
                 Vec3f vec3f2 = adjustMovementForCollisions(new Vec3f(movement.x, g, movement.z), box2, list2);
-                if (vec3f2.horizontalLengthSquared() > vec3F.horizontalLengthSquared()) {
+                if (vec3f2.horizontalLengthSquared() > vec3f.horizontalLengthSquared()) {
                     float d = box.minY - box2.minY;
                     return vec3f2.add(0.0F, -d, 0.0F);
                 }
             }
         }
 
-        return vec3F;
+        return vec3f;
     }
 
     private static float[] collectStepHeights(BoundingBox collisionBox, List<BoundingBox> collisions, float f, float stepHeight) {

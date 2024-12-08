@@ -12,14 +12,14 @@ public class Vector implements Cloneable {
     private VectorType type;
     private long transactionId = -1; // if this vector is velocity or explosion...
 
-    public Vector(Vec3f vec3F, VectorType type) {
+    public Vector(Vec3f vec3f, VectorType type) {
         this.type = type;
-        this.velocity = vec3F;
+        this.velocity = vec3f;
     }
 
-    public Vector(Vec3f vec3F, VectorType type, long transactionId) {
+    public Vector(Vec3f vec3f, VectorType type, long transactionId) {
         this.type = type;
-        this.velocity = vec3F;
+        this.velocity = vec3f;
         this.transactionId = transactionId;
     }
 

@@ -22,24 +22,24 @@ public class PredictionEngineNormal extends PredictionEngine {
         if (d < 1.0E-7) {
             return Vec3f.ZERO;
         } else {
-            Vec3f vec3F = (d > 1.0 ? movementInput.normalize() : movementInput).mul(speed);
+            Vec3f vec3f = (d > 1.0 ? movementInput.normalize() : movementInput).mul(speed);
             float f = TrigMath.sin(yaw * 0.017453292F), g = TrigMath.cos(yaw * 0.017453292F);
-            return new Vec3f(vec3F.x * g - vec3F.z * f, vec3F.y, vec3F.z * g + vec3F.x * f);
+            return new Vec3f(vec3f.x * g - vec3f.z * f, vec3f.y, vec3f.z * g + vec3f.x * f);
         }
     }
 
     @Override
     public Vec3f jump(Vec3f client) {
-        Vec3f vec3F = client.clone();
+        Vec3f vec3f = client.clone();
         float f = player.getJumpVelocity();
         if (!(f <= 1.0E-5F)) {
-            vec3F = new Vec3f(vec3F.x, Math.max(f, vec3F.y), vec3F.z);
+            vec3f = new Vec3f(vec3f.x, Math.max(f, vec3f.y), vec3f.z);
             if (player.sprinting) {
                 float g = player.yaw * 0.017453292F;
-                vec3F = vec3F.add(new Vec3f(-TrigMath.sin(g) * 0.2F, 0.0F, TrigMath.cos(g) * 0.2F));
+                vec3f = vec3f.add(new Vec3f(-TrigMath.sin(g) * 0.2F, 0.0F, TrigMath.cos(g) * 0.2F));
             }
         }
-        return vec3F;
+        return vec3f;
     }
 
     @Override
@@ -76,13 +76,13 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     @Override
-    public Vec3f applyEndOfTick(Vec3f vec3F) {
+    public Vec3f applyEndOfTick(Vec3f vec3f) {
         float f = player.lastGround ? /* worldManager.blockAt(player.getSession(), blockPos).block().getSlipperiness() */ 0.6F : 1.0F;
         float g = f * 0.91F;
-        float d = vec3F.y;
+        float d = vec3f.y;
         StatusEffect statusEffect = player.getStatusEffect(Effect.LEVITATION);
         if (statusEffect != null) {
-            d += (0.05F * (statusEffect.getAmplifier() + 1) - vec3F.y) * 0.2F;
+            d += (0.05F * (statusEffect.getAmplifier() + 1) - vec3f.y) * 0.2F;
         } /* else if (!this.getWorld().isChunkLoaded(blockPos)) {
             if (this.getY() > (double)this.getWorld().getBottomY()) {
                 d = -0.1;
@@ -93,14 +93,14 @@ public class PredictionEngineNormal extends PredictionEngine {
             d -= player.getEffectiveGravity();
         }
 
-        return new Vec3f(vec3F.x * g, d * 0.98F, vec3F.z * g);
+        return new Vec3f(vec3f.x * g, d * 0.98F, vec3f.z * g);
     }
 
     private Vec3f applyMovementInput(boolean sprinting, Vec3f client, Vec3f movementInput, float slipperiness) {
-        Vec3f vec3F = client.add(movementInputToVelocity(movementInput, player.getMovementSpeed(sprinting, slipperiness), player.yaw));
-        vec3F = applyClimbingSpeed(vec3F);
+        Vec3f vec3f = client.add(movementInputToVelocity(movementInput, player.getMovementSpeed(sprinting, slipperiness), player.yaw));
+        vec3f = applyClimbingSpeed(vec3f);
 
-        return vec3F;
+        return vec3f;
     }
 
     private Vec3f applyClimbingSpeed(Vec3f motion) {
