@@ -71,7 +71,7 @@ public class EntityTicker {
         double closetOffset = Double.MAX_VALUE;
         for (Vector vector : possibilities) {
             final Vec3f bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
-            final Vec3f ac = Collisions.adjustMovementForCollisions(player, player.boundingBox.offset(0, 1e-5f, 0), bc);
+            final Vec3f ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
             if (offset < closetOffset) {
