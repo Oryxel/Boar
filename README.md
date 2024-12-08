@@ -24,6 +24,18 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 - ~~Teleport system is broken (partially fixed)~~
 - A lot of stuff is still unimplemented.
 
+#### Things to note about Bedrock (for me - or any contributors)
+- Why the **FUCK** position (and everything else) stored in floating point. (I hate this)
+- A lot of bounding boxes is different, ~~step motion seems to be different (not sure)~~?
+- Sprinting/Sneaking status client doesn't seem to match up with player movement
+- NetworkStackLatency (ping packet), is deprecated, and might be removed soon (hope not).
+- CorrectPlayerMovePrediction is weird, the velocity player actually moves seems to be different from
+  the one we sent, (it's not EOT or anything, it's just that...?), this is a TODO.
+- Sneaking collisions calculation currently is wrong on both Bedrock (and Java - ViaBedrock).
+- Push out of block is instant, not slowly like on single-player world or on Java? (prob geyser teleport.)
+- I don't trust my way of hooking and reading packet sent from/to client enough, it might not work 
+  sometimes (although that never happened).
+
 ### Credit:
 
 - https://github.com/PrismarineJS/minecraft-data
