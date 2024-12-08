@@ -35,15 +35,20 @@ public class VelocityA extends OffsetHandlerCheck {
             }
             iterator.remove();
 
-            double distance = entry.getValue().distanceTo(player.closetVector.getVelocity());
-            if (distance < 0.001) {
+            Vec3f vec3f = player.postPredictionVelocities.get(entry.getKey());
+            if (vec3f == null) {
+                continue;
+            }
+
+            double distance = vec3f.distanceTo(player.predictedVelocity);
+            if (distance < 0.0001) {
                 continue;
             }
 
             if (player.queuedVelocities.isEmpty()) {
                 player.teleportUtil.setbackWithVelocity(entry.getKey());
             }
-            Bukkit.broadcastMessage("fail VelocityA!");
+            Bukkit.broadcastMessage("fail VelocityA!, d=" + distance);
         }
     }
 }

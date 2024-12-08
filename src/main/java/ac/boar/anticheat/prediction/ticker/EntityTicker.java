@@ -104,7 +104,7 @@ public class EntityTicker {
 
         player.predictedVelocity = afterCollision.clone();
 
-        if (player.actualVelocity.length() > 0) {
+        if (player.actualVelocity.length() > 0 || offset > 1e-4) {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " + afterCollision.x + "," + afterCollision.y + "," + afterCollision.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
