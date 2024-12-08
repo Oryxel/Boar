@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public class BoundingBox implements Cloneable {
     private static final float EPSILON = 1.0E-7F;
+    private static final float MAX_TOLERANCE_ERROR = 2.0E-5F;
     public float minX;
     public float minY;
     public float minZ;
@@ -152,13 +153,13 @@ public class BoundingBox implements Cloneable {
             if (maxDist > 0.0D) {
                 float d1 = this.minX - other.maxX;
 
-                if (d1 >= -EPSILON) {
+                if (d1 >= -MAX_TOLERANCE_ERROR) {
                     maxDist = Math.min(maxDist, d1);
                 }
             } else if (maxDist < 0.0D) {
                 float d0 = this.maxX - other.minX;
 
-                if (d0 <= EPSILON) {
+                if (d0 >= -MAX_TOLERANCE_ERROR) {
                     maxDist = Math.max(maxDist, d0);
                 }
             }
@@ -171,13 +172,13 @@ public class BoundingBox implements Cloneable {
             if (maxDist > 0.0D) {
                 float d1 = this.minY - other.maxY;
 
-                if (d1 >= -EPSILON) {
+                if (d1 >= -MAX_TOLERANCE_ERROR) {
                     maxDist = Math.min(maxDist, d1);
                 }
             } else if (maxDist < 0.0D) {
                 float d0 = this.maxY - other.minY;
 
-                if (d0 <= EPSILON) {
+                if (d0 >= -MAX_TOLERANCE_ERROR) {
                     maxDist = Math.max(maxDist, d0);
                 }
             }
@@ -191,13 +192,13 @@ public class BoundingBox implements Cloneable {
             if (maxDist > 0.0D) {
                 float d1 = this.minZ - other.maxZ;
 
-                if (d1 >= -EPSILON) {
+                if (d1 >= -MAX_TOLERANCE_ERROR) {
                     maxDist = Math.min(maxDist, d1);
                 }
             } else if (maxDist < 0.0D) {
                 float d0 = this.maxZ - other.minZ;
 
-                if (d0 <= EPSILON) {
+                if (d0 >= -MAX_TOLERANCE_ERROR) {
                     maxDist = Math.max(maxDist, d0);
                 }
             }
