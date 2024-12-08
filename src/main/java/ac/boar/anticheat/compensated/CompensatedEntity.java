@@ -44,7 +44,7 @@ public class CompensatedEntity {
             cache.setPosition(vec3f);
         });
 
-        player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () ->  {
+        player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> {
             cache.setBoundingBox(newBox);
 
             if (cache.getOldPositions().size() > 4) {

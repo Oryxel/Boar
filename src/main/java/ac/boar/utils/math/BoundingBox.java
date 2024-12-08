@@ -34,17 +34,9 @@ public class BoundingBox implements Cloneable {
         this.maxZ = (float) boundingBox.getMax(Axis.Z);
     }
 
-    public Vec3f toVec3f(float width) {
-        return new Vec3f(this.minX + (width / 2F), this.minY, this.maxZ - (width / 2F));
-    }
-
     public static BoundingBox getBoxAt(float x, float y, float z, float width, float height) {
         float f = width / 2.0f;
         return new BoundingBox(x - f, y, z - f, x + f, y + height, z + f);
-    }
-
-    public FloatList getPointPositions() {
-        return gather(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public static FloatList gather(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -73,6 +65,86 @@ public class BoundingBox implements Cloneable {
                 return m + 1;
             }
         };
+    }
+
+    public static Optional<Vec3f> raycast(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Vec3f from, Vec3f to) {
+        float[] ds = new float[]{1.0F};
+        float d = to.x - from.x;
+        float e = to.y - from.y;
+        float f = to.z - from.z;
+        Direction direction = traceCollisionSide(minX, minY, minZ, maxX, maxY, maxZ, from, ds, null, d, e, f);
+        if (direction == null) {
+            return Optional.empty();
+        } else {
+            float g = ds[0];
+            return Optional.of(from.add(g * d, g * e, g * f));
+        }
+    }
+
+    private static Direction traceCollisionSide(BoundingBox BoundingBox, Vec3f intersectingVector, float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ) {
+        return traceCollisionSide(BoundingBox.minX, BoundingBox.minY, BoundingBox.minZ, BoundingBox.maxX, BoundingBox.maxY, BoundingBox.maxZ, intersectingVector, traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ);
+    }
+
+    private static Direction traceCollisionSide(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Vec3f intersectingVector, float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ) {
+        if (deltaX > 1.0E-7) {
+            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ, minX, minY, maxY, minZ, maxZ, Direction.WEST, intersectingVector.x, intersectingVector.y, intersectingVector.z);
+        } else if (deltaX < -1.0E-7) {
+            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ, maxX, minY, maxY, minZ, maxZ, Direction.EAST, intersectingVector.x, intersectingVector.y, intersectingVector.z);
+        }
+
+        if (deltaY > 1.0E-7) {
+            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaY, deltaZ, deltaX, minY, minZ, maxZ, minX, maxX, Direction.DOWN, intersectingVector.y, intersectingVector.z, intersectingVector.x);
+        } else if (deltaY < -1.0E-7) {
+            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaY, deltaZ, deltaX, maxY, minZ, maxZ, minX, maxX, Direction.UP, intersectingVector.y, intersectingVector.z, intersectingVector.x);
+        }
+
+        if (deltaZ > 1.0E-7) {
+            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaZ, deltaX, deltaY, minZ, minX, maxX, minY, maxY, Direction.NORTH, intersectingVector.z, intersectingVector.x, intersectingVector.y);
+        } else if (deltaZ < -1.0E-7) {
+            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaZ, deltaX, deltaY, maxZ, minX, maxX, minY, maxY, Direction.SOUTH, intersectingVector.z, intersectingVector.x, intersectingVector.y);
+        }
+
+        return approachDirection;
+    }
+
+    private static Direction traceCollisionSide(float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ, float begin, float minX, float maxX, float minZ, float maxZ, Direction resultDirection, float startX, float startY, float startZ) {
+        float d = (begin - startX) / deltaX;
+        float e = startY + d * deltaY;
+        float f = startZ + d * deltaZ;
+        if (0.0 < d && d < traceDistanceResult[0] && minX - 1.0E-7 < e && e < maxX + 1.0E-7 && minZ - 1.0E-7 < f && f < maxZ + 1.0E-7) {
+            traceDistanceResult[0] = d;
+            return resultDirection;
+        } else {
+            return approachDirection;
+        }
+    }
+
+    public static BoundingBox of(Vec3f center, float dx, float dy, float dz) {
+        return new BoundingBox(center.x - dx / 2.0F, center.y - dy / 2.0F, center.z - dz / 2.0F, center.x + dx / 2.0F, center.y + dy / 2.0F, center.z + dz / 2.0F);
+    }
+
+    protected static int findRequiredBitResolution(float min, float max) {
+        if (min < -1.0E-7 || max > 1.0000001) {
+            return -1;
+        }
+        for (int i = 0; i <= 3; ++i) {
+            int j = 1 << i;
+            float d = min * (float) j;
+            float e = max * (float) j;
+            boolean bl = Math.abs(d - (float) Math.round(d)) < 1.0E-7 * (float) j;
+            boolean bl2 = Math.abs(e - (float) Math.round(e)) < 1.0E-7 * (float) j;
+            if (!bl || !bl2) continue;
+            return i;
+        }
+        return -1;
+    }
+
+    public Vec3f toVec3f(float width) {
+        return new Vec3f(this.minX + (width / 2F), this.minY, this.maxZ - (width / 2F));
+    }
+
+    public FloatList getPointPositions() {
+        return gather(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public float calculateXOffset(BoundingBox other, float offsetX) {
@@ -161,10 +233,9 @@ public class BoundingBox implements Cloneable {
     public boolean equals(Object o) {
         if (this == o) {
             return true;
-        } else if (!(o instanceof BoundingBox)) {
+        } else if (!(o instanceof BoundingBox BoundingBox)) {
             return false;
         } else {
-            BoundingBox BoundingBox = (BoundingBox)o;
             if (Double.compare(BoundingBox.minX, this.minX) != 0) {
                 return false;
             } else if (Double.compare(BoundingBox.minY, this.minY) != 0) {
@@ -334,58 +405,6 @@ public class BoundingBox implements Cloneable {
         return raycast(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, from, to);
     }
 
-    public static Optional<Vec3f> raycast(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Vec3f from, Vec3f to) {
-        float[] ds = new float[]{1.0F};
-        float d = to.x - from.x;
-        float e = to.y - from.y;
-        float f = to.z - from.z;
-        Direction direction = traceCollisionSide(minX, minY, minZ, maxX, maxY, maxZ, from, ds, null, d, e, f);
-        if (direction == null) {
-            return Optional.empty();
-        } else {
-            float g = ds[0];
-            return Optional.of(from.add(g * d, g * e, g * f));
-        }
-    }
-
-    private static Direction traceCollisionSide(BoundingBox BoundingBox, Vec3f intersectingVector, float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ) {
-        return traceCollisionSide(BoundingBox.minX, BoundingBox.minY, BoundingBox.minZ, BoundingBox.maxX, BoundingBox.maxY, BoundingBox.maxZ, intersectingVector, traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ);
-    }
-
-    private static Direction traceCollisionSide(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Vec3f intersectingVector, float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ) {
-        if (deltaX > 1.0E-7) {
-            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ, minX, minY, maxY, minZ, maxZ, Direction.WEST, intersectingVector.x, intersectingVector.y, intersectingVector.z);
-        } else if (deltaX < -1.0E-7) {
-            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaX, deltaY, deltaZ, maxX, minY, maxY, minZ, maxZ, Direction.EAST, intersectingVector.x, intersectingVector.y, intersectingVector.z);
-        }
-
-        if (deltaY > 1.0E-7) {
-            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaY, deltaZ, deltaX, minY, minZ, maxZ, minX, maxX, Direction.DOWN, intersectingVector.y, intersectingVector.z, intersectingVector.x);
-        } else if (deltaY < -1.0E-7) {
-            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaY, deltaZ, deltaX, maxY, minZ, maxZ, minX, maxX, Direction.UP, intersectingVector.y, intersectingVector.z, intersectingVector.x);
-        }
-
-        if (deltaZ > 1.0E-7) {
-            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaZ, deltaX, deltaY, minZ, minX, maxX, minY, maxY, Direction.NORTH, intersectingVector.z, intersectingVector.x, intersectingVector.y);
-        } else if (deltaZ < -1.0E-7) {
-            approachDirection = traceCollisionSide(traceDistanceResult, approachDirection, deltaZ, deltaX, deltaY, maxZ, minX, maxX, minY, maxY, Direction.SOUTH, intersectingVector.z, intersectingVector.x, intersectingVector.y);
-        }
-
-        return approachDirection;
-    }
-
-    private static Direction traceCollisionSide(float[] traceDistanceResult, Direction approachDirection, float deltaX, float deltaY, float deltaZ, float begin, float minX, float maxX, float minZ, float maxZ, Direction resultDirection, float startX, float startY, float startZ) {
-        float d = (begin - startX) / deltaX;
-        float e = startY + d * deltaY;
-        float f = startZ + d * deltaZ;
-        if (0.0 < d && d < traceDistanceResult[0] && minX - 1.0E-7 < e && e < maxX + 1.0E-7 && minZ - 1.0E-7 < f && f < maxZ + 1.0E-7) {
-            traceDistanceResult[0] = d;
-            return resultDirection;
-        } else {
-            return approachDirection;
-        }
-    }
-
     public String toString() {
         return "AABB[" + this.minX + ", " + this.minY + ", " + this.minZ + "] -> [" + this.maxX + ", " + this.maxY + ", " + this.maxZ + "]";
     }
@@ -400,26 +419,6 @@ public class BoundingBox implements Cloneable {
 
     public Vec3f getMaxPos() {
         return new Vec3f(this.maxX, this.maxY, this.maxZ);
-    }
-
-    public static BoundingBox of(Vec3f center, float dx, float dy, float dz) {
-        return new BoundingBox(center.x - dx / 2.0F, center.y - dy / 2.0F, center.z - dz / 2.0F, center.x + dx / 2.0F, center.y + dy / 2.0F, center.z + dz / 2.0F);
-    }
-
-    protected static int findRequiredBitResolution(float min, float max) {
-        if (min < -1.0E-7 || max > 1.0000001) {
-            return -1;
-        }
-        for (int i = 0; i <= 3; ++i) {
-            int j = 1 << i;
-            float d = min * (float)j;
-            float e = max * (float)j;
-            boolean bl = Math.abs(d - (float)Math.round(d)) < 1.0E-7 * (float)j;
-            boolean bl2 = Math.abs(e - (float)Math.round(e)) < 1.0E-7 * (float)j;
-            if (!bl || !bl2) continue;
-            return i;
-        }
-        return -1;
     }
 
     @Override

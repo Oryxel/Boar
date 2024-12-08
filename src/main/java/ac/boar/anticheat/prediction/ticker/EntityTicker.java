@@ -14,7 +14,6 @@ import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.cloudburstmc.math.GenericMath;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.data.Ability;
 import org.geysermc.geyser.entity.EntityDefinitions;
@@ -251,9 +250,9 @@ public class EntityTicker {
             int o = 0;
             Vector3i vector3i;
 
-            for(int p = i; p < j; ++p) {
-                for(int q = k; q < l; ++q) {
-                    for(int r = m; r < n; ++r) {
+            for (int p = i; p < j; ++p) {
+                for (int q = k; q < l; ++q) {
+                    for (int r = m; r < n; ++r) {
                         vector3i = Vector3i.from(p, q, r);
 
                         // I guess this is a TODO.
@@ -280,7 +279,7 @@ public class EntityTicker {
 
             if (vec3F.length() > 0.0) {
                 if (o > 0) {
-                    vec3F = vec3F.mul(1.0 / (double)o);
+                    vec3F = vec3F.mul(1.0 / (double) o);
                 }
 
 //                if (!(this instanceof PlayerEntity)) {

@@ -13,8 +13,7 @@ public class AbilitiesUpdatePacket implements GeyserPacketListener {
     @Override
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();
-        if (event.getPacket() instanceof UpdateAbilitiesPacket) {
-            final UpdateAbilitiesPacket updateAbilitiesPacket = (UpdateAbilitiesPacket) event.getPacket();
+        if (event.getPacket() instanceof UpdateAbilitiesPacket updateAbilitiesPacket) {
             if (updateAbilitiesPacket.getUniqueEntityId() != player.getSession().getPlayerEntity().getGeyserId()) {
                 return;
             }
@@ -32,8 +31,7 @@ public class AbilitiesUpdatePacket implements GeyserPacketListener {
             });
         }
 
-        if (event.getPacket() instanceof UpdateAttributesPacket) {
-            final UpdateAttributesPacket updateAttributesPacket = (UpdateAttributesPacket) event.getPacket();
+        if (event.getPacket() instanceof UpdateAttributesPacket updateAttributesPacket) {
             if (updateAttributesPacket.getRuntimeEntityId() != player.getSession().getPlayerEntity().getGeyserId()) {
                 return;
             }

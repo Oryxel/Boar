@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class GeyserPacketEvents {
     @Getter
-    private static List<GeyserPacketListener> listeners = new CopyOnWriteArrayList<>();
+    private static final List<GeyserPacketListener> listeners = new CopyOnWriteArrayList<>();
 
     public static void register(final GeyserPacketListener listener) {
         GeyserPacketEvents.listeners.add(listener);

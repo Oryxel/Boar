@@ -11,11 +11,10 @@ public class LatencyPacket implements BedrockPacketListener {
 
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
-        if (!(event.getPacket() instanceof NetworkStackLatencyPacket)) {
+        if (!(event.getPacket() instanceof NetworkStackLatencyPacket packet)) {
             return;
         }
 
-        final NetworkStackLatencyPacket packet = (NetworkStackLatencyPacket) event.getPacket();
         long id = packet.getTimestamp();
         if (id >= 0 || ((double) id / GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP) % 10 == 0 || ((double) GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP / id) % 10 == 0) {
             return;

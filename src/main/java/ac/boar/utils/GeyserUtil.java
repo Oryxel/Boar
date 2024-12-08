@@ -7,7 +7,6 @@ import ac.boar.protocol.listener.UpstreamSessionListener;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacketHandler;
 import org.geysermc.geyser.api.connection.GeyserConnection;
-import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
 import org.geysermc.mcprotocollib.network.event.session.SessionListener;
 import org.geysermc.mcprotocollib.network.tcp.TcpSession;
 

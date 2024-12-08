@@ -1,9 +1,9 @@
 package ac.boar.protocol.event.bedrock;
 
+import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import ac.boar.anticheat.user.api.BoarPlayer;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
 
 @RequiredArgsConstructor

@@ -1,10 +1,10 @@
 package ac.boar.protocol.listener;
 
-import ac.boar.protocol.event.java.PacketSendEvent;
-import lombok.RequiredArgsConstructor;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.JavaPacketEvents;
 import ac.boar.protocol.event.java.PacketListener;
+import ac.boar.protocol.event.java.PacketSendEvent;
+import lombok.RequiredArgsConstructor;
 import org.geysermc.mcprotocollib.network.Session;
 import org.geysermc.mcprotocollib.network.event.session.*;
 import org.geysermc.mcprotocollib.network.packet.Packet;

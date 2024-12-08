@@ -13,14 +13,13 @@ import lombok.Getter;
 @Getter
 public class Boar {
     @Getter
-    private static Boar instance = new Boar();
-    private Boar() {}
-
+    private static final Boar instance = new Boar();
     private BoarPlayerManager playerManager;
 
-    public void init() {
-        BoarPlugin.LOGGER.info("Loading mappings.....");
+    private Boar() {
+    }
 
+    public void init() {
         BoarPlugin.LOGGER.info("Initialing events....");
         new GeyserSessionJoinEvent();
 

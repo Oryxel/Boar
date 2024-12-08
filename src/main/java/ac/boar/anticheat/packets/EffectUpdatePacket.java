@@ -13,8 +13,7 @@ public class EffectUpdatePacket implements PacketListener {
     public void onPacketSend(PacketSendEvent event) {
         final BoarPlayer player = event.getPlayer();
 
-        if (event.getPacket() instanceof ClientboundUpdateMobEffectPacket) {
-            final ClientboundUpdateMobEffectPacket packet = (ClientboundUpdateMobEffectPacket) event.getPacket();
+        if (event.getPacket() instanceof ClientboundUpdateMobEffectPacket packet) {
             Entity entity = player.getSession().getEntityCache().getEntityByJavaId(packet.getEntityId());
             if (entity == null) {
                 return;
@@ -30,8 +29,7 @@ public class EffectUpdatePacket implements PacketListener {
             });
         }
 
-        if (event.getPacket() instanceof ClientboundRemoveMobEffectPacket) {
-            final ClientboundRemoveMobEffectPacket packet = (ClientboundRemoveMobEffectPacket) event.getPacket();
+        if (event.getPacket() instanceof ClientboundRemoveMobEffectPacket packet) {
             Entity entity = player.getSession().getEntityCache().getEntityByJavaId(packet.getEntityId());
             if (entity == null) {
                 return;

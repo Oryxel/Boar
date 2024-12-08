@@ -7,7 +7,6 @@ import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
-import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
@@ -17,13 +16,12 @@ public class MovementCheckRunner implements BedrockPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
-        if (!(event.getPacket() instanceof PlayerAuthInputPacket)) {
+        if (!(event.getPacket() instanceof PlayerAuthInputPacket packet)) {
             return;
         }
 
         player.tick();
 
-        final PlayerAuthInputPacket packet = (PlayerAuthInputPacket) event.getPacket();
         player.tick = packet.getTick();
 
         // This DOES happen, sometimes it failed to add the adapter, force player to rejoin...

@@ -32,64 +32,47 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class BoarPlayer {
-    private final GeyserConnection connection;
     public final long joinedTime = System.currentTimeMillis();
-
-    @Getter @Setter private BedrockSession bedrockSession;
-    @Getter @Setter private Session javaSession;
-
     public final TeleportUtil teleportUtil = new TeleportUtil(this);
     public final LatencyUtil latencyUtil = new LatencyUtil(this);
-
     public final CompensatedEntity compensatedEntity = new CompensatedEntity(this);
-
     public final CheckHolder checkHolder = new CheckHolder(this);
-
+    private final GeyserConnection connection;
     public float lastX, x, lastY, y, lastZ, z;
     public long tick;
-
     public boolean onGround, lastGround;
     public float fallDistance;
-
     public float yaw, pitch;
-
     public int sinceSprinting, sinceSneaking;
     public boolean sprinting, lastSprinting, sneaking, lastSneaking, swimming, lastSwimming;
     public boolean gliding, lastGliding;
-
     public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
-
     public boolean lastTickWasTeleport, lastTeleportWasSimulation;
     public int sinceTeleport;
-
     public boolean wasInPowderSnow, inPowderSnow;
     public boolean touchingWater, submergedInWater;
-
     public boolean collideX, collideZ, collideY;
-
     public boolean canClimb, lastCanClimb;
-
     public Optional<Vector3i> supportingBlockPos = Optional.empty();
-
     public double extraUncertainOffset = 0;
-
     // End of tick velocity.
     public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
-
     public Vector3f bedrockRotation = Vector3f.ZERO;
-
     public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
     public Map<Long, Vec3f> queuedVelocities = new ConcurrentHashMap<>();
     public Map<Long, Vec3f> postPredictionVelocities = new ConcurrentHashMap<>();
-
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
     public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
     public BoundingBox boundingBox;
-
     public Set<PlayerAuthInputData> inputData = new HashSet<>();
-
     public PlayerAbilities abilities = new PlayerAbilities();
+    @Getter
+    @Setter
+    private BedrockSession bedrockSession;
+    @Getter
+    @Setter
+    private Session javaSession;
 
     public void init() {
         GeyserUtil.hookBedrockSession(this);
@@ -189,7 +172,7 @@ public class BoarPlayer {
 //            }
         } else {
             int i = (int) Math.floor(this.x);
-            int j = (int) Math.floor(this.y - (double)offset);
+            int j = (int) Math.floor(this.y - (double) offset);
             int k = (int) Math.floor(this.z);
             return Vector3i.from(i, j, k);
         }

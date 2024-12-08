@@ -2,8 +2,8 @@ package ac.boar.anticheat.check.api.holder;
 
 import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.check.impl.prediction.PredictionA;
-import ac.boar.anticheat.check.impl.velocity.VelocityA;
 import ac.boar.anticheat.check.impl.timer.TimerA;
+import ac.boar.anticheat.check.impl.velocity.VelocityA;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.RequiredArgsConstructor;
 

@@ -16,9 +16,11 @@ public abstract class PredictionEngine {
     protected final BoarPlayer player;
 
     public abstract Vec3f travel(boolean sprinting, Vec3f vec3F, Vec3f movementInput);
+
     public abstract Vec3f applyEndOfTick(Vec3f vec3F);
 
     protected abstract Vec3f jump(Vec3f vec3F);
+
     protected abstract boolean canJump();
 
     public final List<Vector> gatherAllPossibilities() {
@@ -33,7 +35,8 @@ public abstract class PredictionEngine {
         return vectors;
     }
 
-    protected void applyTravelToPossibilities(final List<Vector> vectors) {}
+    protected void applyTravelToPossibilities(final List<Vector> vectors) {
+    }
 
     private void addClimbingToPossibilities(final List<Vector> vectors) {
         if (!player.lastCanClimb && !player.canClimb) {
