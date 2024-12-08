@@ -1,4 +1,4 @@
-package ac.boar.protocol.event.bedrock.geyser;
+package ac.boar.protocol.event.geyser;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package ac.boar.protocol.event.bedrock;
+package ac.boar.protocol.event;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.Getter;

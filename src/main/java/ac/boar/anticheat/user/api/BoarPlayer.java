@@ -24,7 +24,6 @@ import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.session.GeyserSession;
-import org.geysermc.mcprotocollib.network.Session;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 import java.util.*;
@@ -36,7 +35,6 @@ public class BoarPlayer {
     public final long joinedTime = System.currentTimeMillis();
 
     @Getter @Setter private BedrockSession bedrockSession;
-    @Getter @Setter private Session javaSession;
 
     public final TeleportUtil teleportUtil = new TeleportUtil(this);
     public final LatencyUtil latencyUtil = new LatencyUtil(this);
@@ -44,6 +42,8 @@ public class BoarPlayer {
     public final CompensatedEntity compensatedEntity = new CompensatedEntity(this);
 
     public final CheckHolder checkHolder = new CheckHolder(this);
+
+    public long runtimeEntityId;
 
     public float lastX, x, lastY, y, lastZ, z;
     public long tick;
@@ -102,7 +102,7 @@ public class BoarPlayer {
 
     public void sendTransaction(boolean immediate) {
         lastSentId++;
-        if (lastSentId == Math.abs(GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP)) {
+        if (lastSentId == GeyserUtil.MAGIC_FORM_IMAGE_HACK_TIMESTAMP) {
             lastSentId++;
         }
 

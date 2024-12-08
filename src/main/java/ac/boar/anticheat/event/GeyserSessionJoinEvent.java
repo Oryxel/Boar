@@ -1,4 +1,4 @@
-package ac.boar.anticheat.event.geyser;
+package ac.boar.anticheat.event;
 
 import ac.boar.anticheat.Boar;
 import ac.boar.plugin.BoarPlugin;
