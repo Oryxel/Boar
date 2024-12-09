@@ -159,7 +159,7 @@ public class BoundingBox implements Cloneable {
             } else if (maxDist < 0.0D) {
                 float d0 = this.maxX - other.minX;
 
-                if (d0 >= -MAX_TOLERANCE_ERROR) {
+                if (d0 <= MAX_TOLERANCE_ERROR) {
                     maxDist = Math.max(maxDist, d0);
                 }
             }
@@ -178,7 +178,7 @@ public class BoundingBox implements Cloneable {
             } else if (maxDist < 0.0D) {
                 float d0 = this.maxY - other.minY;
 
-                if (d0 >= -MAX_TOLERANCE_ERROR) {
+                if (d0 <= MAX_TOLERANCE_ERROR) {
                     maxDist = Math.max(maxDist, d0);
                 }
             }
@@ -198,7 +198,7 @@ public class BoundingBox implements Cloneable {
             } else if (maxDist < 0.0D) {
                 float d0 = this.maxZ - other.minZ;
 
-                if (d0 >= -MAX_TOLERANCE_ERROR) {
+                if (d0 <= MAX_TOLERANCE_ERROR) {
                     maxDist = Math.max(maxDist, d0);
                 }
             }
