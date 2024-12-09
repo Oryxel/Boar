@@ -29,6 +29,11 @@ public class BedrockCollision {
             return boxes;
         }
 
+        if (state.is(Blocks.CONDUIT)) {
+            float f = 0.25F;
+            return List.of(new BoundingBox(f, 0, f, 1 - f, 0.5F, 1 - f));
+        }
+
         if (state.is(Blocks.CACTUS)) {
             float f = 0.0625F;
             return List.of(new BoundingBox(f, 0, f, 1 - f, 1, 1 - f));
