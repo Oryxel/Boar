@@ -8,9 +8,9 @@ import org.geysermc.geyser.level.physics.Axis;
 import java.util.Optional;
 
 public class BoundingBox implements Cloneable {
-    private static final float EPSILON = 1.0E-7F;
-    private static final float MAX_TOLERANCE_ERROR = 2.0E-5F;
-    private static final float TOLERANCE_DISTANCE = 1.0E-5F;
+    public static final float EPSILON = 1.0E-7F;
+    public static final float MAX_TOLERANCE_ERROR = 2.0E-5F;
+    public static final float TOLERANCE_DISTANCE = 1.0E-5F;
     public float minX;
     public float minY;
     public float minZ;

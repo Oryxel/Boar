@@ -1,5 +1,6 @@
 package ac.boar.anticheat.utils.collisions;
 
+import ac.boar.anticheat.compensated.cache.EntityCache;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
@@ -14,6 +15,7 @@ import org.geysermc.geyser.level.physics.Axis;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.collision.BlockCollision;
 import org.geysermc.geyser.util.BlockUtils;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,22 +92,22 @@ public class Collisions {
                 }
             }
 
-            boolean bl = Math.abs(d) < Math.abs(f);
-            if (bl && f != 0.0) {
-                f = calculateMaxOffset(Axis.Z, entityBoundingBox, collisions, f);
-                if (f != 0.0) {
-                    entityBoundingBox = entityBoundingBox.offset(0.0F, 0.0F, f);
-                }
-            }
+//            boolean bl = Math.abs(d) < Math.abs(f);
+//            if (f != 0.0) {
+//                f = calculateMaxOffset(Axis.Z, entityBoundingBox, collisions, f);
+//                if (f != 0.0) {
+//                    entityBoundingBox = entityBoundingBox.offset(0.0F, 0.0F, f);
+//                }
+//            }
 
             if (d != 0.0) {
                 d = calculateMaxOffset(Axis.X, entityBoundingBox, collisions, d);
-                if (!bl && d != 0.0) {
+                if (d != 0.0) {
                     entityBoundingBox = entityBoundingBox.offset(d, 0.0F, 0.0F);
                 }
             }
 
-            if (!bl && f != 0.0) {
+            if (f != 0.0) {
                 f = calculateMaxOffset(Axis.Z, entityBoundingBox, collisions, f);
             }
 
@@ -187,7 +189,7 @@ public class Collisions {
     }
 
     public static Vec3f adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3f movement) {
-        List<BoundingBox> list = /* this.getWorld().getEntityCollisions(this, box.stretch(movement)) */ new ArrayList<>();
+        List<BoundingBox> list = getEntityCollisions(player, box.stretch(movement));
         Vec3f vec3f = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list);
         boolean bl = movement.x != vec3f.x;
         boolean bl2 = movement.y != vec3f.y;
@@ -236,5 +238,28 @@ public class Collisions {
         float[] fs = floatSet.toFloatArray();
         FloatArrays.unstableSort(fs);
         return fs;
+    }
+
+    private static List<BoundingBox> getEntityCollisions(BoarPlayer player, BoundingBox box) {
+        if (box.getAverageSideLength() > BoundingBox.EPSILON) {
+            List<EntityCache> list = new ArrayList<>();
+            player.compensatedEntity.getMap().forEach((k, v) -> {
+                EntityType type = v.getType();
+                if (v.getBoundingBox().intersects(box) && (type.name().toLowerCase().contains("boat") || type == EntityType.SHULKER)) {
+                    list.add(v);
+                }
+            });
+
+            List<BoundingBox> boxes = new ArrayList<>();
+
+            for (EntityCache lv : list) {
+                System.out.println(lv.getBoundingBox());
+                boxes.add(lv.getBoundingBox());
+            }
+
+            return boxes;
+        }
+
+        return List.of();
     }
 }
