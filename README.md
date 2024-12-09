@@ -16,6 +16,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 - Player can clip into walls (they will glitch back anyway, but it will still cause false) mentioned
   in [3370](https://github.com/GeyserMC/Geyser/issues/3370) and [4269](https://github.com/GeyserMC/Geyser/issues/4269)
+- Sprinting while slamming your head to the walls causes a bunch of falses.
 - ~~Floating point errors BREAK A LOT OF THINGS, this is stupid and break my collision system completely.  (Normally
   1e-5 -> 0.1) (partially fixed)~~
 - Prediction engine accuracy is yuck and can be even worse if player movement is too fast or in other cases.
