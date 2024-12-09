@@ -121,13 +121,7 @@ public class Collisions {
                 return 0;
             }
 
-            if (axis == Axis.X) {
-                d = bb.calculateXOffset(box, d);
-            } else if (axis == Axis.Y) {
-                d = bb.calculateYOffset(box, d);
-            } else {
-                d = bb.calculateZOffset(box, d);
-            }
+            d = bb.calculateMaxDistance(axis, box, d);
         }
 
         return d;
