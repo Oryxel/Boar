@@ -2,6 +2,7 @@ package ac.boar.anticheat.utils.collisions;
 
 import ac.boar.utils.math.BoundingBox;
 import org.geysermc.geyser.level.block.Blocks;
+import org.geysermc.geyser.level.block.property.ChestType;
 import org.geysermc.geyser.level.block.property.Properties;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.block.type.ChestBlock;
@@ -14,8 +15,49 @@ import java.util.List;
 
 public class BedrockCollision {
     public static List<BoundingBox> getBoundingBox(BlockState state) {
-        if (state.block() instanceof ChestBlock || state.is(Blocks.ENDER_CHEST)) {
+        if (state.is(Blocks.ENDER_CHEST)) {
             return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
+        }
+        
+        if (state.block() instanceof ChestBlock) {
+            float f = 0.025F;
+            final BoundingBox DOUBLE_NORTH_SHAPE = new BoundingBox(f, 0, 0, 1 - f, 0.95F, 1 - f);
+            final BoundingBox DOUBLE_SOUTH_SHAPE = new BoundingBox(f, 0, f, 1 - f, 0.95F, 1);
+            final BoundingBox DOUBLE_WEST_SHAPE = new BoundingBox(0, 0, f, 1 - f, 0.95F, 1 - f);
+            final BoundingBox DOUBLE_EAST_SHAPE = new BoundingBox(f, 0, f, 1, 0.95F, 1 - f);
+            final BoundingBox SINGLE_SHAPE = new BoundingBox(f, 0, f, 1 - f, 0.95F, 1 - f);
+
+            final ChestType type = state.getValue(Properties.CHEST_TYPE);
+            Direction facing = state.getValue(Properties.HORIZONTAL_FACING);
+            if (type == ChestType.LEFT) {
+                facing = switch (facing) {
+                    case SOUTH -> Direction.WEST;
+                    case WEST -> Direction.NORTH;
+                    case EAST -> Direction.SOUTH;
+                    default -> Direction.EAST;
+                };
+            } else {
+                facing = switch (facing) {
+                    case SOUTH -> Direction.EAST;
+                    case WEST -> Direction.SOUTH;
+                    case EAST -> Direction.NORTH;
+                    default -> Direction.WEST;
+                };
+            }
+
+            BoundingBox box;
+            if (type == ChestType.SINGLE) {
+                box = SINGLE_SHAPE;
+            } else {
+                switch (facing) {
+                    case SOUTH -> box = DOUBLE_SOUTH_SHAPE;
+                    case WEST -> box = DOUBLE_WEST_SHAPE;
+                    case EAST -> box = DOUBLE_EAST_SHAPE;
+                    default -> box = DOUBLE_NORTH_SHAPE;
+                }
+            }
+
+            return List.of(box);
         }
 
         if (state.is(Blocks.CAULDRON)) {
