@@ -6,6 +6,7 @@ import ac.boar.anticheat.data.PlayerAbilities;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
+import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.anticheat.utils.LatencyUtil;
 import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.utils.GeyserUtil;
@@ -21,6 +22,7 @@ import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.level.WorldManager;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.session.GeyserSession;
@@ -188,9 +190,9 @@ public class BoarPlayer {
 //                return (!((double)offset <= 0.5) || !blockState.isIn(BlockTags.FENCES)) && !blockState.isIn(BlockTags.WALLS) && !(blockState.getBlock() instanceof FenceGateBlock) ? blockPos.withY(MathHelper.floor(this.pos.y - (double)offset)) : blockPos;
 //            }
         } else {
-            int i = (int) Math.floor(this.x);
-            int j = (int) Math.floor(this.y - (double)offset);
-            int k = (int) Math.floor(this.z);
+            int i = (int) Math.floor(this.lastX);
+            int j = (int) Math.floor(this.lastY - (double)offset);
+            int k = (int) Math.floor(this.lastZ);
             return Vector3i.from(i, j, k);
         }
     }
@@ -200,7 +202,7 @@ public class BoarPlayer {
     }
 
     protected float getJumpVelocity(float strength) {
-        return /*this.getAttributeValue(EntityAttributes.JUMP_STRENGTH)*/ 0.42F * strength * this.getJumpVelocityMultiplier() + this.getJumpBoostVelocityModifier();
+        return 0.42F * strength * this.getJumpVelocityMultiplier() + this.getJumpBoostVelocityModifier();
     }
 
     public float getJumpBoostVelocityModifier() {
@@ -208,11 +210,11 @@ public class BoarPlayer {
     }
 
     protected float getJumpVelocityMultiplier() {
-//        float f = this.getWorld().getBlockState(this.getBlockPos()).getBlock().getJumpVelocityMultiplier();
-//        float g = this.getWorld().getBlockState(this.getVelocityAffectingPos()).getBlock().getJumpVelocityMultiplier();
-//        return (double)f == 1.0 ? g : f;
+        WorldManager manager = getSession().getGeyser().getWorldManager();
+        float f = BlockUtil.getJumpVelocityMultiplier(manager.blockAt(getSession(), Vector3i.from(lastX, lastY, lastZ)));
+        float g = BlockUtil.getJumpVelocityMultiplier(manager.blockAt(getSession(), this.getVelocityAffectingPos()));
 
-        return 1.0F;
+        return (double)f == 1.0 ? g : f;
     }
 
     public float getEffectiveGravity() {
