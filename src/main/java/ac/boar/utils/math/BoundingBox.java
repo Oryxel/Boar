@@ -10,6 +10,7 @@ import java.util.Optional;
 public class BoundingBox implements Cloneable {
     private static final float EPSILON = 1.0E-7F;
     private static final float MAX_TOLERANCE_ERROR = 2.0E-5F;
+    private static final float TOLERANCE_DISTANCE = 1.0E-5F;
     public float minX;
     public float minY;
     public float minZ;
@@ -148,61 +149,47 @@ public class BoundingBox implements Cloneable {
         return gather(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public float calculateXOffset(BoundingBox other, float maxDist) {
-        if (other.maxY > this.minY && other.minY < this.maxY && other.maxZ > this.minZ && other.minZ < this.maxZ) {
-            if (maxDist > 0.0D) {
-                float d1 = this.minX - other.maxX;
-
-                if (d1 >= -MAX_TOLERANCE_ERROR) {
-                    maxDist = Math.min(maxDist, d1);
-                }
-            } else if (maxDist < 0.0D) {
-                float d0 = this.maxX - other.minX;
-
-                if (d0 <= MAX_TOLERANCE_ERROR) {
-                    maxDist = Math.max(maxDist, d0);
-                }
-            }
-        }
-        return maxDist;
+    public float chooseMin(Axis axis) {
+        return switch (axis) {
+            case X -> this.minX;
+            case Y -> this.minY;
+            default -> this.minZ;
+        };
     }
 
-    public float calculateYOffset(BoundingBox other, float maxDist) {
-        if (other.maxX > this.minX && other.minX < this.maxX && other.maxZ > this.minZ && other.minZ < this.maxZ) {
-            if (maxDist > 0.0D) {
-                float d1 = this.minY - other.maxY;
-
-                if (d1 >= -MAX_TOLERANCE_ERROR) {
-                    maxDist = Math.min(maxDist, d1);
-                }
-            } else if (maxDist < 0.0D) {
-                float d0 = this.maxY - other.minY;
-
-                if (d0 <= MAX_TOLERANCE_ERROR) {
-                    maxDist = Math.max(maxDist, d0);
-                }
-            }
-
-        }
-        return maxDist;
+    public float chooseMax(Axis axis) {
+        return switch (axis) {
+            case X -> this.maxX;
+            case Y -> this.maxY;
+            default -> this.maxZ;
+        };
     }
 
-    public float calculateZOffset(BoundingBox other, float maxDist) {
-        if (other.maxX > this.minX && other.minX < this.maxX && other.maxY > this.minY && other.minY < this.maxY) {
-            if (maxDist > 0.0D) {
-                float d1 = this.minZ - other.maxZ;
+    public boolean isOverlapped(Axis axis, BoundingBox other) {
+        return switch (axis) {
+            case X -> other.maxY - this.minY > TOLERANCE_DISTANCE && this.maxY - other.minY > TOLERANCE_DISTANCE && other.maxZ - this.minZ > TOLERANCE_DISTANCE && this.maxZ - other.minZ > TOLERANCE_DISTANCE;
+            case Y -> other.maxX - this.minX > TOLERANCE_DISTANCE && this.maxX - other.minX > TOLERANCE_DISTANCE && other.maxZ - this.minZ > TOLERANCE_DISTANCE && this.maxZ - other.minZ > TOLERANCE_DISTANCE;
+            default -> other.maxX - this.minX > TOLERANCE_DISTANCE && this.maxX - other.minX > TOLERANCE_DISTANCE && other.maxY - this.minY > TOLERANCE_DISTANCE && this.maxY - other.minY >TOLERANCE_DISTANCE;
+        };
+    }
 
-                if (d1 >= -MAX_TOLERANCE_ERROR) {
-                    maxDist = Math.min(maxDist, d1);
-                }
-            } else if (maxDist < 0.0D) {
-                float d0 = this.maxZ - other.minZ;
+    public float calculateMaxDistance(Axis axis, BoundingBox other, float maxDist) {
+        if (!isOverlapped(axis, other) || maxDist == 0) {
+            return maxDist;
+        }
 
-                if (d0 <= MAX_TOLERANCE_ERROR) {
-                    maxDist = Math.max(maxDist, d0);
-                }
+        if (maxDist > 0) {
+            float d1 = chooseMin(axis) - other.chooseMax(axis);
+
+            if (d1 >= -MAX_TOLERANCE_ERROR) {
+                maxDist = Math.min(maxDist, d1);
             }
+        } else {
+            float d0 = chooseMax(axis) - other.chooseMin(axis);
 
+            if (d0 <= MAX_TOLERANCE_ERROR) {
+                maxDist = Math.max(maxDist, d0);
+            }
         }
         return maxDist;
     }
