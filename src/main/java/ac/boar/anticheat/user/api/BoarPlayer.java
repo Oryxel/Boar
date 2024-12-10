@@ -179,6 +179,10 @@ public class BoarPlayer {
         return this.getPosWithYOffset(1.0E-5F);
     }
 
+    public Vector3i getLandingPos() {
+        return this.getPosWithYOffset(0.2F);
+    }
+
     public Vector3i getPosWithYOffset(float offset) {
         if (this.supportingBlockPos.isPresent()) {
             Vector3i blockPos = this.supportingBlockPos.get();

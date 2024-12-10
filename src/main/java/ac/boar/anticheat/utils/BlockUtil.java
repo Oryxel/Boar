@@ -1,5 +1,7 @@
 package ac.boar.anticheat.utils;
 
+import ac.boar.anticheat.user.api.BoarPlayer;
+import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.type.BlockState;
 
@@ -30,5 +32,15 @@ public class BlockUtil {
         }
 
         return 0.6F;
+    }
+
+    public static void onSteppedOn(BoarPlayer player, Vector3i pos, BlockState state) {
+        if (state.is(Blocks.SLIME_BLOCK)) {
+            float d = Math.abs(player.clientVelocity.y);
+            if (d < 0.1 && !player.sneaking) {
+                float e = 0.391F + d * 0.2F;
+                player.clientVelocity = player.clientVelocity.mul(e, 1, e);
+            }
+        }
     }
 }
