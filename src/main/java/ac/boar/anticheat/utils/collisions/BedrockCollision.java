@@ -18,6 +18,11 @@ public class BedrockCollision {
         if (state.is(Blocks.ENDER_CHEST)) {
             return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
         }
+
+        if (state.is(Blocks.HONEY_BLOCK)) {
+            float f = 0.0625F;
+            return List.of(new BoundingBox(f, 0, f, 1 - f, 1, 1 - f));
+        }
         
         if (state.block() instanceof ChestBlock) {
             float f = 0.025F;
