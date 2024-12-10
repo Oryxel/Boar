@@ -32,58 +32,66 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.inputData.clear();
         player.inputData.addAll(packet.getInputData());
 
+        // TODO: handle teleport properly.
         player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
         player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
-        if (player.sinceTeleport != 1) {
-            player.x = packet.getPosition().getX();
-            player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
-            player.z = packet.getPosition().getZ();
-        }
+        player.x = packet.getPosition().getX();
+        player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
+        player.z = packet.getPosition().getZ();
+
+        player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
+
+        player.yaw = packet.getRotation().getY();
+        player.pitch = packet.getRotation().getX();
 
         if (player.boundingBox == null) {
             player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
-        }
-
-        player.sinceTeleport++;
-        if (player.lastTickWasTeleport) {
-            player.sinceTeleport = 0;
-            return;
-        }
-
-        if (player.sinceTeleport < (player.lastTeleportWasSimulation ? 3 : 2)) {
-            player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
-            return;
         }
 
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
         player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
 
+        updateInputData(player);
+
+        new PlayerTicker(player).tick();
+
+        correctPlayerAuthInput(player, packet);
+    }
+
+    private void updateInputData(BoarPlayer player) {
         player.lastGliding = player.gliding;
-        if (packet.getInputData().contains(PlayerAuthInputData.START_GLIDING)) {
+        if (player.inputData.contains(PlayerAuthInputData.START_GLIDING)) {
             // TODO: prevent player from spoofing this.
             player.gliding = true;
-        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_GLIDING)) {
+        } else if (player.inputData.contains(PlayerAuthInputData.STOP_GLIDING)) {
             player.gliding = false;
         }
 
         player.lastSprinting = player.sprinting;
-        if (packet.getInputData().contains(PlayerAuthInputData.START_SPRINTING)) {
+        if (player.inputData.contains(PlayerAuthInputData.START_SPRINTING)) {
             // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
             // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
             // Even if we're wrong about this, correct player movement.
             player.sprinting = player.movementInput.z > 0;
-        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SPRINTING)) {
+        } else if (player.inputData.contains(PlayerAuthInputData.STOP_SPRINTING)) {
             player.sprinting = false;
         }
 
         player.lastSneaking = player.sneaking;
-        if (packet.getInputData().contains(PlayerAuthInputData.START_SNEAKING)) {
+        if (player.inputData.contains(PlayerAuthInputData.START_SNEAKING)) {
             player.sneaking = true;
             player.sprinting = false;
-        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SNEAKING)) {
+        } else if (player.inputData.contains(PlayerAuthInputData.STOP_SNEAKING)) {
             player.sneaking = false;
+        }
+
+        player.lastSwimming = player.swimming;
+        if (player.inputData.contains(PlayerAuthInputData.START_SWIMMING)) {
+            player.swimming = true;
+        } else if (player.inputData.contains(PlayerAuthInputData.STOP_SWIMMING)) {
+            player.swimming = false;
         }
 
         if (!player.sprinting) {
@@ -98,31 +106,16 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.sinceSneaking = 0;
         }
 
-        player.lastSwimming = player.swimming;
-        if (packet.getInputData().contains(PlayerAuthInputData.START_SWIMMING)) {
-            player.swimming = true;
-        } else if (packet.getInputData().contains(PlayerAuthInputData.STOP_SWIMMING)) {
-            player.swimming = false;
-        }
-
-        player.yaw = packet.getRotation().getY();
-        player.pitch = packet.getRotation().getX();
-
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
         // Or the player sprinting status is just de-synced...
         if (player.movementInput.z < 0 && player.sprinting) {
-            player.lastSprinting = true;
             player.sprinting = false;
             player.sinceSprinting = 1;
         }
+    }
 
-        player.lastCanClimb = player.canClimb;
-        player.canClimb = (player.isClimbing() /* || this.getBlockStateAtPos().isOf(Blocks.POWDER_SNOW) && PowderSnowBlock.canWalkOnPowderSnow(this) */);
-
-        player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
-        new PlayerTicker(player).tick();
-
-        // Possible patch for no-fall exploit on GeyserMC since geyser just check for delta.y > 0 and VERTICAL_COLLISION
+    // Possible patch for no-fall exploit on GeyserMC since geyser just check for delta.y > 0 and VERTICAL_COLLISION
+    private void correctPlayerAuthInput(BoarPlayer player, PlayerAuthInputPacket packet) {
         packet.setDelta(Vector3f.from(player.clientVelocity.x, player.clientVelocity.y, player.clientVelocity.z));
         if (packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && !player.collideY) {
             packet.getInputData().remove(PlayerAuthInputData.VERTICAL_COLLISION);

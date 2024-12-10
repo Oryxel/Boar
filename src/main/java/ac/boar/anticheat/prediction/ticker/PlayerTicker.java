@@ -18,6 +18,14 @@ public class PlayerTicker extends LivingEntityTicker {
     }
 
     @Override
+    public void baseTick() {
+        player.lastCanClimb = player.canClimb;
+        player.canClimb = (player.isClimbing() /* || this.getBlockStateAtPos().isOf(Blocks.POWDER_SNOW) && PowderSnowBlock.canWalkOnPowderSnow(this) */);
+
+        super.baseTick();
+    }
+
+    @Override
     public void tickMovement() {
         if (player.lastSneaking || player.sneaking) {
             player.movementInput = player.movementInput.mul(0.3);

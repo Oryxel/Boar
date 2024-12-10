@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.player;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.geyser.GeyserPacketListener;
@@ -9,7 +9,7 @@ import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket;
 import org.cloudburstmc.protocol.bedrock.packet.UpdateAttributesPacket;
 import org.geysermc.geyser.entity.attribute.GeyserAttributeType;
 
-public class AbilitiesUpdatePacket implements GeyserPacketListener {
+public class PlayerAbilitiesPacket implements GeyserPacketListener {
     @Override
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();

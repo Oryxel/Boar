@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.player;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.TeleportUtil;
@@ -14,7 +14,7 @@ import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 
 import java.util.Queue;
 
-public class WorldTeleportPacket implements BedrockPacketListener, GeyserPacketListener {
+public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();

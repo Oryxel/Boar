@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.world;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.geyser.GeyserPacketListener;

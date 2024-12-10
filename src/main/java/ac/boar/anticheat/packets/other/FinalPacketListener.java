@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.other;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.BedrockPacketListener;
@@ -9,7 +9,7 @@ import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
 
-public class FinalPassthroughPacketListener implements GeyserPacketListener, BedrockPacketListener {
+public class FinalPacketListener implements GeyserPacketListener, BedrockPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();

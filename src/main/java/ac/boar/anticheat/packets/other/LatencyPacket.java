@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.other;
 
 import ac.boar.protocol.event.BedrockPacketListener;
 import ac.boar.protocol.event.PacketReceivedEvent;
