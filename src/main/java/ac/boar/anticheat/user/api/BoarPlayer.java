@@ -125,6 +125,10 @@ public class BoarPlayer {
         return 1000000L;
     }
 
+    public void updateBoundingBox() {
+        boundingBox = BoundingBox.getBoxAt(x, y, z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
+    }
+
     public void tick() {
         List<Effect> ranOutStatus = new ArrayList<>();
         for (Map.Entry<Effect, StatusEffect> entry : this.statusMap.entrySet()) {

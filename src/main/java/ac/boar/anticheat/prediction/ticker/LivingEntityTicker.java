@@ -105,8 +105,8 @@ public class LivingEntityTicker extends EntityTicker {
         Vector3i lv4 = player.getLandingPos();
         BlockState lv5 = player.getSession().getGeyser().getWorldManager().blockAt(player.getSession(), lv4);
         if (player.collideY) {
-            if (!player.sneaking && ((lv5.block() instanceof BedBlock) || lv5.is(Blocks.SLIME_BLOCK)) && clientVelocity.y < 0) {
-                clientVelocity.y = -clientVelocity.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.66F);
+            if (!player.sneaking && ((lv5.block() instanceof BedBlock) || lv5.is(Blocks.SLIME_BLOCK)) && beforeCollision.y < 0) {
+                clientVelocity.y = -beforeCollision.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.66F);
             } else {
                 clientVelocity.y = 0;
             }

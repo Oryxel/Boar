@@ -32,7 +32,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.inputData.clear();
         player.inputData.addAll(packet.getInputData());
 
-        // TODO: handle teleport properly.
         player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
         player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
@@ -46,7 +45,11 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.pitch = packet.getRotation().getX();
 
         if (player.boundingBox == null) {
-            player.boundingBox = BoundingBox.getBoxAt(player.x, player.y, player.z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
+            player.updateBoundingBox();
+        }
+
+        if (player.lastTickWasTeleport) {
+            return;
         }
 
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
