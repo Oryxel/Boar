@@ -30,6 +30,7 @@ public final class TeleportUtil {
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
             player.queuedVelocities.clear();
             player.clientVelocity = velocity;
+            System.out.println("reset!");
         });
     }
 
@@ -46,9 +47,9 @@ public final class TeleportUtil {
         packet.setTick(player.tick);
         packet.setOnGround(player.onGround);
         packet.setPredictionType(PredictionType.PLAYER);
-        this.player.getBedrockSession().sendPacketImmediately(packet);
-
         this.addTeleportToQueue(lastKnowValid, vec3f, true, true);
+
+        this.player.getBedrockSession().sendPacketImmediately(packet);
     }
 
     public void setbackTo(Vec3f vec3f) {
