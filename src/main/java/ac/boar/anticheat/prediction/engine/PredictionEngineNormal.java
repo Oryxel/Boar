@@ -8,6 +8,7 @@ import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class PredictionEngineNormal extends PredictionEngine {
 
     @Override
     public boolean canJump() {
-        return player.onGround;
+        return player.inputData.contains(PlayerAuthInputData.START_JUMPING);
     }
 
     @Override
