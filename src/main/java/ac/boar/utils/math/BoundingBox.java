@@ -10,7 +10,7 @@ import java.util.Optional;
 public class BoundingBox implements Cloneable {
     public static final float EPSILON = 1.0E-7F;
     public static final float MAX_TOLERANCE_ERROR = 2.0E-5F;
-    public static final float TOLERANCE_DISTANCE = 1.0E-5F;
+    public static final float TOLERANCE_DISTANCE = 5.0E-5F;
     public float minX;
     public float minY;
     public float minZ;
