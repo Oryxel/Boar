@@ -70,7 +70,7 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
         }
 
         final BoarPlayer player = event.getPlayer();
-        if (packet.getMode() != MovePlayerPacket.Mode.TELEPORT && packet.getMode() != MovePlayerPacket.Mode.RESPAWN) {
+        if (packet.getMode() == MovePlayerPacket.Mode.HEAD_ROTATION) {
             return;
         }
 
