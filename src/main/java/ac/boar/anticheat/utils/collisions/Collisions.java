@@ -92,14 +92,6 @@ public class Collisions {
                 }
             }
 
-//            boolean bl = Math.abs(d) < Math.abs(f);
-//            if (f != 0.0) {
-//                f = calculateMaxOffset(Axis.Z, entityBoundingBox, collisions, f);
-//                if (f != 0.0) {
-//                    entityBoundingBox = entityBoundingBox.offset(0.0F, 0.0F, f);
-//                }
-//            }
-
             if (d != 0.0) {
                 d = calculateMaxOffset(Axis.X, entityBoundingBox, collisions, d);
                 if (d != 0.0) {

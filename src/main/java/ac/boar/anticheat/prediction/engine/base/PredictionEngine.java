@@ -64,7 +64,7 @@ public abstract class PredictionEngine {
     }
 
     private void addJumpingToPossibilities(List<Vector> vectors) {
-        if (!canJump() || !player.inputData.contains(PlayerAuthInputData.START_JUMPING)) {
+        if (!canJump()) {
             return;
         }
 
