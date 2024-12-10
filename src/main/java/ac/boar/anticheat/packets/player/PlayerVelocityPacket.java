@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.player;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.geyser.GeyserPacketListener;
@@ -6,7 +6,7 @@ import ac.boar.protocol.event.geyser.GeyserSendEvent;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket;
 
-public class VelocityUpdatePacket implements GeyserPacketListener {
+public class PlayerVelocityPacket implements GeyserPacketListener {
     @Override
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();

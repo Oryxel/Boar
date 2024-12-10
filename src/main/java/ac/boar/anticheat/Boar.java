@@ -2,6 +2,13 @@ package ac.boar.anticheat;
 
 import ac.boar.anticheat.event.GeyserSessionJoinEvent;
 import ac.boar.anticheat.packets.*;
+import ac.boar.anticheat.packets.other.FinalPacketListener;
+import ac.boar.anticheat.packets.other.LatencyPacket;
+import ac.boar.anticheat.packets.player.PlayerAbilitiesPacket;
+import ac.boar.anticheat.packets.player.PlayerEffectPacket;
+import ac.boar.anticheat.packets.player.PlayerTeleportPacket;
+import ac.boar.anticheat.packets.player.PlayerVelocityPacket;
+import ac.boar.anticheat.packets.world.EntityUpdatePacket;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.BedrockPacketEvents;
@@ -22,17 +29,17 @@ public class Boar {
         new GeyserSessionJoinEvent();
 
         BedrockPacketEvents.register(new LatencyPacket());
-        BedrockPacketEvents.register(new WorldTeleportPacket());
+        BedrockPacketEvents.register(new PlayerTeleportPacket());
         BedrockPacketEvents.register(new MovementCheckRunner());
         BedrockPacketEvents.register(new PacketCheckRunner());
-        BedrockPacketEvents.register(new FinalPassthroughPacketListener());
+        BedrockPacketEvents.register(new FinalPacketListener());
 
-        GeyserPacketEvents.register(new WorldTeleportPacket());
-        GeyserPacketEvents.register(new EffectUpdatePacket());
+        GeyserPacketEvents.register(new PlayerTeleportPacket());
+        GeyserPacketEvents.register(new PlayerEffectPacket());
         GeyserPacketEvents.register(new EntityUpdatePacket());
-        GeyserPacketEvents.register(new VelocityUpdatePacket());
-        GeyserPacketEvents.register(new AbilitiesUpdatePacket());
-        GeyserPacketEvents.register(new FinalPassthroughPacketListener());
+        GeyserPacketEvents.register(new PlayerVelocityPacket());
+        GeyserPacketEvents.register(new PlayerAbilitiesPacket());
+        GeyserPacketEvents.register(new FinalPacketListener());
 
         this.playerManager = new BoarPlayerManager();
     }

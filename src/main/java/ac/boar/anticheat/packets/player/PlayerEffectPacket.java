@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets;
+package ac.boar.anticheat.packets.player;
 
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.user.api.BoarPlayer;
@@ -8,7 +8,7 @@ import ac.boar.protocol.event.geyser.GeyserSendEvent;
 import org.cloudburstmc.protocol.bedrock.packet.MobEffectPacket;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
-public class EffectUpdatePacket implements GeyserPacketListener {
+public class PlayerEffectPacket implements GeyserPacketListener {
     @Override
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();

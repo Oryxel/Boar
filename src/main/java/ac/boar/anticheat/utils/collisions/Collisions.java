@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatList;
-import it.unimi.dsi.fastutil.floats.FloatListIterator;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.Axis;
@@ -20,7 +19,7 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Collisions {
+public final class Collisions {
 
     private static boolean isSpaceAroundPlayerEmpty(BoarPlayer player, float offsetX, float offsetZ, float f) {
         BoundingBox lv = player.boundingBox;
@@ -196,12 +195,9 @@ public class Collisions {
 
             List<BoundingBox> list2 = findCollisionsForMovement(player, list, box3);
             float f = vec3f.y;
-            float[] fs = collectStepHeights(box2, list2, 0.6F, f);
-            float[] var14 = fs;
-            int var15 = fs.length;
+            float[] fs = collectStepHeights(box2, list2, player.getStepHeight(), f);
 
-            for (int var16 = 0; var16 < var15; ++var16) {
-                float g = var14[var16];
+            for (float g : fs) {
                 Vec3f vec3f2 = adjustMovementForCollisions(new Vec3f(movement.x, g, movement.z), box2, list2);
                 if (vec3f2.horizontalLengthSquared() > vec3f.horizontalLengthSquared()) {
                     float d = box.minY - box2.minY;
@@ -218,9 +214,7 @@ public class Collisions {
         block0:
         for (BoundingBox bb : collisions) {
             FloatList floatList = bb.getPointPositions();
-            FloatListIterator floatListIterator = floatList.iterator();
-            while (floatListIterator.hasNext()) {
-                double d = floatListIterator.next();
+            for (double d : floatList) {
                 float g = (float) (d - collisionBox.minY);
                 if (g < 0.0f || g == stepHeight) continue;
                 if (g > f) continue block0;
@@ -235,7 +229,7 @@ public class Collisions {
     private static List<BoundingBox> getEntityCollisions(BoarPlayer player, BoundingBox box) {
         if (box.getAverageSideLength() > BoundingBox.EPSILON) {
             List<EntityCache> list = new ArrayList<>();
-            player.compensatedEntity.getMap().forEach((k, v) -> {
+            player.compensatedEntity.getMap().forEach((_, v) -> {
                 EntityType type = v.getType();
                 if (v.getBoundingBox().intersects(box) && (type.name().toLowerCase().contains("boat") || type == EntityType.SHULKER)) {
                     list.add(v);

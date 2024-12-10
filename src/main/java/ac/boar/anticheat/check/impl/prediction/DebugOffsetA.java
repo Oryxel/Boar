@@ -22,7 +22,7 @@ public class DebugOffsetA extends OffsetHandlerCheck {
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
                     "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", SS" + player.sinceSprinting +
-                    ", SN" + player.sinceSneaking + ", ST" + player.sinceTeleport);
+                    ", SN" + player.sinceSneaking);
         }
 
         if (player.actualVelocity.length() > 0) {
