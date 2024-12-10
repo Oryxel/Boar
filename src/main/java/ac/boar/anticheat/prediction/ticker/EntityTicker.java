@@ -17,7 +17,10 @@ import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.data.Ability;
 import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
+import org.geysermc.geyser.level.block.type.BedBlock;
+import org.geysermc.geyser.level.block.type.BlockState;
 
 import java.util.Iterator;
 import java.util.List;
@@ -116,8 +119,14 @@ public class EntityTicker {
             clientVelocity.x = 0;
         }
 
+        Vector3i lv4 = player.getLandingPos();
+        BlockState lv5 = player.getSession().getGeyser().getWorldManager().blockAt(player.getSession(), lv4);
         if (player.collideY) {
-            clientVelocity.y = 0;
+            if (!player.sneaking && ((lv5.block() instanceof BedBlock) || lv5.is(Blocks.SLIME_BLOCK)) && clientVelocity.y < 0) {
+                clientVelocity.y = -clientVelocity.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.66F);
+            } else {
+                clientVelocity.y = 0;
+            }
         }
 
         if (player.collideZ) {
