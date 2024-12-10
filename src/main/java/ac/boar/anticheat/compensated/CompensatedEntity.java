@@ -7,6 +7,7 @@ import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.cloudburstmc.protocol.bedrock.packet.AddEntityPacket;
 import org.geysermc.geyser.entity.EntityDefinition;
 
@@ -15,9 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Getter
+@Setter
 public class CompensatedEntity {
     private final BoarPlayer player;
     private final Map<Long, EntityCache> map = new ConcurrentHashMap<>();
+
+    private EntityCache vehicle;
+    private boolean riding;
 
     public EntityCache getEntityCache(long id) {
         return this.map.get(id);
@@ -71,6 +76,18 @@ public class CompensatedEntity {
     }
 
     public void removeEntity(final long id) {
-        this.map.remove(id);
+        EntityCache cache = this.map.remove(id);
+        if (cache == vehicle) {
+            dismount(vehicle);
+        }
+    }
+
+    public void dismount(EntityCache cache) {
+        if (cache != vehicle) {
+            return;
+        }
+        player.sendTransaction();
+        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> vehicle = null);
+        riding = false;
     }
 }

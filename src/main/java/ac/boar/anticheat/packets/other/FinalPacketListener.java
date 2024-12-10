@@ -23,6 +23,10 @@ public class FinalPacketListener implements GeyserPacketListener, BedrockPacketL
                 event.setCancelled(true);
             }
 
+            if (!player.compensatedEntity.isRiding() && player.compensatedEntity.getVehicle() != null) {
+                event.setCancelled(true);
+            }
+
             if (event.isCancelled()) {
                 return;
             }
