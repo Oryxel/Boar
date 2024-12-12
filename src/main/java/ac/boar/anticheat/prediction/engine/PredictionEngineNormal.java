@@ -115,7 +115,7 @@ public class PredictionEngineNormal extends PredictionEngine {
             float d = /* MathUtil.clamp(motion.x, -0.20000076F, 0.20000076F) */ motion.x;
             float e = /* MathUtil.clamp(motion.z, -0.20000076F, 0.20000076F) */ motion.z;
             float g = Math.max(motion.y, -0.20000076F);
-            if (g < 0.0 && player.movementInput.z < 0 && (player.sneaking || player.lastSneaking)) {
+            if (g < 0.0 && !player.inputData.contains(PlayerAuthInputData.WANT_UP) && (player.sneaking || player.lastSneaking)) {
                 g = 0.0F;
             }
 
