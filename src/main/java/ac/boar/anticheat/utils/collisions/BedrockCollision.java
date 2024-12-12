@@ -26,7 +26,17 @@ public class BedrockCollision {
             float f = 0.0625F;
             return List.of(new BoundingBox(f, 0, f, 1 - f, 1, 1 - f));
         }
-        
+
+        if (state.is(Blocks.LANTERN)) {
+            final List<BoundingBox> STANDING_SHAPE = List.of(new BoundingBox(0.3125F, 0, 0.3125F, 0.6875F, 0.5F, 0.6875F),
+                    new BoundingBox(0.375F, 0.5F, 0.375F, 0.625F, 0.5F, 0.625F));
+            final List<BoundingBox> HANGING_SHAPE = List.of(new BoundingBox(
+                    0.3125F, 0.325F, 0.3125F, 0.6875F, 0.6875F, 0.6875F),
+                    new BoundingBox(0.375F, 0.325F, 0.375F, 0.625F, 0.6875F, 0.625F));
+
+            return state.getValue(Properties.HANGING) ? HANGING_SHAPE : STANDING_SHAPE;
+        }
+
         if (state.block() instanceof ChestBlock) {
             float f = 0.025F;
             final BoundingBox DOUBLE_NORTH_SHAPE = new BoundingBox(f, 0, 0, 1 - f, 0.95F, 1 - f);
