@@ -16,17 +16,17 @@ public class DebugOffsetA extends OffsetHandlerCheck {
     public void onPredictionComplete(double offset) {
         Vec3f predicted = player.predictedVelocity;
 
-        if (player.actualVelocity.length() > 0 || offset > 1e-4) {
+        if (player.movementInput.length() > 0 || offset > 1e-4) {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
                     predicted.x + "," + predicted.y + "," + predicted.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
                     "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", SS" + player.sinceSprinting +
                     ", SN" + player.sinceSneaking);
-        }
 
-        if (player.actualVelocity.length() > 0) {
             Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
+//            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + player.claimedEOT.distance(player.clientVelocity.toVector3f())
+//                    + ", EOT: " + player.claimedEOT.toString());
         }
     }
 }

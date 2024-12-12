@@ -78,6 +78,8 @@ public class BoarPlayer {
     public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
 
+    public Vector3f claimedEOT;
+
     public Vector3f bedrockRotation = Vector3f.ZERO;
 
     public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
