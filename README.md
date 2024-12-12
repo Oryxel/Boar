@@ -16,6 +16,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 - Player can clip into walls (they will glitch back anyway, but it will still cause false) mentioned
   in [3370](https://github.com/GeyserMC/Geyser/issues/3370) and [4269](https://github.com/GeyserMC/Geyser/issues/4269)
+- Slamming your head while trying to move on the Z axis causes 0.002 false positive.
 - Sprinting while slamming your head to the walls causes a bunch of falses.
 - ~~Floating point errors BREAK A LOT OF THINGS, this is stupid and break my collision system completely.  (Normally
   1e-5 -> 0.1) (partially fixed)~~
@@ -24,7 +25,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 - ~~Teleport system is broken (partially fixed)~~
 - A lot of stuff is still unimplemented.
 
-#### Things to note about Bedrock (for me - or any contributors)
+#### Things to note about (for me - or any contributors)
 
 - Why the **FUCK** position (and everything else) stored in floating point. (I hate this)
 - A lot of bounding boxes is different, ~~step motion seems to be different (not sure)~~?
