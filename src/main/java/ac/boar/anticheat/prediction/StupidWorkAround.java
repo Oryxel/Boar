@@ -14,7 +14,7 @@ public class StupidWorkAround {
             float lengthPrediction = after.length();
             float lengthActual = player.actualVelocity.length();
 
-            if (lengthPrediction > lengthActual && after.squaredDistanceTo(player.actualVelocity) <= 0.000036) {
+            if (lengthPrediction > lengthActual && after.squaredDistanceTo(player.actualVelocity) <= 0.000081) {
                 fixed = player.actualVelocity.clone();
             }
         }
