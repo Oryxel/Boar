@@ -7,6 +7,7 @@ import ac.boar.protocol.event.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
@@ -55,10 +56,14 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
         player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
+        player.claimedEOT = packet.getDelta();
 
         updateInputData(player);
 
         new PlayerTicker(player).tick();
+        if (packet.getMotion().length() > 0) {
+            Bukkit.broadcastMessage(player.movementInput.x + "," + player.movementInput.z + ", A: " + packet.getMotion().toString());
+        }
 
         correctPlayerAuthInput(player, packet);
     }
