@@ -9,6 +9,7 @@ import ac.boar.anticheat.utils.collisions.Collisions;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.math.vector.Vector3i;
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.type.BedBlock;
 import org.geysermc.geyser.level.block.type.BlockState;
@@ -131,7 +132,7 @@ public abstract class PredictionEngine {
     }
 
     protected void addClimbingToPossibilities(final List<Vector> vectors) {
-        if (!player.lastCanClimb && !player.canClimb) {
+        if (!player.lastCanClimb && !player.canClimb && !player.inputData.contains(PlayerAuthInputData.WANT_UP)) {
             return;
         }
 
@@ -140,7 +141,8 @@ public abstract class PredictionEngine {
             list.add(vector);
 
             Vector vector1 = vector.clone();
-            vector1.setVelocity(new Vec3f(vector1.getVelocity().x, 0.20000076F, vector1.getVelocity().z));
+            vector1.setVelocity(new Vec3f(vector1.getVelocity().x, !player.canClimb ? player.lastClimbingSpeed
+                    : player.climbingSpeed, vector1.getVelocity().z));
             list.add(vector1);
         }
 

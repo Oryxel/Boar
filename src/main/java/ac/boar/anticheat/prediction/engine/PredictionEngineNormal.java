@@ -9,6 +9,7 @@ import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
+import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 import java.util.ArrayList;
@@ -109,12 +110,12 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     private Vec3f applyClimbingSpeed(Vec3f motion) {
-        if (player.lastCanClimb) {
+        if (player.lastCanClimb && player.lastClimbingSpeed > 0.2) {
             // this.onLanding();
             float d = /* MathUtil.clamp(motion.x, -0.20000076F, 0.20000076F) */ motion.x;
             float e = /* MathUtil.clamp(motion.z, -0.20000076F, 0.20000076F) */ motion.z;
             float g = Math.max(motion.y, -0.20000076F);
-            if (g < 0.0 && /* !this.getBlockStateAtPos().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder() */ player.movementInput.z < 0 && (player.sneaking || player.lastSneaking)) {
+            if (g < 0.0 && player.movementInput.z < 0 && (player.sneaking || player.lastSneaking)) {
                 g = 0.0F;
             }
 

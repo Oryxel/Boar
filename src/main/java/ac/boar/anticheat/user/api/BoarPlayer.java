@@ -25,6 +25,7 @@ import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.level.WorldManager;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
+import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
@@ -69,6 +70,7 @@ public class BoarPlayer {
     public boolean collideX, collideZ, collideY;
 
     public boolean canClimb, lastCanClimb;
+    public float lastClimbingSpeed, climbingSpeed;
 
     public Optional<Vector3i> supportingBlockPos = Optional.empty();
 
@@ -172,8 +174,24 @@ public class BoarPlayer {
     }
 
     public boolean isClimbing() {
-        return getSession().getGeyser().getWorldManager().blockAt(getSession(), Vector3i.from(x, y, z)).is(Blocks.LADDER) ||
-                getSession().getGeyser().getWorldManager().blockAt(getSession(), Vector3i.from(lastX, lastY, lastZ)).is(Blocks.LADDER);
+        BlockState state = getBlockStateAtPos();
+        BlockState lastState = getBlockStateAtPosLast();
+
+        boolean ladder = state.is(Blocks.LADDER) || lastState.is(Blocks.LADDER);
+        boolean scaffolding = state.is(Blocks.SCAFFOLDING) || lastState.is(Blocks.SCAFFOLDING);
+
+        climbingSpeed = ladder ? 0.20000076F : 0.15000153F;
+        return ladder || scaffolding;
+    }
+
+    public BlockState getBlockStateAtPosLast() {
+        WorldManager manager = getSession().getGeyser().getWorldManager();
+        return manager.blockAt(getSession(), Vector3i.from(lastX, lastY, lastZ));
+    }
+
+    public BlockState getBlockStateAtPos() {
+        WorldManager manager = getSession().getGeyser().getWorldManager();
+        return manager.blockAt(getSession(), Vector3i.from(x, y, z));
     }
 
     public Vector3i getVelocityAffectingPos() {
