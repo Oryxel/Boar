@@ -1,6 +1,9 @@
 package ac.boar.anticheat.utils.collisions;
 
+import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.BoundingBox;
+import org.cloudburstmc.math.vector.Vector3i;
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.property.ChestType;
 import org.geysermc.geyser.level.block.property.Properties;
@@ -14,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BedrockCollision {
-    public static List<BoundingBox> getBoundingBox(BlockState state) {
+    public static List<BoundingBox> getBoundingBox(BoarPlayer player, Vector3i vector3i, BlockState state) {
         if (state.is(Blocks.ENDER_CHEST)) {
             return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
         }
@@ -63,6 +66,26 @@ public class BedrockCollision {
             }
 
             return List.of(box);
+        }
+
+        if (state.is(Blocks.SCAFFOLDING)) {
+            final BoundingBox COLLISION_SHAPE = new BoundingBox(0, 0, 0, 1, 0.125F, 1);
+            final BoundingBox OUTLINE_SHAPE = new BoundingBox(0, 0, 0, 1, 1, 1).offset(0, -1, 0);
+
+            BoundingBox lv = new BoundingBox(0, 0.875f, 0, 1, 1, 1);
+            BoundingBox lv2 = new BoundingBox(0, 0, 0, 0.125f, 1, 0.125f);
+            BoundingBox lv3 = new BoundingBox(0.875f, 0, 0, 1, 1, 0.125f);
+            BoundingBox lv4 = new BoundingBox(0, 0, 0.875f, 0.125f, 1, 1);
+            BoundingBox lv5 = new BoundingBox(0.875f, 0, 0.875f, 1, 1, 1);
+            List<BoundingBox> NORMAL_OUTLINE_SHAPE = List.of(lv, lv2, lv3, lv4, lv5);
+
+            boolean above = player.boundingBox.minY > vector3i.getY() + 1 - 1.0E-5F;
+            boolean aboveOutline = player.boundingBox.minY > vector3i.getY() + OUTLINE_SHAPE.maxY - 1.0E-5F;
+            if (above && !player.inputData.contains(PlayerAuthInputData.WANT_DOWN)) {
+                return NORMAL_OUTLINE_SHAPE;
+            } else {
+                return state.getValue(Properties.STABILITY_DISTANCE) != 0 && state.getValue(Properties.BOTTOM) && aboveOutline ? List.of(COLLISION_SHAPE) : List.of();
+            }
         }
 
         if (state.is(Blocks.CAULDRON)) {
@@ -131,6 +154,6 @@ public class BedrockCollision {
             return List.of(box);
         }
 
-        return List.of();
+        return null;
     }
 }
