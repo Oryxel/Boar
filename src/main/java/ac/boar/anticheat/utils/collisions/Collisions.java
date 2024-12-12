@@ -149,8 +149,8 @@ public final class Collisions {
     private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list) {
         GeyserSession session = player.getSession();
         BlockState state = session.getGeyser().getWorldManager().blockAt(session, vector3i);
-        List<BoundingBox> boxes = BedrockCollision.getBoundingBox(state);
-        if (!boxes.isEmpty()) {
+        List<BoundingBox> boxes = BedrockCollision.getBoundingBox(player, vector3i, state);
+        if (boxes != null) {
             for (BoundingBox box : boxes) {
                 box = box.offset(new Vec3f(vector3i));
                 if (box.intersects(boundingBox)) {
