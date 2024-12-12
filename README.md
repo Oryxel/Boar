@@ -27,7 +27,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 #### Things to note about (for me - or any contributors)
 
-- Why the **FUCK** position (and everything else) stored in floating point. (I hate this)
+- Why the **HELL** position (and everything else) stored in floating point. (just switch to double this is stupid [11418](https://bugs.mojang.com/browse/MCPE-11418))
 - A lot of bounding boxes is different, ~~step motion seems to be different (not sure)~~?
 - Sprinting/Sneaking status client sent doesn't seem to match up with player movement
 - NetworkStackLatency (ping packet), is deprecated, and might be removed soon (hope not).
