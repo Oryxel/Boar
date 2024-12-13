@@ -60,10 +60,7 @@ public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();
         if (event.getPacket() instanceof UpdateBlockPacket packet) {
-            if (packet.getDataLayer() == 1) {
-                player.compensatedWorld.updateWaterLoggedBlock(packet.getBlockPosition(), packet.getDefinition());
-                return;
-            } else if (packet.getDataLayer() != 0) {
+            if (packet.getDataLayer() > 0) {
                 return;
             }
 

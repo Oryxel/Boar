@@ -1,28 +1,23 @@
 package ac.boar.anticheat.compensated;
 
 import ac.boar.anticheat.compensated.cache.BoarChunk;
+import ac.boar.anticheat.data.FluidState;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.utils.MathUtil;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.math.vector.Vector3i;
-import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.geysermc.geyser.level.JavaDimension;
 import org.geysermc.geyser.level.block.type.Block;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.util.MathUtils;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.DataPalette;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 // https://github.com/GeyserMC/Geyser/blob/master/core/src/main/java/org/geysermc/geyser/session/cache/ChunkCache.java
 @RequiredArgsConstructor
 public class CompensatedWorld {
     private final BoarPlayer player;
     private final Long2ObjectMap<BoarChunk> chunks = new Long2ObjectOpenHashMap<>();
-    private final List<Integer> waterloggedBlocks = new CopyOnWriteArrayList<>();
 
     private int minY;
     private int heightY;
@@ -41,17 +36,6 @@ public class CompensatedWorld {
     private BoarChunk getChunk(int chunkX, int chunkZ) {
         long chunkPosition = MathUtils.chunkPositionToLong(chunkX, chunkZ);
         return chunks.getOrDefault(chunkPosition, null);
-    }
-
-    public void updateWaterLoggedBlock(Vector3i vector3i, BlockDefinition definition) {
-        player.sendTransaction();
-        if (definition == player.getSession().getBlockMappings().getBedrockAir()) {
-            player.latencyUtil.addTransactionToQueue(player.lastSentId,
-                    () -> waterloggedBlocks.remove(MathUtil.pack(vector3i)));
-        } else if (definition == player.getSession().getBlockMappings().getBedrockWater()) {
-            player.latencyUtil.addTransactionToQueue(player.lastSentId,
-                    () -> waterloggedBlocks.add(MathUtil.pack(vector3i)));
-        }
     }
 
     public void updateBlock(int x, int y, int z, int block) {
@@ -80,6 +64,10 @@ public class CompensatedWorld {
         }
 
         palette.set(x & 0xF, y & 0xF, z & 0xF, block);
+    }
+
+    public FluidState getFluidState(Vector3i vector3i) {
+        return null;
     }
 
     public BlockState getBlockState(Vector3i vector3i) {
