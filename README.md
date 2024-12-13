@@ -10,7 +10,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 - A packet managing system for GeyserMC
 - A broken teleport handling system
-- An uncompleted prediction engine that only works on normal movement. (1e-4 accuracy)
+- An uncompleted prediction engine that only works on normal/elytra movement. (1e-4 accuracy)
 
 ## Problems
 
