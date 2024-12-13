@@ -41,6 +41,7 @@ public class UpstreamSessionListener extends UpstreamSession {
             getSession().sendPacket(startGamePacket);
 
             GeyserUtil.hookJavaSession(player);
+            player.loadBlockMappings();
             return;
         }
 

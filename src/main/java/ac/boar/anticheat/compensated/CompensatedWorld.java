@@ -5,7 +5,7 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import org.geysermc.geyser.level.JavaDimension;
 import org.geysermc.geyser.level.block.type.Block;
 import org.geysermc.geyser.util.MathUtils;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.DataPalette;
@@ -16,8 +16,8 @@ public class CompensatedWorld {
     private final BoarPlayer player;
     private final Long2ObjectMap<BoarChunk> chunks = new Long2ObjectOpenHashMap<>();
 
-    @Setter private int minY;
-    @Setter private int heightY;
+    private int minY;
+    private int heightY;
 
     public void addToCache(int x, int z, DataPalette[] chunks, long id) {
         long chunkPosition = MathUtils.chunkPositionToLong(x, z);
@@ -85,6 +85,13 @@ public class CompensatedWorld {
     public void removeChunk(int chunkX, int chunkZ) {
         long chunkPosition = MathUtils.chunkPositionToLong(chunkX, chunkZ);
         chunks.remove(chunkPosition);
+    }
+
+
+    public void loadDimension() {
+        JavaDimension dimension = player.getSession().getDimensionType();
+        this.minY = dimension.minY();
+        this.heightY = dimension.maxY();
     }
 
     /**

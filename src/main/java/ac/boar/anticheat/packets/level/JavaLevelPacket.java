@@ -1,16 +1,22 @@
 package ac.boar.anticheat.packets.level;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
+import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.protocol.event.java.PacketListener;
 import ac.boar.protocol.event.java.PacketSendEvent;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.cloudburstmc.math.vector.Vector3i;
+import org.cloudburstmc.protocol.bedrock.packet.UpdateBlockPacket;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.ChunkSection;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.DataPalette;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundRespawnPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundForgetLevelChunkPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundLevelChunkWithLightPacket;
 
-public class JavaLevelChunkPacket implements PacketListener {
+public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         final BoarPlayer player = event.getPlayer();
@@ -44,6 +50,30 @@ public class JavaLevelChunkPacket implements PacketListener {
 
             player.latencyUtil.addTransactionToQueue(player.lastSentId + (sendTrans ? 1 : 0),
                     () -> player.compensatedWorld.removeChunk(packet.getX(), packet.getZ()));
+        }
+
+        if (event.getPacket() instanceof ClientboundRespawnPacket || event.getPacket() instanceof ClientboundLoginPacket) {
+            event.getPostTasks().add(player.compensatedWorld::loadDimension);
+        }
+    }
+
+    @Override
+    public void onPacketSend(GeyserSendEvent event) {
+        final BoarPlayer player = event.getPlayer();
+        if (event.getPacket() instanceof UpdateBlockPacket packet) {
+            // TODO: support for waterlogged block
+            if (packet.getDataLayer() > 0) {
+                return;
+            }
+
+            final Vector3i blockPosition = packet.getBlockPosition();
+            int javaId = player.getJavaBlock(packet.getDefinition());
+            if (javaId == -1) {
+                player.getSession().getGeyser().getWorldManager().getBlockAt(
+                        player.getSession(), blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+            }
+
+            player.compensatedWorld.updateBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), javaId);
         }
     }
 }
