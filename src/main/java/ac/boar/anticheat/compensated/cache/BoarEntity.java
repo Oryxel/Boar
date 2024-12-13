@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class EntityCache {
+public class BoarEntity {
     private final EntityType type;
     private final EntityDefinition definition;
     private Vec3f position = Vec3f.ZERO, utdPosition = Vec3f.ZERO;

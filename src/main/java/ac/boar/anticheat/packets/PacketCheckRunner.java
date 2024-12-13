@@ -3,8 +3,8 @@ package ac.boar.anticheat.packets;
 import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.BedrockPacketListener;
-import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.bedrock.BedrockPacketListener;
+import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 
 import java.util.Map;
 

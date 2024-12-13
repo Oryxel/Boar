@@ -2,17 +2,19 @@ package ac.boar.anticheat;
 
 import ac.boar.anticheat.event.GeyserSessionJoinEvent;
 import ac.boar.anticheat.packets.*;
+import ac.boar.anticheat.packets.level.JavaLevelChunkPacket;
 import ac.boar.anticheat.packets.other.FinalPacketListener;
 import ac.boar.anticheat.packets.other.LatencyPacket;
 import ac.boar.anticheat.packets.player.PlayerAbilitiesPacket;
 import ac.boar.anticheat.packets.player.PlayerEffectPacket;
 import ac.boar.anticheat.packets.player.PlayerTeleportPacket;
 import ac.boar.anticheat.packets.player.PlayerVelocityPacket;
-import ac.boar.anticheat.packets.world.EntityUpdatePacket;
+import ac.boar.anticheat.packets.entities.EntityUpdatePacket;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.BedrockPacketEvents;
 import ac.boar.protocol.GeyserPacketEvents;
+import ac.boar.protocol.JavaPacketEvents;
 import lombok.Getter;
 
 @Getter
@@ -41,6 +43,8 @@ public class Boar {
         GeyserPacketEvents.register(new PlayerAbilitiesPacket());
         GeyserPacketEvents.register(new FinalPacketListener());
 
+        JavaPacketEvents.register(new JavaLevelChunkPacket());
+
         this.playerManager = new BoarPlayerManager();
     }
 
@@ -48,6 +52,7 @@ public class Boar {
         BoarPlugin.LOGGER.info("Shutting down...");
         this.playerManager.clear();
 
+        JavaPacketEvents.terminate();
         BedrockPacketEvents.terminate();
         GeyserPacketEvents.terminate();
     }

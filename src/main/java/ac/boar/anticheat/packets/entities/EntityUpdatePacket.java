@@ -1,9 +1,9 @@
-package ac.boar.anticheat.packets.world;
+package ac.boar.anticheat.packets.entities;
 
-import ac.boar.anticheat.compensated.cache.EntityCache;
+import ac.boar.anticheat.compensated.cache.BoarEntity;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityLinkData;
 import org.cloudburstmc.protocol.bedrock.packet.*;
@@ -36,7 +36,7 @@ public class EntityUpdatePacket implements GeyserPacketListener {
                 return;
             }
 
-            EntityCache vehicle = player.compensatedEntity.getEntityCache(data.getFrom());
+            BoarEntity vehicle = player.compensatedEntity.getEntityCache(data.getFrom());
             if (vehicle == null) {
                 return;
             }

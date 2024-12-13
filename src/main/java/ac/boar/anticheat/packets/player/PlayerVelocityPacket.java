@@ -1,8 +1,8 @@
 package ac.boar.anticheat.packets.player;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket;
 

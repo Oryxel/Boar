@@ -2,10 +2,9 @@ package ac.boar.anticheat.packets;
 
 import ac.boar.anticheat.prediction.ticker.PlayerTicker;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.BedrockPacketListener;
-import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.bedrock.BedrockPacketListener;
+import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.MathUtil;
-import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3f;
@@ -23,8 +22,13 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         player.tick();
         player.tick = packet.getTick();
-
         player.bedrockRotation = packet.getRotation();
+
+        // This DOES happen, sometimes it failed to add the adapter, force player to rejoin...
+        if (player.getJavaSession() == null) {
+            player.disconnect("SessionAdapter failed to inject!");
+            return;
+        }
 
         if (player.teleportUtil.teleportInQueue()) {
             return;

@@ -2,8 +2,8 @@ package ac.boar.protocol.listener;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.BedrockPacketEvents;
-import ac.boar.protocol.event.BedrockPacketListener;
-import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.bedrock.BedrockPacketListener;
+import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacketHandler;

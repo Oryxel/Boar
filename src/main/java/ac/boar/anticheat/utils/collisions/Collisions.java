@@ -1,6 +1,6 @@
 package ac.boar.anticheat.utils.collisions;
 
-import ac.boar.anticheat.compensated.cache.EntityCache;
+import ac.boar.anticheat.compensated.cache.BoarEntity;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
@@ -228,7 +228,7 @@ public final class Collisions {
 
     private static List<BoundingBox> getEntityCollisions(BoarPlayer player, BoundingBox box) {
         if (box.getAverageSideLength() > BoundingBox.EPSILON) {
-            List<EntityCache> list = new ArrayList<>();
+            List<BoarEntity> list = new ArrayList<>();
             player.compensatedEntity.getMap().forEach((_, v) -> {
                 EntityType type = v.getType();
                 if (v.getBoundingBox().intersects(box) && (type.name().toLowerCase().contains("boat") || type == EntityType.SHULKER)) {
@@ -238,7 +238,7 @@ public final class Collisions {
 
             List<BoundingBox> boxes = new ArrayList<>();
 
-            for (EntityCache lv : list) {
+            for (BoarEntity lv : list) {
                 System.out.println(lv.getBoundingBox());
                 boxes.add(lv.getBoundingBox());
             }

@@ -1,8 +1,8 @@
 package ac.boar.anticheat.compensated;
 
-import ac.boar.anticheat.compensated.cache.EntityCache;
+import ac.boar.anticheat.compensated.cache.BoarEntity;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
@@ -19,17 +19,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Setter
 public class CompensatedEntity {
     private final BoarPlayer player;
-    private final Map<Long, EntityCache> map = new ConcurrentHashMap<>();
+    private final Map<Long, BoarEntity> map = new ConcurrentHashMap<>();
 
-    private EntityCache vehicle;
+    private BoarEntity vehicle;
     private boolean riding;
 
-    public EntityCache getEntityCache(long id) {
+    public BoarEntity getEntityCache(long id) {
         return this.map.get(id);
     }
 
     public void queuePositionUpdate(GeyserSendEvent event, long id, Vec3f vec3f) {
-        final EntityCache cache = this.map.get(id);
+        final BoarEntity cache = this.map.get(id);
         if (cache == null) {
             return;
         }
@@ -66,7 +66,7 @@ public class CompensatedEntity {
             return;
         }
 
-        final EntityCache cache = new EntityCache(definition.entityType(), definition);
+        final BoarEntity cache = new BoarEntity(definition.entityType(), definition);
         cache.setPosition(new Vec3f(packet.getPosition()));
         cache.setUtdPosition(cache.getPosition().clone());
         cache.setBoundingBox(BoundingBox.getBoxAt(packet.getPosition().getX(), packet.getPosition().getY(), packet.getPosition().getZ(), definition.width(), definition.height()));
@@ -76,13 +76,13 @@ public class CompensatedEntity {
     }
 
     public void removeEntity(final long id) {
-        EntityCache cache = this.map.remove(id);
+        BoarEntity cache = this.map.remove(id);
         if (cache == vehicle) {
             dismount(vehicle);
         }
     }
 
-    public void dismount(EntityCache cache) {
+    public void dismount(BoarEntity cache) {
         if (cache != vehicle) {
             return;
         }

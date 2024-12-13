@@ -2,7 +2,7 @@ package ac.boar.anticheat.check.api.impl;
 
 import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 
 public class PacketCheck extends Check {
     public PacketCheck(BoarPlayer player) {
