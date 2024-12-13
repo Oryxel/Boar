@@ -8,6 +8,9 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.JavaDimension;
+import org.geysermc.geyser.level.block.Blocks;
+import org.geysermc.geyser.level.block.Fluid;
+import org.geysermc.geyser.level.block.property.Properties;
 import org.geysermc.geyser.level.block.type.Block;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.util.MathUtils;
@@ -67,7 +70,16 @@ public class CompensatedWorld {
     }
 
     public FluidState getFluidState(Vector3i vector3i) {
-        return null;
+        final BlockState state = getBlockState(vector3i);
+        boolean lava = state.is(Blocks.LAVA), water = state.is(Blocks.WATER), waterlogged = state.getValue(Properties.WATERLOGGED) != null;
+        if (!lava && !water && !waterlogged) {
+            return new FluidState(Fluid.EMPTY, 0);
+        }
+        if (lava || water) {
+            return new FluidState(lava ? Fluid.LAVA : Fluid.WATER, state.getValue(Properties.LEVEL) / 9.0F);
+        }
+
+        return new FluidState(Fluid.WATER, 8.0F / 9.0F);
     }
 
     public BlockState getBlockState(Vector3i vector3i) {
