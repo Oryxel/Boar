@@ -1,4 +1,4 @@
-package ac.boar.anticheat.packets.entities;
+package ac.boar.anticheat.packets.level;
 
 import ac.boar.anticheat.compensated.cache.BoarEntity;
 import ac.boar.anticheat.user.api.BoarPlayer;
@@ -8,7 +8,7 @@ import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityLinkData;
 import org.cloudburstmc.protocol.bedrock.packet.*;
 
-public class EntityUpdatePacket implements GeyserPacketListener {
+public class LevelEntityPacket implements GeyserPacketListener {
     @Override
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();

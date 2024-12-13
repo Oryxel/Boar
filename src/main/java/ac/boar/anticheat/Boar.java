@@ -9,7 +9,7 @@ import ac.boar.anticheat.packets.player.PlayerAbilitiesPacket;
 import ac.boar.anticheat.packets.player.PlayerEffectPacket;
 import ac.boar.anticheat.packets.player.PlayerTeleportPacket;
 import ac.boar.anticheat.packets.player.PlayerVelocityPacket;
-import ac.boar.anticheat.packets.entities.EntityUpdatePacket;
+import ac.boar.anticheat.packets.level.LevelEntityPacket;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.plugin.BoarPlugin;
 import ac.boar.protocol.BedrockPacketEvents;
@@ -39,7 +39,7 @@ public class Boar {
         GeyserPacketEvents.register(new PlayerTeleportPacket());
         GeyserPacketEvents.register(new JavaLevelPacket());
         GeyserPacketEvents.register(new PlayerEffectPacket());
-        GeyserPacketEvents.register(new EntityUpdatePacket());
+        GeyserPacketEvents.register(new LevelEntityPacket());
         GeyserPacketEvents.register(new PlayerVelocityPacket());
         GeyserPacketEvents.register(new PlayerAbilitiesPacket());
         GeyserPacketEvents.register(new FinalPacketListener());

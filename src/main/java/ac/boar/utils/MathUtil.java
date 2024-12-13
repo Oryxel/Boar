@@ -2,8 +2,13 @@ package ac.boar.utils;
 
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.TrigMath;
+import org.cloudburstmc.math.vector.Vector3i;
 
 public final class MathUtil {
+    public static int pack(Vector3i vector3i) {
+        return (vector3i.getY() + vector3i.getZ() * 31) * 31 + vector3i.getX();
+    }
+
     public static int floor(float value) {
         int i = (int) value;
         return value < (float) i ? i - 1 : i;
