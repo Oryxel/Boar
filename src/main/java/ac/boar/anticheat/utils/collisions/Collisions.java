@@ -265,7 +265,6 @@ public final class Collisions {
         return false;
     }
 
-
     private static List<BoundingBox> getEntityCollisions(BoarPlayer player, BoundingBox box) {
         if (box.getAverageSideLength() > BoundingBox.EPSILON) {
             List<BoarEntity> list = new ArrayList<>();
