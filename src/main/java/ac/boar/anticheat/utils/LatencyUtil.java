@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class LatencyUtil {
     private final BoarPlayer player;
     @Getter
-    private final List<Long> sentTransactions = new ArrayList<>();
+    private final List<Long> sentTransactions = new CopyOnWriteArrayList<>();
     private final Map<Long, List<Runnable>> map = new ConcurrentHashMap<>();
 
     public void addTransactionToQueue(long id, Runnable runnable) {
@@ -35,11 +35,17 @@ public final class LatencyUtil {
     }
 
     public boolean confirmTransaction(long id) {
-        if (!this.sentTransactions.contains(id)) {
+        if (!this.sentTransactions.contains(id) || id <= player.lastReceivedId) {
             return false;
         }
 
-        this.sentTransactions.remove(id);
+        for (Long l : this.sentTransactions) {
+            if (l > id) {
+                break;
+            }
+
+            this.sentTransactions.remove(id);
+        }
 
         Iterator<Map.Entry<Long, List<Runnable>>> iterator = this.map.entrySet().iterator();
 
