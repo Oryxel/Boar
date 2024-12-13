@@ -32,8 +32,8 @@ public class CompensatedWorld {
     }
 
     public boolean isChunkLoaded(int chunkX, int chunkZ) {
-        final BoarChunk chunk = getChunk(chunkX, chunkZ);
-        return chunk == null || chunk.id() > player.lastReceivedId;
+        final BoarChunk chunk = this.getChunk(chunkX >> 4, chunkZ >> 4);
+        return chunk != null && chunk.id() <= player.lastReceivedId;
     }
 
     private BoarChunk getChunk(int chunkX, int chunkZ) {
@@ -69,17 +69,38 @@ public class CompensatedWorld {
         palette.set(x & 0xF, y & 0xF, z & 0xF, block);
     }
 
+    public boolean isRegionLoaded(int minX, int minZ, int maxX, int maxZ) {
+        int m = minX >> 4;
+        int n = maxX >> 4;
+        int o = minZ >> 4;
+        int p = maxZ >> 4;
+
+        for (int q = m; q <= n; q++) {
+            for (int r = o; r <= p; r++) {
+                if (!this.isChunkLoaded(q, r)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public FluidState getFluidState(Vector3i vector3i) {
-        final BlockState state = getBlockState(vector3i);
+        return getFluidState(vector3i.getX(), vector3i.getY(), vector3i.getZ());
+    }
+
+    public FluidState getFluidState(int x, int y, int z) {
+        final BlockState state = getBlockState(x, y, z);
         boolean lava = state.is(Blocks.LAVA), water = state.is(Blocks.WATER), waterlogged = state.getValue(Properties.WATERLOGGED) != null;
         if (!lava && !water && !waterlogged) {
             return new FluidState(Fluid.EMPTY, 0);
         }
         if (lava || water) {
-            return new FluidState(lava ? Fluid.LAVA : Fluid.WATER, state.getValue(Properties.LEVEL) / 9.0F);
+            return new FluidState(lava ? Fluid.LAVA : Fluid.WATER, Math.max(8 - state.getValue(Properties.LEVEL), 0) / 9.0F);
         }
 
-        return new FluidState(Fluid.WATER, 8.0F / 9.0F);
+        return new FluidState(Fluid.WATER, 8 / 9.0F);
     }
 
     public BlockState getBlockState(Vector3i vector3i) {

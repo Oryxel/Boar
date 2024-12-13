@@ -30,7 +30,6 @@ public final class TeleportUtil {
         player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
             player.queuedVelocities.clear();
             player.clientVelocity = velocity;
-            System.out.println("reset!");
         });
     }
 

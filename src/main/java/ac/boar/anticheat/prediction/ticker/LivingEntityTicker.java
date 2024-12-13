@@ -20,7 +20,9 @@ public class LivingEntityTicker extends EntityTicker {
 
     public void tickMovement() {
         PredictionEngine engine;
-        if (player.gliding) {
+        if (player.touchingWater || player.isInLava()) {
+            engine = null;
+        } else if (player.gliding) {
             engine = new PredictionEngineElytra(player);
         } else {
             engine = new PredictionEngineNormal(player);
@@ -32,6 +34,11 @@ public class LivingEntityTicker extends EntityTicker {
 //        } else {
 //            this.travelMidAir(movementInput);
 //        }
+
+        // Testing....
+        if (engine == null) {
+            return;
+        }
 
         if (player.abilities.getAbilities().contains(Ability.MAY_FLY)) {
             player.clientVelocity = engine.applyEndOfTick(player.actualVelocity);

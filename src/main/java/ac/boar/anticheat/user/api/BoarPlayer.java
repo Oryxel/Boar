@@ -11,6 +11,7 @@ import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.anticheat.utils.LatencyUtil;
 import ac.boar.anticheat.utils.TeleportUtil;
 import ac.boar.utils.GeyserUtil;
+import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import lombok.Getter;
@@ -36,6 +37,7 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @RequiredArgsConstructor
 public class BoarPlayer {
@@ -96,7 +98,8 @@ public class BoarPlayer {
     public Map<Long, Vec3f> postPredictionVelocities = new ConcurrentHashMap<>();
 
     public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
-    public Map<Fluid, Double> fluidHeight = new HashMap<>(), submergedFluidTag = new HashMap<>();
+    public Map<Fluid, Double> fluidHeight = new HashMap<>();
+    public List<Fluid> submergedFluidTag = new CopyOnWriteArrayList<>();
     public BoundingBox boundingBox;
 
     public Set<PlayerAuthInputData> inputData = new HashSet<>();
@@ -154,8 +157,33 @@ public class BoarPlayer {
         return (MinecraftCodecHelper) getJavaSession().getCodecHelper();
     }
 
+    public boolean isInLava() {
+        if (!this.fluidHeight.containsKey(Fluid.LAVA)) {
+            return false;
+        }
+
+        return tick != 1 && this.fluidHeight.get(Fluid.LAVA) > 0.0;
+    }
+
     public long getMagnitude() {
         return 1000000L;
+    }
+
+    public float getEyeY() {
+        return 1.62F;
+    }
+
+    public boolean isSubmergedIn(Fluid fluidTag) {
+        return this.submergedFluidTag.contains(fluidTag);
+    }
+
+    public boolean isRegionUnloaded() {
+        BoundingBox lv = boundingBox.expand(1.0F);
+        int i = MathUtil.floor(lv.minX);
+        int j = MathUtil.ceil(lv.maxX);
+        int k = MathUtil.floor(lv.minZ);
+        int l = MathUtil.ceil(lv.maxZ);
+        return !compensatedWorld.isRegionLoaded(i, k, j, l);
     }
 
     public void updateBoundingBox() {
