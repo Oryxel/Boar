@@ -44,7 +44,7 @@ public final class LatencyUtil {
                 break;
             }
 
-            this.sentTransactions.remove(id);
+            this.sentTransactions.remove(l);
         }
 
         Iterator<Map.Entry<Long, List<Runnable>>> iterator = this.map.entrySet().iterator();
