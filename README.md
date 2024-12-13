@@ -17,7 +17,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 - Floating point errors break collision, causing false positive, or loss precision
 - Player can clip into walls (they will glitch back anyway, but it will still cause false) mentioned
   in [3370](https://github.com/GeyserMC/Geyser/issues/3370) and [4269](https://github.com/GeyserMC/Geyser/issues/4269)
-- Slamming your head while trying to move on the Z axis causes 0.002 false positive.
+- Slamming your head while trying to move on the Z (and Y) axis causes 0.002 false positive.
 - Sprinting while slamming your head to the walls causes a bunch of falses.
 - Prediction engine accuracy is yuck and can be even worse if player movement is too fast or in other cases.
 - Collision is wrong and broken (different bounding boxes, collisions is wrong on block edge, sneaking on edge is wrong)
