@@ -52,7 +52,7 @@ public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
                     () -> player.compensatedWorld.removeChunk(packet.getX(), packet.getZ()));
         }
 
-        if (event.getPacket() instanceof ClientboundRespawnPacket || event.getPacket() instanceof ClientboundLoginPacket) {
+        if (event.getPacket() instanceof ClientboundRespawnPacket) {
             event.getPostTasks().add(player.compensatedWorld::loadDimension);
         }
     }
@@ -73,7 +73,9 @@ public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
                         player.getSession(), blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
             }
 
-            player.compensatedWorld.updateBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), javaId);
+            player.sendTransaction(event.isImmediate());
+            player.latencyUtil.addTransactionToQueue(player.lastSentId, () ->
+                    player.compensatedWorld.updateBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), javaId));
         }
     }
 }

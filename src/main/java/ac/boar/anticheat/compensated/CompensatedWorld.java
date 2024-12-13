@@ -5,8 +5,10 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
+import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.JavaDimension;
 import org.geysermc.geyser.level.block.type.Block;
+import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.util.MathUtils;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.DataPalette;
 
@@ -61,6 +63,14 @@ public class CompensatedWorld {
         }
 
         palette.set(x & 0xF, y & 0xF, z & 0xF, block);
+    }
+
+    public BlockState getBlockState(Vector3i vector3i) {
+        return getBlockState(vector3i.getX(), vector3i.getY(), vector3i.getZ());
+    }
+
+    public BlockState getBlockState(int x, int y, int z) {
+        return BlockState.of(getBlockAt(x, y, z));
     }
 
     public int getBlockAt(int x, int y, int z) {
