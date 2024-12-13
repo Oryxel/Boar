@@ -11,7 +11,6 @@ import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.packet.UpdateBlockPacket;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.ChunkSection;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.DataPalette;
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundRespawnPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundForgetLevelChunkPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundLevelChunkWithLightPacket;
@@ -61,8 +60,10 @@ public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();
         if (event.getPacket() instanceof UpdateBlockPacket packet) {
-            // TODO: support for waterlogged block
-            if (packet.getDataLayer() > 0) {
+            if (packet.getDataLayer() == 1) {
+                player.compensatedWorld.updateWaterLoggedBlock(packet.getBlockPosition(), packet.getDefinition());
+                return;
+            } else if (packet.getDataLayer() != 0) {
                 return;
             }
 
