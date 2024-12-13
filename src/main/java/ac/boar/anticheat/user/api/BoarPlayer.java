@@ -121,6 +121,14 @@ public class BoarPlayer {
         }
     }
 
+    public double getSwimHeight() {
+        return (double)this.getStandingEyeHeight() < 0.4 ? 0.0 : 0.4;
+    }
+
+    public float getStandingEyeHeight() {
+        return 1.62F;
+    }
+
     public int getJavaBlock(BlockDefinition definition) {
         return this.bedrockToJavaBlocks.getOrDefault(definition, -1);
     }
@@ -170,7 +178,7 @@ public class BoarPlayer {
     }
 
     public float getEyeY() {
-        return 1.62F;
+        return y + 1.62F;
     }
 
     public boolean isSubmergedIn(Fluid fluidTag) {

@@ -2,6 +2,7 @@ package ac.boar.anticheat.prediction.ticker;
 
 import ac.boar.anticheat.prediction.engine.PredictionEngineElytra;
 import ac.boar.anticheat.prediction.engine.PredictionEngineNormal;
+import ac.boar.anticheat.prediction.engine.PredictionEngineWater;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import org.cloudburstmc.protocol.bedrock.data.Ability;
@@ -22,6 +23,9 @@ public class LivingEntityTicker extends EntityTicker {
         PredictionEngine engine;
         if (player.touchingWater || player.isInLava()) {
             engine = null;
+            if (player.touchingWater) {
+                engine = new PredictionEngineWater(player);
+            }
         } else if (player.gliding) {
             engine = new PredictionEngineElytra(player);
         } else {

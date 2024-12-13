@@ -44,4 +44,15 @@ public final class MathUtil {
         float k = TrigMath.sin(f);
         return new Vec3f(i * j, -k, h * j);
     }
+
+    public static Vec3f movementInputToVelocity(Vec3f movementInput, float speed, float yaw) {
+        double d = movementInput.lengthSquared();
+        if (d < 1.0E-7) {
+            return Vec3f.ZERO;
+        } else {
+            Vec3f vec3f = (d > 1.0 ? movementInput.normalize() : movementInput).mul(speed);
+            float f = TrigMath.sin(yaw * 0.017453292F), g = TrigMath.cos(yaw * 0.017453292F);
+            return new Vec3f(vec3f.x * g - vec3f.z * f, vec3f.y, vec3f.z * g + vec3f.x * f);
+        }
+    }
 }
