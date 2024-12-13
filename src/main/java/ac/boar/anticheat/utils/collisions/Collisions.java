@@ -245,7 +245,6 @@ public final class Collisions {
             List<BoundingBox> boxes = new ArrayList<>();
 
             for (BoarEntity lv : list) {
-                System.out.println(lv.getBoundingBox());
                 boxes.add(lv.getBoundingBox());
             }
 

@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.floats.AbstractFloatList;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import org.geysermc.geyser.level.physics.Axis;
+import org.geysermc.geyser.level.physics.Direction;
 
 import java.util.Optional;
 
