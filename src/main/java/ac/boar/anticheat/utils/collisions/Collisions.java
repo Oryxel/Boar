@@ -24,7 +24,7 @@ public final class Collisions {
     private static boolean isSpaceAroundPlayerEmpty(BoarPlayer player, float offsetX, float offsetZ, float f) {
         BoundingBox lv = player.boundingBox;
         List<BoundingBox> collisions = legacyBoxCollisions(player, new BoundingBox(
-                lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ));
+                lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ), true);
 
         return collisions.isEmpty();
     }
@@ -120,12 +120,12 @@ public final class Collisions {
         return d;
     }
 
-    private static List<BoundingBox> findCollisionsForMovement(BoarPlayer player, List<BoundingBox> regularCollisions, BoundingBox boundingBox) {
-        regularCollisions.addAll(legacyBoxCollisions(player, boundingBox));
+    private static List<BoundingBox> findCollisionsForMovement(BoarPlayer player, List<BoundingBox> regularCollisions, BoundingBox boundingBox, boolean compensated) {
+        regularCollisions.addAll(legacyBoxCollisions(player, boundingBox, compensated));
         return regularCollisions;
     }
 
-    private static List<BoundingBox> legacyBoxCollisions(BoarPlayer player, BoundingBox bb) {
+    private static List<BoundingBox> legacyBoxCollisions(BoarPlayer player, BoundingBox bb, boolean compensated) {
         List<BoundingBox> list = Lists.newArrayList();
         int i = (int) Math.floor(bb.minX);
         int j = (int) Math.floor(bb.maxX + 1.0D);
@@ -137,7 +137,7 @@ public final class Collisions {
         for (int k1 = i; k1 < j; ++k1) {
             for (int l1 = i1; l1 < j1; ++l1) {
                 for (int i2 = k - 1; i2 < l; ++i2) {
-                    addCollisionBoxesToList(player, Vector3i.from(k1, i2, l1), bb, list);
+                    addCollisionBoxesToList(player, Vector3i.from(k1, i2, l1), bb, list, compensated);
                 }
             }
         }
@@ -146,9 +146,15 @@ public final class Collisions {
     }
 
     // TODO: compensated world
-    private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list) {
+    private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list, boolean compensated) {
         GeyserSession session = player.getSession();
-        BlockState state = session.getGeyser().getWorldManager().blockAt(session, vector3i);
+        BlockState state;
+        if (compensated) {
+            state = player.compensatedWorld.getBlockState(vector3i);
+        } else {
+            state = session.getGeyser().getWorldManager().blockAt(session, vector3i);
+        }
+
         List<BoundingBox> boxes = BedrockCollision.getBoundingBox(player, vector3i, state);
         if (boxes != null) {
             for (BoundingBox box : boxes) {
@@ -174,14 +180,14 @@ public final class Collisions {
         }
     }
 
-    public static Vec3f adjustMovementForCollisions(BoarPlayer player, Vec3f movement, BoundingBox box, List<BoundingBox> collisions) {
-        List<BoundingBox> list = findCollisionsForMovement(player, collisions, box.stretch(movement));
+    public static Vec3f adjustMovementForCollisions(BoarPlayer player, Vec3f movement, BoundingBox box, List<BoundingBox> collisions, boolean compensated) {
+        List<BoundingBox> list = findCollisionsForMovement(player, collisions, box.stretch(movement), compensated);
         return adjustMovementForCollisions(movement, box, list);
     }
 
-    public static Vec3f adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3f movement) {
+    public static Vec3f adjustMovementForCollisions(BoarPlayer player, BoundingBox box, Vec3f movement, boolean compensated) {
         List<BoundingBox> list = getEntityCollisions(player, box.stretch(movement));
-        Vec3f vec3f = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list);
+        Vec3f vec3f = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(player, movement, box, list, compensated);
         boolean bl = movement.x != vec3f.x;
         boolean bl2 = movement.y != vec3f.y;
         boolean bl3 = movement.z != vec3f.z;
@@ -193,7 +199,7 @@ public final class Collisions {
                 box3 = box3.stretch(0, -9.999999747378752E-6F, 0);
             }
 
-            List<BoundingBox> list2 = findCollisionsForMovement(player, list, box3);
+            List<BoundingBox> list2 = findCollisionsForMovement(player, list, box3, compensated);
             float f = vec3f.y;
             float[] fs = collectStepHeights(box2, list2, player.getStepHeight(), f);
 

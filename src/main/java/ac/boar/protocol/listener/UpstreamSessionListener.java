@@ -42,6 +42,8 @@ public class UpstreamSessionListener extends UpstreamSession {
 
             GeyserUtil.hookJavaSession(player);
             player.loadBlockMappings();
+
+            player.compensatedWorld.loadDimension();
             return;
         }
 
