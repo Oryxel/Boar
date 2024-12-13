@@ -1,6 +1,6 @@
 package ac.boar.protocol;
 
-import ac.boar.protocol.event.BedrockPacketListener;
+import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import lombok.Getter;
 
 import java.util.List;

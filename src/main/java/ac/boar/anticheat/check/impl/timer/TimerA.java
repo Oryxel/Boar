@@ -3,7 +3,7 @@ package ac.boar.anticheat.check.impl.timer;
 import ac.boar.anticheat.check.api.CheckInfo;
 import ac.boar.anticheat.check.api.impl.PacketCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
-import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 
 @CheckInfo(name = "Timer", type = "A")

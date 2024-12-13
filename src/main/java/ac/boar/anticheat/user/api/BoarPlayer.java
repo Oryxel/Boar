@@ -2,6 +2,7 @@ package ac.boar.anticheat.user.api;
 
 import ac.boar.anticheat.check.api.holder.CheckHolder;
 import ac.boar.anticheat.compensated.CompensatedEntity;
+import ac.boar.anticheat.compensated.CompensatedWorld;
 import ac.boar.anticheat.data.PlayerAbilities;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.data.Vector;
@@ -27,6 +28,8 @@ import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.session.GeyserSession;
+import org.geysermc.mcprotocollib.network.tcp.TcpSession;
+import org.geysermc.mcprotocollib.protocol.codec.MinecraftCodecHelper;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 import java.util.*;
@@ -38,11 +41,13 @@ public class BoarPlayer {
     public final long joinedTime = System.currentTimeMillis();
 
     @Getter @Setter private BedrockSession bedrockSession;
+    @Getter @Setter private TcpSession javaSession;
 
     public final TeleportUtil teleportUtil = new TeleportUtil(this);
     public final LatencyUtil latencyUtil = new LatencyUtil(this);
 
     public final CompensatedEntity compensatedEntity = new CompensatedEntity(this);
+    public final CompensatedWorld compensatedWorld = new CompensatedWorld(this);
 
     public final CheckHolder checkHolder = new CheckHolder(this);
 
@@ -123,6 +128,14 @@ public class BoarPlayer {
         }
 
         this.latencyUtil.getSentTransactions().add(lastSentId);
+    }
+
+    public void disconnect(String reason) {
+        getSession().disconnect("[Boar] " + reason);
+    }
+
+    public MinecraftCodecHelper getCodecHelper() {
+        return (MinecraftCodecHelper) getJavaSession().getCodecHelper();
     }
 
     public long getMagnitude() {

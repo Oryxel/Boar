@@ -1,7 +1,7 @@
 package ac.boar.anticheat.packets.other;
 
-import ac.boar.protocol.event.BedrockPacketListener;
-import ac.boar.protocol.event.PacketReceivedEvent;
+import ac.boar.protocol.event.bedrock.BedrockPacketListener;
+import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.utils.GeyserUtil;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 

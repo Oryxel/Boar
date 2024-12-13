@@ -3,8 +3,8 @@ package ac.boar.anticheat.packets.player;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.EntityUtil;
-import ac.boar.protocol.event.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.geyser.GeyserSendEvent;
+import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
+import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import org.cloudburstmc.protocol.bedrock.packet.MobEffectPacket;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
