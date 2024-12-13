@@ -20,6 +20,7 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
+import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.entity.EntityDefinitions;
@@ -27,6 +28,7 @@ import org.geysermc.geyser.level.WorldManager;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
+import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.network.tcp.TcpSession;
 import org.geysermc.mcprotocollib.protocol.codec.MinecraftCodecHelper;
@@ -101,9 +103,23 @@ public class BoarPlayer {
 
     public PlayerAbilities abilities = new PlayerAbilities();
 
+    // Mappings
+    public final Map<BlockDefinition, Integer> bedrockToJavaBlocks = new HashMap<>();
+
     public void init() {
         GeyserUtil.hookBedrockSession(this);
         this.checkHolder.init();
+    }
+
+    public void loadBlockMappings() {
+        GeyserBedrockBlock[] javaToBedrockBlocks = getSession().getBlockMappings().getJavaToBedrockBlocks();
+        for (int i = 0; i < javaToBedrockBlocks.length; i++) {
+            this.bedrockToJavaBlocks.put(javaToBedrockBlocks[i], i);
+        }
+    }
+
+    public int getJavaBlock(BlockDefinition definition) {
+        return this.bedrockToJavaBlocks.getOrDefault(definition, -1);
     }
 
     public void sendTransaction() {

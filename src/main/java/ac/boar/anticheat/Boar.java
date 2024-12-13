@@ -2,7 +2,7 @@ package ac.boar.anticheat;
 
 import ac.boar.anticheat.event.GeyserSessionJoinEvent;
 import ac.boar.anticheat.packets.*;
-import ac.boar.anticheat.packets.level.JavaLevelChunkPacket;
+import ac.boar.anticheat.packets.level.JavaLevelPacket;
 import ac.boar.anticheat.packets.other.FinalPacketListener;
 import ac.boar.anticheat.packets.other.LatencyPacket;
 import ac.boar.anticheat.packets.player.PlayerAbilitiesPacket;
@@ -37,13 +37,14 @@ public class Boar {
         BedrockPacketEvents.register(new FinalPacketListener());
 
         GeyserPacketEvents.register(new PlayerTeleportPacket());
+        GeyserPacketEvents.register(new JavaLevelPacket());
         GeyserPacketEvents.register(new PlayerEffectPacket());
         GeyserPacketEvents.register(new EntityUpdatePacket());
         GeyserPacketEvents.register(new PlayerVelocityPacket());
         GeyserPacketEvents.register(new PlayerAbilitiesPacket());
         GeyserPacketEvents.register(new FinalPacketListener());
 
-        JavaPacketEvents.register(new JavaLevelChunkPacket());
+        JavaPacketEvents.register(new JavaLevelPacket());
 
         this.playerManager = new BoarPlayerManager();
     }
