@@ -92,7 +92,7 @@ public class CompensatedWorld {
 
     public FluidState getFluidState(int x, int y, int z) {
         final BlockState state = getBlockState(x, y, z);
-        boolean lava = state.is(Blocks.LAVA), water = state.is(Blocks.WATER), waterlogged = state.getValue(Properties.WATERLOGGED) != null;
+        boolean lava = state.is(Blocks.LAVA), water = state.is(Blocks.WATER), waterlogged = state.getValue(Properties.WATERLOGGED) != null && state.getValue(Properties.WATERLOGGED);
         if (!lava && !water && !waterlogged) {
             return new FluidState(Fluid.EMPTY, 0);
         }
