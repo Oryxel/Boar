@@ -143,6 +143,11 @@ public class BoarPlayer {
             lastSentId++;
         }
 
+        if (System.currentTimeMillis() - lastRespondTime > 5000L) {
+            disconnect("Timed out!");
+            return;
+        }
+
         // We have to send negative values since geyser translate positive one.
         final NetworkStackLatencyPacket latencyPacket = new NetworkStackLatencyPacket();
         latencyPacket.setTimestamp(-lastSentId);
