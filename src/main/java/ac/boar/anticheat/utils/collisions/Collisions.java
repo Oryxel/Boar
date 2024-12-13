@@ -1,7 +1,9 @@
 package ac.boar.anticheat.utils.collisions;
 
 import ac.boar.anticheat.compensated.cache.BoarEntity;
+import ac.boar.anticheat.data.FluidState;
 import ac.boar.anticheat.user.api.BoarPlayer;
+import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
 import com.google.common.collect.Lists;
@@ -9,6 +11,7 @@ import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import org.cloudburstmc.math.vector.Vector3i;
+import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.Axis;
 import org.geysermc.geyser.session.GeyserSession;
@@ -231,6 +234,37 @@ public final class Collisions {
         FloatArrays.unstableSort(fs);
         return fs;
     }
+
+    public static boolean doesNotCollide(BoarPlayer player, float offsetX, float offsetY, float offsetZ) {
+        return doesNotCollide(player, player.boundingBox.offset(offsetX, offsetY, offsetZ));
+    }
+
+    private static boolean doesNotCollide(BoarPlayer player, BoundingBox box) {
+        return legacyBoxCollisions(player, box, true).isEmpty() && !containsFluid(player, box);
+    }
+
+    private static boolean containsFluid(BoarPlayer player, BoundingBox box) {
+        int i = MathUtil.floor(box.minX);
+        int j = MathUtil.ceil(box.maxX);
+        int k = MathUtil.floor(box.minY);
+        int l = MathUtil.ceil(box.maxY);
+        int m = MathUtil.floor(box.minZ);
+        int n = MathUtil.ceil(box.maxZ);
+
+        for (int o = i; o < j; o++) {
+            for (int p = k; p < l; p++) {
+                for (int q = m; q < n; q++) {
+                    FluidState lv2 = player.compensatedWorld.getFluidState(o, p, q);
+                    if (lv2.fluid() != Fluid.EMPTY) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     private static List<BoundingBox> getEntityCollisions(BoarPlayer player, BoundingBox box) {
         if (box.getAverageSideLength() > BoundingBox.EPSILON) {
