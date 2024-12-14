@@ -78,6 +78,10 @@ public class BedrockCollision {
             return List.of(box);
         }
 
+        if (state.is(Blocks.LECTERN)) {
+            return List.of(new BoundingBox(0, 0, 0, 1, 0.9F, 1));
+        }
+
         if (state.is(Blocks.SCAFFOLDING)) {
             final BoundingBox COLLISION_SHAPE = new BoundingBox(0, 0, 0, 1, 0.125F, 1);
             final BoundingBox OUTLINE_SHAPE = new BoundingBox(0, 0, 0, 1, 1, 1).offset(0, -1, 0);
