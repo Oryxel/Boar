@@ -27,7 +27,7 @@ public class BedrockCollision {
             return List.of(new BoundingBox(f, 0, f, 1 - f, 1, 1 - f));
         }
 
-        if (state.is(Blocks.LANTERN)) {
+        if (state.is(Blocks.LANTERN) || state.is(Blocks.SOUL_LANTERN)) {
             final List<BoundingBox> STANDING_SHAPE = List.of(new BoundingBox(0.3125F, 0, 0.3125F, 0.6875F, 0.5F, 0.6875F),
                     new BoundingBox(0.375F, 0.5F, 0.375F, 0.625F, 0.5F, 0.625F));
             final List<BoundingBox> HANGING_SHAPE = List.of(new BoundingBox(
