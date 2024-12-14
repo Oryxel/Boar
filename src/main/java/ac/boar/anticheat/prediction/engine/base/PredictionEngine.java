@@ -45,7 +45,7 @@ public abstract class PredictionEngine {
         return vectors;
     }
 
-    public final double move() {
+    public final void move() {
         List<Vector> possibilities = this.gatherAllPossibilities();
         Vec3f beforeCollision = Vec3f.ZERO, afterCollision = Vec3f.ZERO;
         double closetOffset = Double.MAX_VALUE;
@@ -92,7 +92,7 @@ public abstract class PredictionEngine {
         }
 
         Vector3i lv4 = player.getLandingPos();
-        BlockState lv5 = player.getSession().getGeyser().getWorldManager().blockAt(player.getSession(), lv4);
+        BlockState lv5 = player.compensatedWorld.getBlockState(lv4);
         if (player.collideY) {
             if (!player.sneaking && ((lv5.block() instanceof BedBlock) || lv5.is(Blocks.SLIME_BLOCK)) && beforeCollision.y < 0) {
                 clientVelocity.y = -beforeCollision.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.66F);
@@ -114,7 +114,6 @@ public abstract class PredictionEngine {
             }
         }
 
-        return offset;
     }
 
     protected final Vec3f updateVelocity(Vec3f client, Vec3f movementInput, float speed) {

@@ -2,18 +2,13 @@ package ac.boar.anticheat.prediction.engine;
 
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
-import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
-import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PredictionEngineNormal extends PredictionEngine {
     public PredictionEngineNormal(BoarPlayer player) {
@@ -42,7 +37,7 @@ public class PredictionEngineNormal extends PredictionEngine {
     @Override
     public Vec3f travel(boolean sprinting, Vec3f client, Vec3f movementInput) {
         Vector3i blockPos = player.getVelocityAffectingPos();
-        float slipperiness = BlockUtil.getBlockSlipperiness(player.getSession().getGeyser().getWorldManager().blockAt(player.getSession(), blockPos));
+        float slipperiness = BlockUtil.getBlockSlipperiness(player.compensatedWorld.getBlockState(blockPos));
         float f = player.onGround ? slipperiness : 1.0F;
         return this.applyMovementInput(sprinting, client, movementInput, f);
     }
@@ -50,7 +45,7 @@ public class PredictionEngineNormal extends PredictionEngine {
     @Override
     public Vec3f applyEndOfTick(Vec3f vec3f) {
         Vector3i blockPos = player.getVelocityAffectingPos();
-        float slipperiness = BlockUtil.getBlockSlipperiness(player.getSession().getGeyser().getWorldManager().blockAt(player.getSession(), blockPos));
+        float slipperiness = BlockUtil.getBlockSlipperiness(player.compensatedWorld.getBlockState(blockPos));
         float f = player.lastGround ? slipperiness : 1.0F;
         float g = f * 0.91F;
         float d = vec3f.y;
