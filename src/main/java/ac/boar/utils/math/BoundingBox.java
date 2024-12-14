@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.floats.FloatList;
 import org.geysermc.geyser.level.physics.Axis;
 import org.geysermc.geyser.level.physics.Direction;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BoundingBox implements Cloneable {
@@ -35,6 +36,10 @@ public class BoundingBox implements Cloneable {
         this.maxX = (float) boundingBox.getMax(Axis.X);
         this.maxY = (float) boundingBox.getMax(Axis.Y);
         this.maxZ = (float) boundingBox.getMax(Axis.Z);
+    }
+
+    public List<Float> gatherAllPoints() {
+        return List.of(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 
     public static BoundingBox getBoxAt(float x, float y, float z, float width, float height) {

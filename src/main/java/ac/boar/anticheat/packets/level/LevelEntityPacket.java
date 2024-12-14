@@ -18,11 +18,11 @@ public class LevelEntityPacket implements GeyserPacketListener {
         }
 
         if (event.getPacket() instanceof MoveEntityAbsolutePacket absolute) {
-            player.compensatedEntity.queuePositionUpdate(event, absolute.getRuntimeEntityId(), new Vec3f(absolute.getPosition()));
+            player.compensatedEntity.queuePositionUpdate(null, event, absolute.getRuntimeEntityId(), new Vec3f(absolute.getPosition()));
         }
 
         if (event.getPacket() instanceof MoveEntityDeltaPacket delta) {
-            player.compensatedEntity.queuePositionUpdate(event, delta.getRuntimeEntityId(), new Vec3f(delta.getX(), delta.getY(), delta.getZ()));
+            player.compensatedEntity.queueDeltaUpdate(event, delta.getRuntimeEntityId(), new Vec3f(delta.getX(), delta.getY(), delta.getZ()), delta.getFlags());
         }
 
         if (event.getPacket() instanceof RemoveEntityPacket remove) {
