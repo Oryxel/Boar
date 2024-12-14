@@ -10,6 +10,7 @@ import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.anticheat.utils.LatencyUtil;
 import ac.boar.anticheat.utils.TeleportUtil;
+import ac.boar.utils.ChatUtil;
 import ac.boar.utils.GeyserUtil;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
@@ -162,7 +163,7 @@ public class BoarPlayer {
     }
 
     public void disconnect(String reason) {
-        getSession().disconnect("[Boar] " + reason);
+        getSession().disconnect(ChatUtil.PREFIX + " " + reason);
     }
 
     public MinecraftCodecHelper getCodecHelper() {
