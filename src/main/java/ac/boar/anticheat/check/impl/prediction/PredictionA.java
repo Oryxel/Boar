@@ -4,7 +4,7 @@ import ac.boar.anticheat.check.api.CheckInfo;
 import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
 
-@CheckInfo(name = "Prediction")
+@CheckInfo(name = "Prediction", type = "A")
 public class PredictionA extends OffsetHandlerCheck {
     public PredictionA(BoarPlayer player) {
         super(player);
@@ -17,6 +17,7 @@ public class PredictionA extends OffsetHandlerCheck {
         }
 
         if (offset > 1e-4) {
+            this.fail("o=" + offset);
             //player.teleportUtil.setBackWithSimulation();
         }
     }
