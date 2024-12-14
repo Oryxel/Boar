@@ -27,11 +27,11 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
             return;
         }
 
-        // We can't check for player.lastReceivedId == cache.getTransactionId() bedrock teleport seems to be different.
-        // Player doesn't seem to respond right away, instead it just simply set position and add HANDLE_TELEPORT to next tick.
-        // This seems to be the case after debugging, and also it seems like it what ViaBedrock does.
-        // Which also means player will accept the latest teleport they got, not in order each by each like java!
-        TeleportUtil.TeleportCache temp = null;
+        // We can't check for player.lastReceivedId == cache.getTransactionId() since bedrock teleport is different.
+        // Instead of respond with an extra move packet like java, it just simply set position
+        // and add HANDLE_TELEPORT to input data next tick to let us know that it accepted the teleport.
+        // Which also means player will be in the position of the latest teleport they got and accept that one, not every teleport like Java.
+        TeleportUtil.TeleportCache temp;
         TeleportUtil.TeleportCache cache = null;
         while ((temp = queue.peek()) != null) {
             if (player.lastReceivedId < temp.getTransactionId()) {
@@ -48,17 +48,16 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
         // This is not precise as java, since it being sent this tick instead of right away (also because of floating point I think?), we can't check for 0
         // I will use 0.1 just to be safe, I have seen it reach 2e-6 in some cases, but I haven't test enough to know.
         double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
-        if ((packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT) || cache.isSimulation()) && distance < 0.1) {
+        if ((packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT)) && distance < 0.1) {
             BoarPlugin.LOGGER.info("Accepted teleport, d=" + distance);
             player.lastTickWasTeleport = true;
-            player.lastTeleportWasSimulation = cache.isSimulation();
         } else {
             // This is not the latest teleport, just ignore this one, we only force player to accept the latest one.
             // We don't want to teleport player to old teleport position when they're supposed to teleport to the latest tone.
             if (!queue.isEmpty()) {
                 return;
             }
-            // Set player back to where they're supposed to be position.
+            // Set player back to where they're supposed to be.
             player.teleportUtil.setbackTo(cache.getPosition());
         }
     }
@@ -79,7 +78,7 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
         }
 
         if (packet.getMode() == MovePlayerPacket.Mode.TELEPORT) {
-            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), Vec3f.ZERO, event.isImmediate(), false);
+            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), Vec3f.ZERO, event.isImmediate());
         }
     }
 }

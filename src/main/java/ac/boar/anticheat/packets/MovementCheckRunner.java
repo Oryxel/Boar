@@ -65,9 +65,9 @@ public class MovementCheckRunner implements BedrockPacketListener {
         updateInputData(player);
 
         new PlayerTicker(player).tick();
-        if (packet.getMotion().length() > 0) {
-            Bukkit.broadcastMessage(player.movementInput.x + "," + player.movementInput.z + ", A: " + packet.getMotion().toString());
-        }
+//        if (packet.getMotion().length() > 0) {
+//            Bukkit.broadcastMessage(player.movementInput.x + "," + player.movementInput.z + ", A: " + packet.getMotion().toString());
+//        }
 
         correctPlayerAuthInput(player, packet);
     }

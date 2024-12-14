@@ -71,7 +71,7 @@ public class BoarPlayer {
 
     public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
-    public boolean lastTickWasTeleport, lastTeleportWasSimulation;
+    public boolean lastTickWasTeleport;
 
     public boolean wasInPowderSnow, inPowderSnow;
     public boolean touchingWater, submergedInWater;
