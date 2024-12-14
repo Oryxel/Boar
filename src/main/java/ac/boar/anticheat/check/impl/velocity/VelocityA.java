@@ -5,7 +5,6 @@ import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
-import org.bukkit.Bukkit;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class VelocityA extends OffsetHandlerCheck {
             if (player.queuedVelocities.isEmpty()) {
                 player.teleportUtil.setbackWithVelocity(entry.getKey());
             }
-            Bukkit.broadcastMessage("fail VelocityA!, d=" + distance);
+            this.fail("d=" + distance);
         }
     }
 }
