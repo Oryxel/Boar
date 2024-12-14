@@ -25,7 +25,6 @@ import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.entity.EntityDefinitions;
-import org.geysermc.geyser.level.WorldManager;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
@@ -255,13 +254,11 @@ public class BoarPlayer {
     }
 
     public BlockState getBlockStateAtPosLast() {
-        WorldManager manager = getSession().getGeyser().getWorldManager();
-        return manager.blockAt(getSession(), Vector3i.from(lastX, lastY, lastZ));
+        return compensatedWorld.getBlockState(Vector3i.from(lastX, lastY, lastZ));
     }
 
     public BlockState getBlockStateAtPos() {
-        WorldManager manager = getSession().getGeyser().getWorldManager();
-        return manager.blockAt(getSession(), Vector3i.from(x, y, z));
+        return compensatedWorld.getBlockState(Vector3i.from(x, y, z));
     }
 
     public Vector3i getVelocityAffectingPos() {
@@ -307,9 +304,8 @@ public class BoarPlayer {
     }
 
     protected float getJumpVelocityMultiplier() {
-        WorldManager manager = getSession().getGeyser().getWorldManager();
-        float f = BlockUtil.getJumpVelocityMultiplier(manager.blockAt(getSession(), Vector3i.from(lastX, lastY, lastZ)));
-        float g = BlockUtil.getJumpVelocityMultiplier(manager.blockAt(getSession(), this.getVelocityAffectingPos()));
+        float f = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(Vector3i.from(lastX, lastY, lastZ)));
+        float g = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(this.getVelocityAffectingPos()));
 
         return (double)f == 1.0 ? g : f;
     }
@@ -320,10 +316,6 @@ public class BoarPlayer {
 
     public final float getFinalGravity() {
         return 0.08F;
-    }
-
-    public void onLanding() {
-        this.fallDistance = 0.0F;
     }
 
     public float getStepHeight() {

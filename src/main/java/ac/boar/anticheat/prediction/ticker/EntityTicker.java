@@ -30,15 +30,14 @@ public class EntityTicker {
     }
 
     private void updateSwimming() {
-        player.swimming = player.swimming & player.sinceSprinting < 6 && player.touchingWater; /* && !this.hasVehicle() */;
+        player.swimming = player.swimming & player.sinceSprinting < 6 && player.touchingWater; /* && !this.hasVehicle() */
     }
 
-    private boolean updateWaterState() {
+    private void updateWaterState() {
         player.fluidHeight.clear();
         checkWaterState();
         double d = player.getSession().getDimensionType().ultrawarm() ? 0.007 : 0.0023333333333333335;
-        boolean bl = this.updateMovementInFluid(Fluid.LAVA, d);
-        return player.touchingWater || bl;
+        this.updateMovementInFluid(Fluid.LAVA, d);
     }
 
     private void updateSubmergedInWaterState() {
@@ -138,7 +137,7 @@ public class EntityTicker {
     protected final void tickBlockCollision() {
         if (player.onGround) {
             Vector3i lv = player.getLandingPos();
-            BlockState lv2 = player.getSession().getGeyser().getWorldManager().blockAt(player.getSession(), lv);
+            BlockState lv2 = player.compensatedWorld.getBlockState(lv);
 
             BlockUtil.onSteppedOn(player, lv, lv2);
         }
