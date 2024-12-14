@@ -14,6 +14,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Class.*;
+
 public class GeyserUtil {
     public static long MAGIC_FORM_IMAGE_HACK_TIMESTAMP = 1234567890L;
 
@@ -24,8 +26,8 @@ public class GeyserUtil {
             BedrockServerSession bedrockSession = getBedrockSession(player, connection);
             hookUpstreamSession(player, bedrockSession, connection);
             player.setBedrockSession(bedrockSession);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            player.disconnect("Failed to hook bedrock session!");
         }
     }
 
@@ -35,13 +37,12 @@ public class GeyserUtil {
         try {
             TcpSession javaSession = getJavaSession(player, connection);
             player.setJavaSession(javaSession);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
     private static TcpSession getJavaSession(BoarPlayer player, GeyserConnection connection) throws Exception {
-        Class klass = Class.forName("org.geysermc.geyser.session.GeyserSession");
+        Class<?> klass = Class.forName("org.geysermc.geyser.session.GeyserSession");
         Field upstream = klass.getDeclaredField("downstream");
         upstream.setAccessible(true);
         Object o = upstream.get(connection);
@@ -49,15 +50,14 @@ public class GeyserUtil {
         field.setAccessible(true);
         TcpSession session = (TcpSession) field.get(o);
 
-        List<SessionListener> adapters = new ArrayList<>();
-        adapters.addAll(session.getListeners());
+        List<SessionListener> adapters = new ArrayList<>(session.getListeners());
         session.getListeners().forEach(session::removeListener);
         session.addListener(new TcpSessionListener(player, adapters));
         return session;
     }
 
     private static BedrockServerSession getBedrockSession(BoarPlayer player, GeyserConnection connection) throws Exception {
-        Class klass = Class.forName("org.geysermc.geyser.session.GeyserSession");
+        Class<?> klass = forName("org.geysermc.geyser.session.GeyserSession");
         Field upstream = klass.getDeclaredField("upstream");
         upstream.setAccessible(true);
         Object o = upstream.get(connection);
@@ -73,7 +73,7 @@ public class GeyserUtil {
     }
 
     private static void hookUpstreamSession(BoarPlayer player, BedrockServerSession session, GeyserConnection connection) throws Exception {
-        Class klass = Class.forName("org.geysermc.geyser.session.GeyserSession");
+        Class<?> klass = Class.forName("org.geysermc.geyser.session.GeyserSession");
         Field upstream = klass.getDeclaredField("upstream");
         upstream.setAccessible(true);
         upstream.set(connection, new UpstreamSessionListener(player, session));
