@@ -45,7 +45,7 @@ public class VelocityA extends OffsetHandlerCheck {
             }
 
             if (player.queuedVelocities.isEmpty()) {
-                player.teleportUtil.setbackWithVelocity(entry.getKey());
+                // player.teleportUtil.setbackWithVelocity(entry.getKey());
             }
             this.fail("d=" + distance);
         }
