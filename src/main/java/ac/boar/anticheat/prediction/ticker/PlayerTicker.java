@@ -26,7 +26,8 @@ public class PlayerTicker extends LivingEntityTicker {
 
     @Override
     public void tickMovement() {
-        if (player.lastSneaking || player.sneaking) {
+        // This only applies if the player is not in fluid.
+        if ((player.lastSneaking || player.sneaking) && !player.gliding && !player.isInLava() && !player.touchingWater) {
             player.movementInput = player.movementInput.mul(0.3);
         }
 
