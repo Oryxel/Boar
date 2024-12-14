@@ -20,10 +20,10 @@ public final class TeleportUtil {
     private final Queue<TeleportCache> teleportQueue = new ConcurrentLinkedQueue<>();
     public Vec3f lastKnowValid = Vec3f.ZERO;
 
-    public void addTeleportToQueue(Vec3f vec3f, Vec3f velocity, boolean immediate, boolean simulation) {
+    public void addTeleportToQueue(Vec3f vec3f, Vec3f velocity, boolean immediate) {
         this.player.sendTransaction(immediate);
 
-        final TeleportCache teleportCache = new TeleportCache(vec3f, this.player.lastSentId, simulation);
+        final TeleportCache teleportCache = new TeleportCache(vec3f, this.player.lastSentId);
         this.teleportQueue.add(teleportCache);
 
         player.teleportUtil.lastKnowValid = new Vec3f(vec3f.toVector3f());
@@ -31,24 +31,6 @@ public final class TeleportUtil {
             player.queuedVelocities.clear();
             player.clientVelocity = velocity;
         });
-    }
-
-    public void setbackWithVelocity(long id) {
-        if (teleportInQueue()) {
-            return;
-        }
-
-        Vec3f vec3f = player.postPredictionVelocities.get(id);
-
-        CorrectPlayerMovePredictionPacket packet = new CorrectPlayerMovePredictionPacket();
-        packet.setDelta(vec3f.toVector3f());
-        packet.setPosition(lastKnowValid.toVector3f());
-        packet.setTick(player.tick);
-        packet.setOnGround(player.onGround);
-        packet.setPredictionType(PredictionType.PLAYER);
-        this.addTeleportToQueue(lastKnowValid, vec3f, true, true);
-
-        this.player.getBedrockSession().sendPacketImmediately(packet);
     }
 
     public void setbackTo(Vec3f vec3f) {
@@ -64,7 +46,7 @@ public final class TeleportUtil {
         movePlayerPacket.setOnGround(player.onGround);
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
-        this.addTeleportToQueue(vec3f, Vec3f.ZERO, true, false);
+        this.addTeleportToQueue(vec3f, Vec3f.ZERO, true);
 
         this.player.getBedrockSession().sendPacketImmediately(movePlayerPacket);
     }
@@ -79,6 +61,5 @@ public final class TeleportUtil {
     public static class TeleportCache {
         private final Vec3f position;
         private final long transactionId;
-        private final boolean simulation;
     }
 }
