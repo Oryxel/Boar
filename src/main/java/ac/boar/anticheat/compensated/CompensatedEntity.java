@@ -9,9 +9,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cloudburstmc.protocol.bedrock.packet.AddEntityPacket;
+import org.cloudburstmc.protocol.bedrock.packet.MoveEntityDeltaPacket;
 import org.geysermc.geyser.entity.EntityDefinition;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
@@ -28,8 +30,32 @@ public class CompensatedEntity {
         return this.map.get(id);
     }
 
-    public void queuePositionUpdate(GeyserSendEvent event, long id, Vec3f vec3f) {
+    public void queueDeltaUpdate(GeyserSendEvent event, long id, Vec3f vec3f, Set<MoveEntityDeltaPacket.Flag> flags) {
         final BoarEntity cache = this.map.get(id);
+        if (cache == null) {
+            return;
+        }
+
+        float x = vec3f.x, y = vec3f.y, z = vec3f.z;
+        if (!flags.contains(MoveEntityDeltaPacket.Flag.HAS_X)) {
+            x = cache.getUtdPosition().x;
+        }
+        if (!flags.contains(MoveEntityDeltaPacket.Flag.HAS_Y)) {
+            y = cache.getUtdPosition().y;
+        }
+        if (!flags.contains(MoveEntityDeltaPacket.Flag.HAS_Z)) {
+            z = cache.getUtdPosition().z;
+        }
+
+        if (!flags.contains(MoveEntityDeltaPacket.Flag.HAS_X) && !flags.contains(MoveEntityDeltaPacket.Flag.HAS_Y) && !flags.contains(MoveEntityDeltaPacket.Flag.HAS_Z)) {
+            return;
+        }
+
+        queuePositionUpdate(cache, event, id, new Vec3f(x, y, z));
+    }
+
+    public void queuePositionUpdate(BoarEntity entity, GeyserSendEvent event, long id, Vec3f vec3f) {
+        final BoarEntity cache = entity == null ? this.map.get(id) : entity;
         if (cache == null) {
             return;
         }
