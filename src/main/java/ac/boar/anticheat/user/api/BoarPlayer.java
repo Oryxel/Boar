@@ -75,7 +75,7 @@ public class BoarPlayer {
     public int sinceTeleport;
 
     public boolean wasInPowderSnow, inPowderSnow;
-    public boolean touchingWater, submergedInWater;
+    public boolean wasTouchingWater, touchingWater, submergedInWater;
 
     public boolean collideX, collideZ, collideY;
 
@@ -90,7 +90,7 @@ public class BoarPlayer {
     public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
 
-    public Vector3f claimedEOT;
+    public Vector3f claimedEOT = Vector3f.ZERO, lastClaimedEOT = Vector3f.ZERO;
 
     public Vector3f bedrockRotation = Vector3f.ZERO;
 
@@ -313,7 +313,7 @@ public class BoarPlayer {
     }
 
     public float getEffectiveGravity() {
-        return (float) (clientVelocity.y <= 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity());
+        return (float) (closetVector.beforeTravel.y <= 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity());
     }
 
     public final float getFinalGravity() {

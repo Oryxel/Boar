@@ -142,10 +142,13 @@ public abstract class PredictionEngine {
         // Also in a BUNCH of cases (ex: slamming your head against the wall) sprinting going to desync.
         // Fine, let's allow player sprint if ticks since sprinting is < 6. and also let player choose to NOT sprint.
         for (Vector vector : vectors) {
-            list.add(new Vector(travel(false, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId()));
+            Vector vector0 = new Vector(travel(false, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId());
+            vector0.setBeforeTravel(vector.getVelocity().clone());
+            list.add(vector0);
 
             if (player.sinceSprinting < 6) {
                 Vector vector1 = new Vector(travel(true, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId());
+                vector1.setBeforeTravel(vector.getVelocity().clone());
                 vector1.setSprinting(true);
                 list.add(vector1);
             }
