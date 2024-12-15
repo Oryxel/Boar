@@ -78,6 +78,7 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
         }
 
         if (packet.getMode() == MovePlayerPacket.Mode.TELEPORT) {
+            BoarPlugin.LOGGER.info("Ground: "  + packet.isOnGround());
             player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), Vec3f.ZERO, event.isImmediate());
         }
     }

@@ -54,8 +54,10 @@ public class MovementCheckRunner implements BedrockPacketListener {
         }
 
         if (player.lastTickWasTeleport) {
+            player.sinceTeleport = 0;
             return;
         }
+        player.sinceTeleport++;
 
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
