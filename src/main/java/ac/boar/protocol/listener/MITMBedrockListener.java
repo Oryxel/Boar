@@ -28,6 +28,6 @@ public final class MITMBedrockListener implements BedrockPacketHandler {
             return PacketSignal.HANDLED;
         }
 
-        return this.oldHandler.handlePacket(packet);
+        return this.oldHandler.handlePacket(event.getPacket());
     }
 }

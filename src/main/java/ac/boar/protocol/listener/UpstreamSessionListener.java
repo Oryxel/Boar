@@ -31,9 +31,7 @@ public class UpstreamSessionListener extends UpstreamSession {
             return;
         }
 
-        if (packet instanceof StartGamePacket) {
-            StartGamePacket startGamePacket = (StartGamePacket) event.getPacket();
-
+        if (packet instanceof StartGamePacket startGamePacket) {
             startGamePacket.setAuthoritativeMovementMode(AuthoritativeMovementMode.SERVER_WITH_REWIND);
             startGamePacket.setRewindHistorySize(20);
 
@@ -48,7 +46,6 @@ public class UpstreamSessionListener extends UpstreamSession {
         }
 
         super.sendPacket(event.getPacket());
-
         event.getPostTasks().forEach(Runnable::run);
         event.getPostTasks().clear();
     }
@@ -65,7 +62,6 @@ public class UpstreamSessionListener extends UpstreamSession {
         }
 
         super.sendPacketImmediately(event.getPacket());
-
         event.getPostTasks().forEach(Runnable::run);
         event.getPostTasks().clear();
     }
