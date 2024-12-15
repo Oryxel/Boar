@@ -18,6 +18,7 @@ public class PredictionEngineElytra extends PredictionEngine {
     @Override
     protected void applyTravelToPossibilities(List<Vector> vectors) {
         for (Vector vector : vectors) {
+            vector.setBeforeTravel(vector.getVelocity().clone());
             vector.setVelocity(travel(false, vector.getVelocity().clone(), player.movementInput));
         }
     }

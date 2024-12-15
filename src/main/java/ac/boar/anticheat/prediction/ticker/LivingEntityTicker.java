@@ -21,9 +21,9 @@ public class LivingEntityTicker extends EntityTicker {
 
     public void tickMovement() {
         PredictionEngine engine;
-        if (player.touchingWater || player.isInLava()) {
+        if (player.wasTouchingWater || player.isInLava()) {
             engine = null;
-            if (player.touchingWater) {
+            if (player.wasTouchingWater) {
                 engine = new PredictionEngineWater(player);
             }
         } else if (player.gliding) {
@@ -45,7 +45,7 @@ public class LivingEntityTicker extends EntityTicker {
         }
 
         if (player.abilities.getAbilities().contains(Ability.MAY_FLY)) {
-            player.clientVelocity = engine.applyEndOfTick(player.actualVelocity);
+            // player.clientVelocity = engine.applyEndOfTick(player.actualVelocity);
             return;
         }
 

@@ -23,7 +23,7 @@ public class EntityTicker {
         player.wasInPowderSnow = player.inPowderSnow;
         player.inPowderSnow = false;
 
-        // TODO
+        player.wasTouchingWater = player.touchingWater;
         updateWaterState();
         updateSubmergedInWaterState();
         updateSwimming();

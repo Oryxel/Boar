@@ -62,6 +62,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
         // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
         player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
+        player.lastClaimedEOT = player.claimedEOT.clone();
         player.claimedEOT = packet.getDelta();
 
         updateInputData(player);

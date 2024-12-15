@@ -37,7 +37,7 @@ public class PredictionEngineWater extends PredictionEngine {
     @Override
     public Vec3f applyEndOfTick(Vec3f vec3f) {
         float f = player.closetVector.sprinting ? 0.9F : 0.8F;
-        boolean bl = vec3f.y <= 0.0;
+        boolean bl = player.closetVector.beforeTravel.y <= 0.0;
         float e = player.getEffectiveGravity();
 
         Vec3f lv = vec3f.clone();
