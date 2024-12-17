@@ -5,6 +5,7 @@ import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
 import org.bukkit.Bukkit;
+import org.cloudburstmc.math.vector.Vector3d;
 
 @CheckInfo(name = "DebugOffset")
 public class DebugOffsetA extends OffsetHandlerCheck {
@@ -16,12 +17,14 @@ public class DebugOffsetA extends OffsetHandlerCheck {
     public void onPredictionComplete(double offset) {
         Vec3f predicted = player.predictedVelocity;
 
-        if (player.movementInput.length() > 0) {
+        if (player.movementInput.length() > 0 || offset > 1e-4) {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
                     predicted.x + "," + predicted.y + "," + predicted.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
                     "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
+
+            Bukkit.broadcastMessage("BC: " + player.closetVector.getVelocity().toVector3f().toString());
 
             double eotOffset = player.claimedEOT.distance(player.clientVelocity.toVector3f());
             Bukkit.broadcastMessage("EOT O: " + (eotOffset > 1e-4 ? "§b" : "§a") + eotOffset  + "," + player.claimedEOT.toString());

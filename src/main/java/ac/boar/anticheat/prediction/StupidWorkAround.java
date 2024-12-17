@@ -10,14 +10,14 @@ public class StupidWorkAround {
         Vec3f fixed = after.clone();
 
         // This going to allow for velocity bypass, TODO: fix collision and delete this abomination
-        if (player.collideX || player.collideZ) {
-            float lengthPrediction = after.length();
-            float lengthActual = player.actualVelocity.length();
-
-            if (lengthPrediction > lengthActual && after.squaredDistanceTo(player.actualVelocity) <= 0.000081) {
-                fixed = player.actualVelocity.clone();
-            }
-        }
+//        if (player.collideX || player.collideZ) {
+//            float lengthPrediction = after.length();
+//            float lengthActual = player.actualVelocity.length();
+//
+//            if (lengthPrediction > lengthActual && after.squaredDistanceTo(player.actualVelocity) <= 0.000081) {
+//                fixed = player.actualVelocity.clone();
+//            }
+//        }
 
         return fixed;
     }
