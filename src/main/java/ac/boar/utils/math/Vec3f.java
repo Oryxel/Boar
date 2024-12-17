@@ -1,6 +1,7 @@
 package ac.boar.utils.math;
 
 import org.cloudburstmc.math.GenericMath;
+import org.cloudburstmc.math.vector.Vector3d;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.math.vector.Vector3i;
 
@@ -56,6 +57,10 @@ public class Vec3f implements Cloneable {
 
     public Vector3f toVector3f() {
         return Vector3f.from(this.x, this.y, this.z);
+    }
+
+    public Vector3d toVector3d() {
+        return Vector3d.from(this.x, this.y, this.z);
     }
 
     public float getX() {

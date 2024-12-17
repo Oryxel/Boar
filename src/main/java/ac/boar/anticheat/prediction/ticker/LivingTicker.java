@@ -7,8 +7,8 @@ import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import org.cloudburstmc.protocol.bedrock.data.Ability;
 
-public class LivingEntityTicker extends EntityTicker {
-    public LivingEntityTicker(BoarPlayer player) {
+public class LivingTicker extends EntityTicker {
+    public LivingTicker(BoarPlayer player) {
         super(player);
     }
 
