@@ -11,5 +11,4 @@ import java.util.Set;
 @Setter
 public class PlayerAbilities {
     private final Set<Ability> abilities = new HashSet<>();
-    private float walkSpeed = 0.1F;
 }

@@ -3,6 +3,7 @@ package ac.boar.anticheat.user.api;
 import ac.boar.anticheat.check.api.holder.CheckHolder;
 import ac.boar.anticheat.compensated.CompensatedEntity;
 import ac.boar.anticheat.compensated.CompensatedWorld;
+import ac.boar.anticheat.data.AttributeData;
 import ac.boar.anticheat.data.PlayerAbilities;
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.data.Vector;
@@ -26,6 +27,7 @@ import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.entity.attribute.GeyserAttributeType;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
@@ -55,7 +57,7 @@ public class BoarPlayer {
 
     public final CheckHolder checkHolder = new CheckHolder(this);
 
-    public long runtimeEntityId;
+    public long runtimeEntityId, javaId;
 
     public float lastX, x, lastY, y, lastZ, z;
     public long tick;
@@ -106,12 +108,17 @@ public class BoarPlayer {
     public final Set<PlayerAuthInputData> inputData = new HashSet<>();
 
     public final PlayerAbilities abilities = new PlayerAbilities();
+    public final Map<GeyserAttributeType, AttributeData> attributes = new HashMap<>();
+
+    public float movementSpeed = 0.1F;
 
     // Mappings
     public final Map<BlockDefinition, Integer> bedrockToJavaBlocks = new HashMap<>();
 
     public void init() {
         GeyserUtil.hookBedrockSession(this);
+        this.attributes.put(GeyserAttributeType.MOVEMENT_SPEED, new AttributeData(0.1F));
+
         this.checkHolder.init();
     }
 
@@ -205,6 +212,9 @@ public class BoarPlayer {
     }
 
     public void tick() {
+        this.attributes.forEach((_, a) -> a.tick());
+        this.movementSpeed = this.attributes.get(GeyserAttributeType.MOVEMENT_SPEED).getValue();
+
         List<Effect> ranOutStatus = new ArrayList<>();
         for (Map.Entry<Effect, StatusEffect> entry : this.statusMap.entrySet()) {
             entry.getValue().tick();
@@ -213,7 +223,7 @@ public class BoarPlayer {
             }
         }
 
-        ranOutStatus.forEach(e -> this.statusMap.remove(e));
+        ranOutStatus.forEach(this.statusMap::remove);
     }
 
     public boolean hasStatusEffect(final Effect effect) {
@@ -238,7 +248,7 @@ public class BoarPlayer {
 
     public float getMovementSpeed(boolean sprinting, float slipperiness) {
         if (onGround) {
-            return (abilities.getWalkSpeed() * (sprinting ? 1.3F : 1)) * (0.21600002F / (slipperiness * slipperiness * slipperiness));
+            return (movementSpeed * (sprinting ? 1.3F : 1)) * (0.21600002F / (slipperiness * slipperiness * slipperiness));
         }
 
         return sprinting ? 0.025999999F : 0.02F;

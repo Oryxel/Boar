@@ -1,6 +1,6 @@
 [versions]
 bedrock-connection = "3.0.0.Beta5-20241022.154658-14"
-protocol = "1.21.2-20241107.110329-3"
+protocol = "1.21.4-SNAPSHOT"
 spigot-api = "1.21.1-R0.1-SNAPSHOT"
 fastutil = "8.5.13"
 core = "2.6.0-SNAPSHOT"

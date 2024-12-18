@@ -45,6 +45,7 @@ public class Boar {
         GeyserPacketEvents.register(new FinalPacketListener());
 
         JavaPacketEvents.register(new JavaLevelPacket());
+        JavaPacketEvents.register(new PlayerAbilitiesPacket());
 
         this.playerManager = new BoarPlayerManager();
     }
