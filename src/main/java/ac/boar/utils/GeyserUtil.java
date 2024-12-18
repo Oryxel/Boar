@@ -17,7 +17,7 @@ import java.util.List;
 import static java.lang.Class.*;
 
 public class GeyserUtil {
-    public static long MAGIC_FORM_IMAGE_HACK_TIMESTAMP = 1234567890L;
+    public static final long MAGIC_FORM_IMAGE_HACK_TIMESTAMP = 1234567890L;
 
     public static void hookBedrockSession(BoarPlayer player) {
         final GeyserConnection connection = player.getSession();

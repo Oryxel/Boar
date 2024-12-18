@@ -2,7 +2,6 @@ package ac.boar.anticheat.prediction.engine.base;
 
 import ac.boar.anticheat.check.api.Check;
 import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
-import ac.boar.anticheat.prediction.StupidWorkAround;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.user.api.BoarPlayer;
@@ -72,8 +71,6 @@ public abstract class PredictionEngine {
         player.collideZ = afterCollision.z != beforeCollision.z;
         player.collideY = afterCollision.y != beforeCollision.y;
 
-        afterCollision = StupidWorkAround.postPredictionPatch(player, afterCollision);
-
         player.lastGround = player.onGround;
         player.onGround = beforeCollision.y < 0 && player.collideY;
         player.predictedVelocity = afterCollision.clone();
@@ -139,7 +136,7 @@ public abstract class PredictionEngine {
         final List<Vector> list = new ArrayList<>();
 
         // Is this my fault (maybe it is)? Sometimes player won't stop sprinting 3-4 ticks after sending STOP_SPRINTING.
-        // Also in a BUNCH of cases (ex: slamming your head against the wall) sprinting going to desync.
+        // Also in a BUNCH of cases (ex: slamming your head against the wall) sprinting going to de-sync.
         // Fine, let's allow player sprint if ticks since sprinting is < 6. and also let player choose to NOT sprint.
         for (Vector vector : vectors) {
             Vector vector0 = new Vector(travel(false, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId());

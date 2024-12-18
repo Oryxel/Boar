@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Setter
 public class BoarEntity {
     private final EntityType type;
-    private final EntityDefinition definition;
+    private final EntityDefinition<?> definition;
     private Vec3f position = Vec3f.ZERO, utdPosition = Vec3f.ZERO;
     private BoundingBox boundingBox = new BoundingBox(0, 0, 0, 0, 0, 0);
 

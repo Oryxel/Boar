@@ -5,7 +5,6 @@ import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
 import org.bukkit.Bukkit;
-import org.cloudburstmc.math.vector.Vector3d;
 
 @CheckInfo(name = "DebugOffset")
 public class DebugOffsetA extends OffsetHandlerCheck {

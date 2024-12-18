@@ -82,7 +82,7 @@ public class BoarPlayer {
     public boolean canClimb, lastCanClimb;
     public float lastClimbingSpeed, climbingSpeed;
 
-    public Optional<Vector3i> supportingBlockPos = Optional.empty();
+    public Vector3i supportingBlockPos = null;
 
     public double extraUncertainOffset = 0;
 
@@ -95,17 +95,17 @@ public class BoarPlayer {
     public Vector3f bedrockRotation = Vector3f.ZERO;
 
     public Vector closetVector = new Vector(Vec3f.ZERO, VectorType.NORMAL);
-    public Map<Long, Vec3f> queuedVelocities = new ConcurrentHashMap<>();
-    public Map<Long, Vec3f> postPredictionVelocities = new ConcurrentHashMap<>();
+    public final Map<Long, Vec3f> queuedVelocities = new ConcurrentHashMap<>();
+    public final Map<Long, Vec3f> postPredictionVelocities = new ConcurrentHashMap<>();
 
-    public Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
-    public Map<Fluid, Double> fluidHeight = new HashMap<>();
-    public List<Fluid> submergedFluidTag = new CopyOnWriteArrayList<>();
+    public final Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
+    public final Map<Fluid, Double> fluidHeight = new HashMap<>();
+    public final List<Fluid> submergedFluidTag = new CopyOnWriteArrayList<>();
     public BoundingBox boundingBox;
 
-    public Set<PlayerAuthInputData> inputData = new HashSet<>();
+    public final Set<PlayerAuthInputData> inputData = new HashSet<>();
 
-    public PlayerAbilities abilities = new PlayerAbilities();
+    public final PlayerAbilities abilities = new PlayerAbilities();
 
     // Mappings
     public final Map<BlockDefinition, Integer> bedrockToJavaBlocks = new HashMap<>();
@@ -276,9 +276,8 @@ public class BoarPlayer {
     }
 
     public Vector3i getPosWithYOffset(float offset) {
-        if (this.supportingBlockPos.isPresent()) {
-            Vector3i blockPos = this.supportingBlockPos.get();
-            return blockPos;
+        if (this.supportingBlockPos != null) {
+            return this.supportingBlockPos;
 //            if (!(offset > 1.0E-5F)) {
 //                return blockPos;
 //            } else {

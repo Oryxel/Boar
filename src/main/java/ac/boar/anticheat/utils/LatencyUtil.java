@@ -4,7 +4,6 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
