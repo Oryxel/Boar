@@ -18,7 +18,7 @@ public class PlayerAbilitiesPacket implements GeyserPacketListener {
                 return;
             }
 
-            event.getPostTasks().add(() -> player.sendTransaction(true));
+            event.getPostTasks().add(() -> player.sendTransaction(event.isImmediate()));
             player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> {
                 player.abilities.getAbilities().clear();
                 for (AbilityLayer layer : updateAbilitiesPacket.getAbilityLayers()) {
@@ -42,7 +42,7 @@ public class PlayerAbilitiesPacket implements GeyserPacketListener {
                 }
 
                 player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> player.abilities.setWalkSpeed(attributeData.getValue()));
-                event.getPostTasks().add(() -> player.sendTransaction(true));
+                event.getPostTasks().add(() -> player.sendTransaction(event.isImmediate()));
             }
         }
     }
