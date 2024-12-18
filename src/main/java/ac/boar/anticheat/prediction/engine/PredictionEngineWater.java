@@ -23,7 +23,7 @@ public class PredictionEngineWater extends PredictionEngine {
 
         if (h > 0.0F) {
             f += (0.54600006F - f) * h;
-            g += (player.abilities.getWalkSpeed() - g) * h;
+            g += (player.movementSpeed - g) * h;
         }
 
         // There is no dolphins grace in bedrock.
@@ -70,7 +70,7 @@ public class PredictionEngineWater extends PredictionEngine {
     }
 
     private Vec3f applyFluidMovingSpeed(float gravity, boolean falling, Vec3f motion) {
-        if (gravity != 0.0 && !player.sprinting) {
+        if (gravity != 0.0) {
             float e;
             if (falling && Math.abs(motion.y - 0.005) >= 0.003 && Math.abs(motion.y - gravity / 16.0) < 0.003) {
                 e = -0.003F;

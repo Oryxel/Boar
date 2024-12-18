@@ -36,6 +36,7 @@ public class UpstreamSessionListener extends UpstreamSession {
             startGamePacket.setRewindHistorySize(20);
 
             player.runtimeEntityId = startGamePacket.getRuntimeEntityId();
+            player.javaId = player.getSession().getPlayerEntity().getEntityId();
             getSession().sendPacket(startGamePacket);
 
             GeyserUtil.hookJavaSession(player);
