@@ -20,18 +20,19 @@ public record FluidState(Fluid fluid, float height) {
         return state.fluid == Fluid.EMPTY || state.fluid.equals(this.fluid);
     }
 
-    public Vec3f getVelocity(BoarPlayer player, Vector3i pos, FluidState state) {
+    public Vec3f getVelocity(BoarPlayer player, Vector3i vector3i, FluidState state) {
         float d = 0;
         float e = 0;
 
         for (Direction lv2 : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
-            FluidState lv3 = player.compensatedWorld.getFluidState(pos);
+            Vector3i lv = vector3i.add(lv2.getUnitVector());
+            FluidState lv3 = player.compensatedWorld.getFluidState(lv);
             if (this.isEmptyOrThis(lv3)) {
                 float f = lv3.height();
                 float g = 0.0F;
                 if (f == 0.0F) {
-                    if (!BlockUtil.blocksMovement(player, pos, fluid, player.compensatedWorld.getBlockState(pos))) {
-                        FluidState lv5 = player.compensatedWorld.getFluidState(pos.down());
+                    if (!BlockUtil.blocksMovement(player, lv, fluid, player.compensatedWorld.getBlockState(lv))) {
+                        FluidState lv5 = player.compensatedWorld.getFluidState(lv.down());
                         if (this.isEmptyOrThis(lv5)) {
                             f = lv5.height();
                             if (f > 0.0F) {

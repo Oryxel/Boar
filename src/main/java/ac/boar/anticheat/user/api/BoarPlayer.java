@@ -88,9 +88,10 @@ public class BoarPlayer {
 
     public double extraUncertainOffset = 0;
 
-    // End of tick velocity.
     public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
+
+    public Vec3f waterFluidSpeed = Vec3f.ZERO, lavaFluidSpeed = Vec3f.ZERO;
 
     public Vector3f claimedEOT = Vector3f.ZERO, lastClaimedEOT = Vector3f.ZERO;
 

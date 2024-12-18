@@ -1,9 +1,11 @@
 package ac.boar.anticheat.prediction.engine;
 
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
+
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.collisions.Collisions;
 import ac.boar.utils.math.Vec3f;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.geyser.level.block.Fluid;
 
@@ -14,6 +16,18 @@ public class PredictionEngineWater extends PredictionEngine {
 
     @Override
     public Vec3f travel(boolean sprinting, Vec3f vec3f, Vec3f movementInput) {
+        Vec3f lv2 = player.waterFluidSpeed.clone();
+        if (lv2.length() > 0.0) {
+            Bukkit.broadcastMessage("water fluid!");
+            lv2 = lv2.mul(0.014F);
+            if (Math.abs(vec3f.x) < 0.003 && Math.abs(vec3f.z) < 0.003 && lv2.length() < 0.0045000000000000005) {
+                Bukkit.broadcastMessage("0.003");
+                lv2 = lv2.normalize().mul(0.0045000000000000005F);
+            }
+
+            vec3f = vec3f.add(lv2);
+        }
+
         float f = sprinting ? 0.9F : 0.8F;
         float g = 0.02F;
         float h = 0 /* (float)this.getAttributeValue(EntityAttributes.WATER_MOVEMENT_EFFICIENCY) */;
@@ -65,7 +79,7 @@ public class PredictionEngineWater extends PredictionEngine {
         double g = player.fluidHeight.getOrDefault(Fluid.WATER, 0D);
 
         double h = player.getSwimHeight();
-        boolean allowed = player.onGround && g > h || player.touchingWater && g > 0;
+        boolean allowed = player.onGround && g > h || player.wasTouchingWater && g > 0;
         return player.inputData.contains(PlayerAuthInputData.WANT_UP) && allowed;
     }
 
