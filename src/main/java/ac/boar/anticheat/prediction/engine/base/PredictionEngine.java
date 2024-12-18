@@ -107,7 +107,7 @@ public abstract class PredictionEngine {
 
         player.clientVelocity = this.applyEndOfTick(clientVelocity);
 
-        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
+        for (Map.Entry<Class<?>, Check> entry : player.checkHolder.entrySet()) {
             Check v = entry.getValue();
             if (v instanceof OffsetHandlerCheck) {
                 ((OffsetHandlerCheck) v).onPredictionComplete(offset);

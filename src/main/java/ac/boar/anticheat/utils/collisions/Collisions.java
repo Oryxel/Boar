@@ -109,18 +109,28 @@ public final class Collisions {
         }
     }
 
-    private static float calculateMaxOffset(Axis axis, BoundingBox boundingBox, List<BoundingBox> collision, float d) {
+    private static float calculateMaxOffset(Axis axis, BoundingBox boundingBox, List<BoundingBox> collision, float maxDist) {
         BoundingBox box = boundingBox.clone();
 
         for (BoundingBox bb : collision) {
-            if (Math.abs(d) < 1.0E-7) {
+            if (Math.abs(maxDist) < 1.0E-7) {
                 return 0;
             }
 
-            d = bb.calculateMaxDistance(axis, box, d);
+            double oldDist = maxDist;
+            maxDist = bb.calculateMaxDistance(axis, box, maxDist);
+
+            // Normally minecraft (java) uses 1.0E-7 when it comes to calculating collision (calculateMaxDistance)
+            // We however, uses 3.0E-5 since we have to account for floating point errors. This prevents collision being ignored when there is floating point errors.
+            // But, sometimes this causes the anti-cheat to wrongly calculate your movement around 1.0E-5 -> 3.0E-5 offset (floating point error)
+            // So we simply check for this and correct it back to 0. NOTE: This is only for cases that your movement is supposed to be 0.
+            if (oldDist > 0 && maxDist >= -BoundingBox.MAX_TOLERANCE_ERROR && maxDist < -BoundingBox.EPSILON || oldDist < 0 && maxDist <= BoundingBox.MAX_TOLERANCE_ERROR && maxDist > BoundingBox.EPSILON) {
+                // Bukkit.broadcastMessage("floating point error!");
+                maxDist = 0;
+            }
         }
 
-        return d;
+        return maxDist;
     }
 
     private static List<BoundingBox> findCollisionsForMovement(BoarPlayer player, List<BoundingBox> regularCollisions, BoundingBox boundingBox, boolean compensated) {
