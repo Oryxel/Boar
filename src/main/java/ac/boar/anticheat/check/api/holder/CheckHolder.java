@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 
 @RequiredArgsConstructor
-public class CheckHolder extends HashMap<Class, Check> {
+public class CheckHolder extends HashMap<Class<?>, Check> {
     private final BoarPlayer player;
 
     public void init() {
