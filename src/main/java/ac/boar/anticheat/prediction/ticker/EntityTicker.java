@@ -83,7 +83,6 @@ public class EntityTicker {
             int m = MathUtil.floor(lv.minZ);
             int n = MathUtil.ceil(lv.maxZ);
             double e = 0.0;
-            boolean bl = /* this.isPushedByFluids(); */ true;
             boolean bl2 = false;
             Vec3f lv2 = Vec3f.ZERO;
             int o = 0;
@@ -99,35 +98,38 @@ public class EntityTicker {
                             if (f >= lv.minY) {
                                 bl2 = true;
                                 e = Math.max(f - lv.minY, e);
-                                if (bl) {
-                                    Vec3f lv5 = lv4.getVelocity(player, pos, lv4);
-                                    if (e < 0.4) {
-                                        lv5 = lv5.mul(e);
-                                    }
-
-                                    lv2 = lv2.add(lv5);
-                                    o++;
+                                Vec3f lv5 = lv4.getVelocity(player, pos, lv4);
+                                if (e < 0.4) {
+                                    lv5 = lv5.mul(e);
                                 }
+
+                                lv2 = lv2.add(lv5);
+                                o++;
                             }
                         }
                     }
                 }
             }
 
-//            if (lv2.length() > 0.0) {
-//                if (o > 0) {
-//                    lv2 = lv2.mul(1.0 / (double)o);
-//                }
-//
+            if (lv2.length() > 0.0) {
+                if (o > 0) {
+                    lv2 = lv2.mul(1.0 / o);
+                }
+
 //                Vec3f lv6 = this.getVelocity();
 //                lv2 = lv2.multiply(speed);
-//                double g = 0.003;
 //                if (Math.abs(lv6.x) < 0.003 && Math.abs(lv6.z) < 0.003 && lv2.length() < 0.0045000000000000005) {
 //                    lv2 = lv2.normalize().multiply(0.0045000000000000005);
 //                }
 //
 //                this.setVelocity(this.getVelocity().add(lv2));
-//            }
+            }
+
+            if (tag == Fluid.WATER) {
+                player.waterFluidSpeed = lv2.clone();
+            } else if (tag == Fluid.LAVA) {
+                player.lavaFluidSpeed = lv2.clone();
+            }
 
             player.fluidHeight.put(tag, e);
             return bl2;
