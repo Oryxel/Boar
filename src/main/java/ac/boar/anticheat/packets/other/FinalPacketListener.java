@@ -34,8 +34,4 @@ public class FinalPacketListener implements GeyserPacketListener, BedrockPacketL
             player.teleportUtil.lastKnowValid = new Vec3f(player.x, player.y + EntityDefinitions.PLAYER.offset(), player.z);
         }
     }
-
-    @Override
-    public void onPacketSend(GeyserSendEvent event) {
-    }
 }

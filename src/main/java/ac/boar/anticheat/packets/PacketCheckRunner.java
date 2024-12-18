@@ -12,7 +12,7 @@ public class PacketCheckRunner implements BedrockPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
-        for (Map.Entry<Class, Check> entry : player.checkHolder.entrySet()) {
+        for (Map.Entry<Class<?>, Check> entry : player.checkHolder.entrySet()) {
             Check v = entry.getValue();
             if (v instanceof PacketCheck) {
                 ((PacketCheck) v).onPacketReceived(event);

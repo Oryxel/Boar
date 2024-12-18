@@ -1,12 +1,14 @@
 package ac.boar.utils.math;
 
+import lombok.Getter;
 import org.cloudburstmc.math.GenericMath;
 import org.cloudburstmc.math.vector.Vector3d;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.math.vector.Vector3i;
 
+@Getter
 public class Vec3f implements Cloneable {
-    public static Vec3f ZERO = Vec3f.from(0, 0, 0);
+    public static final Vec3f ZERO = Vec3f.from(0, 0, 0);
 
     public float x, y, z;
 
@@ -61,18 +63,6 @@ public class Vec3f implements Cloneable {
 
     public Vector3d toVector3d() {
         return Vector3d.from(this.x, this.y, this.z);
-    }
-
-    public float getX() {
-        return this.x;
-    }
-
-    public float getY() {
-        return this.y;
-    }
-
-    public float getZ() {
-        return this.z;
     }
 
     public float dot(float x, float y, float z) {

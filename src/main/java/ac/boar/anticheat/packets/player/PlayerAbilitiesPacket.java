@@ -41,9 +41,7 @@ public class PlayerAbilitiesPacket implements GeyserPacketListener {
                     continue;
                 }
 
-                player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> {
-                    player.abilities.setWalkSpeed(attributeData.getValue());
-                });
+                player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> player.abilities.setWalkSpeed(attributeData.getValue()));
                 event.getPostTasks().add(() -> player.sendTransaction(true));
             }
         }

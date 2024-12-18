@@ -62,7 +62,7 @@ public class CompensatedEntity {
 
         cache.getOldPositions().add(cache.getUtdPosition().clone());
 
-        final EntityDefinition definition = cache.getDefinition();
+        final EntityDefinition<?> definition = cache.getDefinition();
         final BoundingBox newBox = BoundingBox.getBoxAt(vec3f.x, vec3f.y, vec3f.z, definition.width(), definition.height());
         cache.setUtdPosition(vec3f.clone());
 

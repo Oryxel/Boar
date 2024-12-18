@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cloudburstmc.math.vector.Vector3f;
-import org.cloudburstmc.protocol.bedrock.data.PredictionType;
-import org.cloudburstmc.protocol.bedrock.packet.CorrectPlayerMovePredictionPacket;
 import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
 
 import java.util.Queue;
@@ -39,7 +37,7 @@ public final class TeleportUtil {
         // If we do not however, server will likely set player back for 'Moved too quickly'
         // Also this (prob) going to prevent respawn tp, if there is one.
 
-        MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
+        final MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
         movePlayerPacket.setRuntimeEntityId(player.runtimeEntityId);
         movePlayerPacket.setPosition(Vector3f.from(vec3f.x, vec3f.y, vec3f.z));
         movePlayerPacket.setRotation(player.bedrockRotation);

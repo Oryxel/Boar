@@ -26,9 +26,7 @@ public class PlayerEffectPacket implements GeyserPacketListener {
             player.sendTransaction();
 
             if (packet.getEvent() == MobEffectPacket.Event.ADD) {
-                player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-                    player.statusMap.put(effect, new StatusEffect(effect, packet.getAmplifier(), packet.getDuration()));
-                });
+                player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> player.statusMap.put(effect, new StatusEffect(effect, packet.getAmplifier(), packet.getDuration())));
             } else if (packet.getEvent() == MobEffectPacket.Event.REMOVE) {
                 player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
                     player.statusMap.remove(effect);
