@@ -18,17 +18,13 @@ public final class TeleportUtil {
     private final Queue<TeleportCache> teleportQueue = new ConcurrentLinkedQueue<>();
     public Vec3f lastKnowValid = Vec3f.ZERO;
 
-    public void addTeleportToQueue(Vec3f vec3f, Vec3f velocity, boolean immediate) {
+    public void addTeleportToQueue(Vec3f vec3f, boolean immediate) {
         this.player.sendTransaction(immediate);
 
         final TeleportCache teleportCache = new TeleportCache(vec3f, this.player.lastSentId);
         this.teleportQueue.add(teleportCache);
 
         player.teleportUtil.lastKnowValid = new Vec3f(vec3f.toVector3f());
-        player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
-            player.queuedVelocities.clear();
-            player.clientVelocity = velocity;
-        });
     }
 
     public void setbackTo(Vec3f vec3f) {
@@ -44,7 +40,7 @@ public final class TeleportUtil {
         movePlayerPacket.setOnGround(player.onGround);
         movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
-        this.addTeleportToQueue(vec3f, Vec3f.ZERO, true);
+        this.addTeleportToQueue(vec3f, true);
 
         this.player.getBedrockSession().sendPacketImmediately(movePlayerPacket);
     }

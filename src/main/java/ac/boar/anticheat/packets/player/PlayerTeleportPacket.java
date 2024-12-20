@@ -15,6 +15,8 @@ import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import java.util.Queue;
 
 public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacketListener {
+    private static float MAX_TOLERANCE_ERROR = 0.001F;
+
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
         final BoarPlayer player = event.getPlayer();
@@ -46,9 +48,9 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
         }
 
         // This is not precise as java, since it being sent this tick instead of right away (also because of floating point I think?), we can't check for 0
-        // I will use 0.1 just to be safe, I have seen it reach 2e-6 in some cases, but I haven't test enough to know.
+        // I have seen it reach 2e-6 in some cases, but I haven't test enough to know.
         double distance = packet.getPosition().distanceSquared(cache.getPosition().toVector3f());
-        if ((packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT)) && distance < 0.1) {
+        if ((packet.getInputData().contains(PlayerAuthInputData.HANDLE_TELEPORT)) && distance < MAX_TOLERANCE_ERROR) {
             BoarPlugin.LOGGER.info("Accepted teleport, d=" + distance);
             player.lastTickWasTeleport = true;
         } else {
@@ -77,9 +79,9 @@ public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacket
             return;
         }
 
+        player.queuedVelocities.clear();
         if (packet.getMode() == MovePlayerPacket.Mode.TELEPORT) {
-            BoarPlugin.LOGGER.info("Ground: "  + packet.isOnGround());
-            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), Vec3f.ZERO, event.isImmediate());
+            player.teleportUtil.addTeleportToQueue(new Vec3f(packet.getPosition()), event.isImmediate());
         }
 
         packet.setOnGround(player.onGround);
