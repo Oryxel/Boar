@@ -88,7 +88,7 @@ public abstract class PredictionEngine {
         BlockState lv5 = player.compensatedWorld.getBlockState(lv4);
         if (player.collideY) {
             if (!player.sneaking && ((lv5.block() instanceof BedBlock) || lv5.is(Blocks.SLIME_BLOCK)) && beforeCollision.y < 0) {
-                clientVelocity.y = -beforeCollision.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.66F);
+                clientVelocity.y = -beforeCollision.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.75F);
             } else {
                 clientVelocity.y = 0;
             }
