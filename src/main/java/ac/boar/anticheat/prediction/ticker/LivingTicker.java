@@ -17,6 +17,8 @@ public class LivingTicker extends EntityTicker {
         super.tick();
         tickMovement();
         super.tickBlockCollision();
+
+        player.updateBoundingBox();
     }
 
     public void tickMovement() {
@@ -26,7 +28,7 @@ public class LivingTicker extends EntityTicker {
             if (player.wasTouchingWater) {
                 engine = new PredictionEngineWater(player);
             }
-        } else if (player.gliding) {
+        } else if (player.gliding || player.wasGliding) {
             engine = new PredictionEngineElytra(player);
         } else {
             engine = new PredictionEngineNormal(player);

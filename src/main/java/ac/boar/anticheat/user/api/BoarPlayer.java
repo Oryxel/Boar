@@ -3,9 +3,7 @@ package ac.boar.anticheat.user.api;
 import ac.boar.anticheat.check.api.holder.CheckHolder;
 import ac.boar.anticheat.compensated.CompensatedEntity;
 import ac.boar.anticheat.compensated.CompensatedWorld;
-import ac.boar.anticheat.data.AttributeData;
-import ac.boar.anticheat.data.PlayerAbilities;
-import ac.boar.anticheat.data.StatusEffect;
+import ac.boar.anticheat.data.*;
 import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.prediction.engine.data.VectorType;
 import ac.boar.anticheat.utils.BlockUtil;
@@ -16,6 +14,7 @@ import ac.boar.utils.GeyserUtil;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.Vec3f;
+import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -57,6 +56,15 @@ public class BoarPlayer {
 
     public final CheckHolder checkHolder = new CheckHolder(this);
 
+    public static final Map<EntityPose, EntityDimensions> POSE_DIMENSIONS = ImmutableMap.<EntityPose, EntityDimensions>builder()
+            .put(EntityPose.STANDING, EntityDimensions.changing(0.6F, 1.8F).withEyeHeight(1.62F))
+            .put(EntityPose.SLEEPING, EntityDimensions.fixed(0.2F, 0.2F).withEyeHeight(0.2F))
+            .put(EntityPose.GLIDING, EntityDimensions.changing(0.6F, 0.6F).withEyeHeight(0.4F))
+            .put(EntityPose.SWIMMING, EntityDimensions.changing(0.6F, 0.6F).withEyeHeight(0.4F))
+            .put(EntityPose.SPIN_ATTACK, EntityDimensions.changing(0.6F, 0.6F).withEyeHeight(0.4F))
+            .put(EntityPose.CROUCHING, EntityDimensions.changing(0.6F, 1.5F).withEyeHeight(1.27F))
+            .put(EntityPose.DYING, EntityDimensions.fixed(0.2F, 0.2F).withEyeHeight(1.62F)).build();
+
     public long runtimeEntityId, javaId;
 
     public float lastX, x, lastY, y, lastZ, z;
@@ -68,8 +76,8 @@ public class BoarPlayer {
     public float yaw, pitch;
 
     public int sinceSprinting, sinceSneaking;
-    public boolean sprinting, lastSprinting, sneaking, lastSneaking, swimming, lastSwimming;
-    public boolean gliding, lastGliding;
+    public boolean sprinting, wasSprinting, sneaking, wasSneaking, swimming, wasSwimming;
+    public boolean gliding, wasGliding;
 
     public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
@@ -81,7 +89,7 @@ public class BoarPlayer {
 
     public boolean collideX, collideZ, collideY;
 
-    public boolean canClimb, lastCanClimb;
+    public boolean canClimb, wasCanClimb;
     public float lastClimbingSpeed, climbingSpeed;
 
     public Vector3i supportingBlockPos = null;
@@ -112,6 +120,8 @@ public class BoarPlayer {
     public final Map<GeyserAttributeType, AttributeData> attributes = new HashMap<>();
 
     public float movementSpeed = 0.1F;
+
+    public EntityPose pose = EntityPose.STANDING;
 
     // Mappings
     public final Map<BlockDefinition, Integer> bedrockToJavaBlocks = new HashMap<>();
@@ -240,11 +250,7 @@ public class BoarPlayer {
     }
 
     public float getHeight() {
-        if (sneaking) {
-            return 1.5F;
-        } else {
-            return EntityDefinitions.PLAYER.height();
-        }
+        return POSE_DIMENSIONS.get(pose).height();
     }
 
     public float getMovementSpeed(boolean sprinting, float slipperiness) {
