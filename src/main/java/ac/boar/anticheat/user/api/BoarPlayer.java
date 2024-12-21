@@ -209,7 +209,7 @@ public class BoarPlayer {
     }
 
     public void updateBoundingBox() {
-        boundingBox = BoundingBox.getBoxAt(x, y, z, EntityDefinitions.PLAYER.width(), EntityDefinitions.PLAYER.height());
+        boundingBox = BoundingBox.getBoxAt(x, y, z, EntityDefinitions.PLAYER.width(), getHeight());
     }
 
     public void tick() {
