@@ -24,12 +24,13 @@ import java.util.List;
 
 public final class Collisions {
 
-    private static boolean isSpaceAroundPlayerEmpty(BoarPlayer player, float offsetX, float offsetZ, float f) {
+    private static boolean isSpaceAroundPlayerEmpty(final BoarPlayer player, float offsetX, float offsetZ, float f) {
         BoundingBox lv = player.boundingBox;
-        List<BoundingBox> collisions = legacyBoxCollisions(player, new BoundingBox(
-                lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ), true);
+        return isSpaceEmpty(player, new BoundingBox(lv.minX + offsetX, lv.minY - f - 1.0E-5F, lv.minZ + offsetZ, lv.maxX + offsetX, lv.minY, lv.maxZ + offsetZ));
+    }
 
-        return collisions.isEmpty();
+    public static boolean isSpaceEmpty(final BoarPlayer player, final BoundingBox box) {
+        return legacyBoxCollisions(player, box, true).isEmpty();
     }
 
     private static boolean method_30263(BoarPlayer player, float f) {

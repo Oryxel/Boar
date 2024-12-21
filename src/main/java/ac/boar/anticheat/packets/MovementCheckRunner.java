@@ -78,7 +78,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
     }
 
     private void updateInputData(BoarPlayer player) {
-        player.lastGliding = player.gliding;
+        player.wasGliding = player.gliding;
         if (player.inputData.contains(PlayerAuthInputData.START_GLIDING)) {
             // TODO: prevent player from spoofing this.
             player.gliding = true;
@@ -86,7 +86,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.gliding = false;
         }
 
-        player.lastSprinting = player.sprinting;
+        player.wasSprinting = player.sprinting;
         if (player.inputData.contains(PlayerAuthInputData.START_SPRINTING)) {
             // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
             // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
@@ -96,7 +96,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.sprinting = false;
         }
 
-        player.lastSneaking = player.sneaking;
+        player.wasSneaking = player.sneaking;
         if (player.inputData.contains(PlayerAuthInputData.START_SNEAKING)) {
             player.sneaking = true;
             player.sprinting = false;
@@ -104,7 +104,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.sneaking = false;
         }
 
-        player.lastSwimming = player.swimming;
+        player.wasSwimming = player.swimming;
         if (player.inputData.contains(PlayerAuthInputData.START_SWIMMING)) {
             player.swimming = true;
         } else if (player.inputData.contains(PlayerAuthInputData.STOP_SWIMMING)) {
