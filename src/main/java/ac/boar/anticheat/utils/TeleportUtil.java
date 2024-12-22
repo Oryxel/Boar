@@ -28,6 +28,10 @@ public final class TeleportUtil {
     }
 
     public void setbackTo(Vec3f vec3f) {
+        if (teleportInQueue()) {
+            return;
+        }
+
         // Server won't know about this if we sent it like this, well they don't need to anyway.
         // As long as we handle thing correctly, it won't be a problem
         // If we do not however, server will likely set player back for 'Moved too quickly'

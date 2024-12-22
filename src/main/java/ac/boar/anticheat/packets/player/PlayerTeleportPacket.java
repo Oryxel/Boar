@@ -15,7 +15,7 @@ import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import java.util.Queue;
 
 public class PlayerTeleportPacket implements BedrockPacketListener, GeyserPacketListener {
-    private static float MAX_TOLERANCE_ERROR = 0.001F;
+    private static final float MAX_TOLERANCE_ERROR = 0.001F;
 
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
