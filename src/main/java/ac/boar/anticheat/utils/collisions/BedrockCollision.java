@@ -2,7 +2,7 @@ package ac.boar.anticheat.utils.collisions;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.BoundingBox;
-import org.cloudburstmc.math.vector.Vector3i;
+import ac.boar.utils.math.MutableBlockPos;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.property.ChestType;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BedrockCollision {
-    public static List<BoundingBox> getBoundingBox(BoarPlayer player, Vector3i vector3i, BlockState state) {
+    public static List<BoundingBox> getBoundingBox(BoarPlayer player, MutableBlockPos vector3i, BlockState state) {
         if (state.is(Blocks.ENDER_CHEST)) {
             return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
         }

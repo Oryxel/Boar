@@ -2,37 +2,38 @@ package ac.boar.anticheat.data;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.BlockUtil;
+import ac.boar.utils.math.MutableBlockPos;
 import ac.boar.utils.math.Vec3f;
-import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.physics.Direction;
 
 public record FluidState(Fluid fluid, float height) {
-    public float getHeight(BoarPlayer player, Vector3i pos) {
+    public float getHeight(BoarPlayer player, MutableBlockPos pos) {
         return isFluidAboveEqual(player, pos) ? 1.0F : this.height();
     }
 
-    private boolean isFluidAboveEqual(BoarPlayer player, Vector3i pos) {
-        return fluid == player.compensatedWorld.getFluidState(pos.up()).fluid();
+    private boolean isFluidAboveEqual(BoarPlayer player, MutableBlockPos pos) {
+        return fluid == player.compensatedWorld.getFluidState(pos.x, pos.y + 1, pos.z).fluid();
     }
 
     private boolean isEmptyOrThis(FluidState state) {
         return state.fluid == Fluid.EMPTY || state.fluid.equals(this.fluid);
     }
 
-    public Vec3f getVelocity(BoarPlayer player, Vector3i vector3i, FluidState state) {
+    public Vec3f getVelocity(BoarPlayer player, MutableBlockPos vector3i, FluidState state) {
         float d = 0;
         float e = 0;
 
+        final MutableBlockPos mutable = new MutableBlockPos(0, 0, 0);
         for (Direction lv2 : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
-            Vector3i lv = vector3i.add(lv2.getUnitVector());
-            FluidState lv3 = player.compensatedWorld.getFluidState(lv);
+            mutable.set(vector3i.x, vector3i.y, vector3i.z).add(lv2.getUnitVector());
+            FluidState lv3 = player.compensatedWorld.getFluidState(mutable.x, mutable.y, mutable.z);
             if (this.isEmptyOrThis(lv3)) {
                 float f = lv3.height();
                 float g = 0.0F;
                 if (f == 0.0F) {
-                    if (!BlockUtil.blocksMovement(player, lv, fluid, player.compensatedWorld.getBlockState(lv))) {
-                        FluidState lv5 = player.compensatedWorld.getFluidState(lv.down());
+                    if (!BlockUtil.blocksMovement(player, mutable, fluid, player.compensatedWorld.getBlockState(mutable.x, mutable.y, mutable.z))) {
+                        FluidState lv5 = player.compensatedWorld.getFluidState(mutable.x, mutable.y - 1, mutable.z);
                         if (this.isEmptyOrThis(lv5)) {
                             f = lv5.height();
                             if (f > 0.0F) {

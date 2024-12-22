@@ -202,7 +202,7 @@ public class BoarPlayer {
     }
 
     public float getEyeY() {
-        return y + 1.62F;
+        return y + POSE_DIMENSIONS.get(pose).eyeHeight();
     }
 
     public boolean isSubmergedIn(Fluid fluidTag) {

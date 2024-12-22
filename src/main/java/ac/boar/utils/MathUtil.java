@@ -11,12 +11,17 @@ public final class MathUtil {
 
     public static int floor(float value) {
         int i = (int) value;
-        return value < (float) i ? i - 1 : i;
+        return value < i ? i - 1 : i;
+    }
+
+    public static int floor(double value) {
+        int i = (int) value;
+        return value < i ? i - 1 : i;
     }
 
     public static int ceil(float value) {
         int i = (int) value;
-        return value > (float) i ? i + 1 : i;
+        return value > i ? i + 1 : i;
     }
 
     public static float toValue(float value, float target) {

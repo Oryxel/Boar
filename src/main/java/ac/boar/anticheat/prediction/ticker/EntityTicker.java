@@ -5,6 +5,7 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
+import ac.boar.utils.math.MutableBlockPos;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.math.vector.Vector3i;
@@ -48,9 +49,9 @@ public class EntityTicker {
 //            return;
 //        }
 
-        Vector3i lv3 = Vector3i.from(player.x, d, player.z);
-        FluidState lv4 = player.compensatedWorld.getFluidState(lv3);
-        float e = lv3.getY() + lv4.getHeight(player, lv3);
+        final MutableBlockPos mutable = new MutableBlockPos(MathUtil.floor(player.x), MathUtil.floor(d), MathUtil.floor(player.z));
+        FluidState lv4 = player.compensatedWorld.getFluidState(mutable.x, mutable.y, mutable.z);
+        float e = mutable.y + lv4.getHeight(player, mutable);
         if (e > d) {
             player.submergedFluidTag.add(lv4.fluid());
         }
@@ -86,18 +87,19 @@ public class EntityTicker {
             Vec3f lv2 = Vec3f.ZERO;
             int o = 0;
 
+            final MutableBlockPos mutable = new MutableBlockPos(0, 0, 0);
             for (int p = i; p < j; p++) {
                 for (int q = k; q < l; q++) {
                     for (int r = m; r < n; r++) {
-                        Vector3i pos = Vector3i.from(p, q, r);
+                        mutable.set(p, q, r);
                         FluidState lv4 = player.compensatedWorld.getFluidState(p, q, r);
 
                         if (lv4.fluid() == tag) {
-                            double f = q + lv4.getHeight(player, pos);
+                            double f = q + lv4.getHeight(player, mutable);
                             if (f >= lv.minY) {
                                 bl2 = true;
                                 e = Math.max(f - lv.minY, e);
-                                Vec3f lv5 = lv4.getVelocity(player, pos, lv4);
+                                Vec3f lv5 = lv4.getVelocity(player, mutable, lv4);
                                 if (e < 0.4) {
                                     lv5 = lv5.mul(e);
                                 }
