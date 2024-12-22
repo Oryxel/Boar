@@ -56,7 +56,6 @@ public class EntityTicker {
         }
     }
 
-
     protected void checkWaterState() {
 //        if (this.getVehicle() instanceof AbstractBoatEntity lv && !lv.isSubmergedInWater()) {
 //            this.touchingWater = false;

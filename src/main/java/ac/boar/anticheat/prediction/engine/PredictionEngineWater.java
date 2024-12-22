@@ -28,6 +28,10 @@ public class PredictionEngineWater extends PredictionEngine {
             vec3f = vec3f.add(lv2);
         }
 
+        if (player.inputData.contains(PlayerAuthInputData.WANT_DOWN)) {
+            vec3f = vec3f.add(0, -0.04F, 0);
+        }
+
         float f = sprinting ? 0.9F : 0.8F;
         float g = 0.02F;
         float h = 0 /* (float)this.getAttributeValue(EntityAttributes.WATER_MOVEMENT_EFFICIENCY) */;
