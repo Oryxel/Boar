@@ -3,6 +3,7 @@ package ac.boar.anticheat.utils;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.collisions.BedrockCollision;
 import ac.boar.utils.math.BoundingBox;
+import ac.boar.utils.math.MutableBlockPos;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.BlockStateValues;
 import org.geysermc.geyser.level.block.Blocks;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockUtil {
-    public static boolean blocksMovement(BoarPlayer player, Vector3i vector3i, Fluid fluid, BlockState state) {
+    public static boolean blocksMovement(BoarPlayer player, MutableBlockPos vector3i, Fluid fluid, BlockState state) {
         if (state.is(Blocks.ICE)) {
             return false;
         }
@@ -27,7 +28,7 @@ public class BlockUtil {
         return !state.is(Blocks.COBWEB) && !state.is(Blocks.BAMBOO_SAPLING) && isSolid(player, state, vector3i);
     }
 
-    public static boolean isSolid(BoarPlayer player, BlockState state, Vector3i vector3i) {
+    public static boolean isSolid(BoarPlayer player, BlockState state, MutableBlockPos vector3i) {
         List<BoundingBox> boxes = getBlockBoundingBoxes(player, state, vector3i);
         if (boxes.isEmpty()) {
             return false;
@@ -41,7 +42,7 @@ public class BlockUtil {
         }
     }
 
-    public static List<BoundingBox> getBlockBoundingBoxes(BoarPlayer player, BlockState state, Vector3i vector3i) {
+    public static List<BoundingBox> getBlockBoundingBoxes(BoarPlayer player, BlockState state, MutableBlockPos vector3i) {
         List<BoundingBox> boxes = BedrockCollision.getBoundingBox(player, vector3i, state);
         if (boxes != null) {
             return boxes;

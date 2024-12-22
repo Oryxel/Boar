@@ -5,12 +5,12 @@ import ac.boar.anticheat.data.FluidState;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.BoundingBox;
+import ac.boar.utils.math.MutableBlockPos;
 import ac.boar.utils.math.Vec3f;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatList;
-import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.Axis;
@@ -140,7 +140,7 @@ public final class Collisions {
     }
 
     private static List<BoundingBox> legacyBoxCollisions(BoarPlayer player, BoundingBox bb, boolean compensated) {
-        List<BoundingBox> list = Lists.newArrayList();
+        final List<BoundingBox> list = Lists.newArrayList();
         int i = (int) Math.floor(bb.minX);
         int j = (int) Math.floor(bb.maxX + 1.0D);
         int k = (int) Math.floor(bb.minY);
@@ -148,10 +148,12 @@ public final class Collisions {
         int i1 = (int) Math.floor(bb.minZ);
         int j1 = (int) Math.floor(bb.maxZ + 1.0D);
 
+        final MutableBlockPos mutable = new MutableBlockPos(0, 0, 0);
         for (int k1 = i; k1 < j; ++k1) {
             for (int l1 = i1; l1 < j1; ++l1) {
                 for (int i2 = k - 1; i2 < l; ++i2) {
-                    addCollisionBoxesToList(player, Vector3i.from(k1, i2, l1), bb, list, compensated);
+                    mutable.set(k1, i2, l1);
+                    addCollisionBoxesToList(player, mutable, bb, list, compensated);
                 }
             }
         }
@@ -160,19 +162,19 @@ public final class Collisions {
     }
 
     // TODO: compensated world
-    private static void addCollisionBoxesToList(BoarPlayer player, Vector3i vector3i, BoundingBox boundingBox, List<BoundingBox> list, boolean compensated) {
+    private static void addCollisionBoxesToList(BoarPlayer player, MutableBlockPos blockPos, BoundingBox boundingBox, List<BoundingBox> list, boolean compensated) {
         GeyserSession session = player.getSession();
         BlockState state;
         if (compensated) {
-            state = player.compensatedWorld.getBlockState(vector3i);
+            state = player.compensatedWorld.getBlockState(blockPos.x, blockPos.y, blockPos.z);
         } else {
-            state = session.getGeyser().getWorldManager().blockAt(session, vector3i);
+            state = session.getGeyser().getWorldManager().blockAt(session, blockPos.x, blockPos.y, blockPos.z);
         }
 
-        List<BoundingBox> boxes = BedrockCollision.getBoundingBox(player, vector3i, state);
+        List<BoundingBox> boxes = BedrockCollision.getBoundingBox(player, blockPos, state);
         if (boxes != null) {
             for (BoundingBox box : boxes) {
-                box = box.offset(new Vec3f(vector3i));
+                box = box.offset(blockPos.x, blockPos.y, blockPos.z);
                 if (box.intersects(boundingBox)) {
                     list.add(box);
                 }
@@ -186,7 +188,7 @@ public final class Collisions {
         }
 
         for (org.geysermc.geyser.level.physics.BoundingBox geyserBB : collision.getBoundingBoxes()) {
-            BoundingBox box = new BoundingBox(geyserBB).offset(new Vec3f(vector3i));
+            BoundingBox box = new BoundingBox(geyserBB).offset(blockPos.x, blockPos.y, blockPos.z);
 
             if (box.intersects(boundingBox)) {
                 list.add(box);
