@@ -123,6 +123,13 @@ public class MovementCheckRunner implements BedrockPacketListener {
         } else {
             player.sinceSneaking = 0;
         }
+
+        // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
+        // Or the player sprinting status is just de-synced...
+        if (player.movementInput.z < 0 && player.sprinting) {
+            player.sprinting = false;
+            player.sinceSprinting = 1;
+        }
     }
 
     // Possible patch for no-fall exploit on GeyserMC since geyser just check for delta.y > 0 and VERTICAL_COLLISION
