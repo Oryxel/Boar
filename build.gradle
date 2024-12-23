@@ -16,7 +16,7 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven {
-        url = uri("https://repo.opencollab.dev/main/")
+        url = "https://repo.opencollab.dev/main/"
     }
 }
 
