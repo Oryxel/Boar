@@ -41,8 +41,12 @@ public class CompensatedWorld {
         return chunks.getOrDefault(chunkPosition, null);
     }
 
+    public void updateBlock(final Vector3i vector3i, int block) {
+        this.updateBlock(vector3i.getX(), vector3i.getY(), vector3i.getZ(), block);
+    }
+
     public void updateBlock(int x, int y, int z, int block) {
-        BoarChunk chunk = this.getChunk(x >> 4, z >> 4);
+        final BoarChunk chunk = this.getChunk(x >> 4, z >> 4);
         if (chunk == null) {
             return;
         }

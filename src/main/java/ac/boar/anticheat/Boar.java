@@ -5,10 +5,7 @@ import ac.boar.anticheat.packets.*;
 import ac.boar.anticheat.packets.level.JavaLevelPacket;
 import ac.boar.anticheat.packets.other.FinalPacketListener;
 import ac.boar.anticheat.packets.other.LatencyPacket;
-import ac.boar.anticheat.packets.player.PlayerAbilitiesPacket;
-import ac.boar.anticheat.packets.player.PlayerEffectPacket;
-import ac.boar.anticheat.packets.player.PlayerTeleportPacket;
-import ac.boar.anticheat.packets.player.PlayerVelocityPacket;
+import ac.boar.anticheat.packets.player.*;
 import ac.boar.anticheat.packets.level.LevelEntityPacket;
 import ac.boar.anticheat.user.BoarPlayerManager;
 import ac.boar.plugin.BoarPlugin;
@@ -31,6 +28,7 @@ public class Boar {
         new GeyserSessionJoinEvent();
 
         BedrockPacketEvents.register(new LatencyPacket());
+        BedrockPacketEvents.register(new PlayerInventoryPacket());
         BedrockPacketEvents.register(new PlayerTeleportPacket());
         BedrockPacketEvents.register(new MovementCheckRunner());
         BedrockPacketEvents.register(new PacketCheckRunner());

@@ -9,6 +9,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.packet.UpdateBlockPacket;
+import org.geysermc.geyser.level.block.property.Properties;
+import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.ChunkSection;
 import org.geysermc.mcprotocollib.protocol.data.game.chunk.DataPalette;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundRespawnPacket;
@@ -60,11 +62,21 @@ public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
     public void onPacketSend(GeyserSendEvent event) {
         final BoarPlayer player = event.getPlayer();
         if (event.getPacket() instanceof UpdateBlockPacket packet) {
-            if (packet.getDataLayer() > 0) {
+            final Vector3i blockPosition = packet.getBlockPosition();
+            // Waterlogged block.
+            if (packet.getDataLayer() == 1) {
+                final boolean waterlogged = packet.getDefinition() == player.getSession().getBlockMappings().getBedrockWater();
+
+                event.getPostTasks().add(() -> player.sendTransaction(event.isImmediate()));
+                player.latencyUtil.addTransactionToQueue(player.lastSentId + 1, () -> {
+                    final BlockState state = player.compensatedWorld.getBlockState(blockPosition);
+                    if (state.getValue(Properties.WATERLOGGED) != null) {
+                        player.compensatedWorld.updateBlock(blockPosition, state.withValue(Properties.WATERLOGGED, waterlogged).javaId());
+                    }
+                });
                 return;
             }
 
-            final Vector3i blockPosition = packet.getBlockPosition();
             int javaId = player.getJavaBlock(packet.getDefinition());
             if (javaId == -1) {
                 player.getSession().getGeyser().getWorldManager().getBlockAt(
@@ -72,8 +84,7 @@ public class JavaLevelPacket implements PacketListener, GeyserPacketListener {
             }
 
             player.sendTransaction(event.isImmediate());
-            player.latencyUtil.addTransactionToQueue(player.lastSentId, () ->
-                    player.compensatedWorld.updateBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), javaId));
+            player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> player.compensatedWorld.updateBlock(blockPosition, javaId));
         }
     }
 }
