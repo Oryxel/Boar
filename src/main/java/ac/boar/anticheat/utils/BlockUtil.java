@@ -72,7 +72,7 @@ public class BlockUtil {
 
     public static float getJumpVelocityMultiplier(BlockState state) {
         if (state.is(Blocks.HONEY_BLOCK)) {
-            return 0.5F;
+            return 0.6F;
         }
 
         return 1F;

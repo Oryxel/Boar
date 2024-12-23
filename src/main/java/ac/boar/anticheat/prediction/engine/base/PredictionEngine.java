@@ -99,7 +99,8 @@ public abstract class PredictionEngine {
             clientVelocity.z = 0;
         }
 
-        player.clientVelocity = this.applyEndOfTick(clientVelocity);
+        float f = player.getVelocityMultiplier();
+        player.clientVelocity = this.applyEndOfTick(clientVelocity.mul(f, 1, f));
 
         for (Map.Entry<Class<?>, Check> entry : player.checkHolder.entrySet()) {
             Check v = entry.getValue();
