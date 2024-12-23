@@ -126,7 +126,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
         // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
         // Or the player sprinting status is just de-synced...
-        if (player.movementInput.z < 0 && player.sprinting) {
+        if (player.movementInput.z <= 0 && player.sprinting) {
             player.sprinting = false;
             player.sinceSprinting = 1;
         }
