@@ -5,7 +5,6 @@ import ac.boar.anticheat.check.api.impl.OffsetHandlerCheck;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.utils.math.Vec3f;
 import org.bukkit.Bukkit;
-import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 
 @CheckInfo(name = "DebugOffset")
 public class DebugOffsetA extends OffsetHandlerCheck {
@@ -17,7 +16,7 @@ public class DebugOffsetA extends OffsetHandlerCheck {
     public void onPredictionComplete(double offset) {
         Vec3f predicted = player.predictedVelocity;
 
-        if (player.movementInput.length() > 0 || player.inputData.contains(PlayerAuthInputData.WANT_UP)) {
+        if (player.actualVelocity.length() > 0) {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
                     predicted.x + "," + predicted.y + "," + predicted.z);
 

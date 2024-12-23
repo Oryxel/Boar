@@ -153,7 +153,7 @@ public abstract class PredictionEngine {
     }
 
     protected void addClimbingToPossibilities(final List<Vector> vectors) {
-        if (!player.climbing) {
+        if (!player.climbing || !player.inputData.contains(PlayerAuthInputData.JUMPING) && !player.horizontalCollision) {
             return;
         }
 
