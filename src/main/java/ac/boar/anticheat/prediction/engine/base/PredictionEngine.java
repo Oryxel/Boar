@@ -26,7 +26,7 @@ public abstract class PredictionEngine {
 
     public abstract Vec3f travel(boolean sprinting, Vec3f vec3f, Vec3f movementInput);
     public abstract Vec3f applyEndOfTick(Vec3f vec3f);
-    protected abstract Vec3f jump(Vec3f vec3f);
+    protected abstract Vec3f jump(boolean sprinting, Vec3f vec3f);
     protected abstract boolean canJump();
 
     public final List<Vector> gatherAllPossibilities() {
@@ -182,10 +182,21 @@ public abstract class PredictionEngine {
             return;
         }
 
+        // Is this my fault (maybe it is)? Sometimes player won't stop sprinting 3-4 ticks after sending STOP_SPRINTING.
+        // Also in a BUNCH of cases (ex: slamming your head against the wall) sprinting going to de-sync.
+        // Fine, let's allow player sprint if ticks since sprinting is < 6. and also let player choose to NOT sprint.
+
+        // Also for jumping, not entirely sure but sprinting for jumping can de-sync from travel sprinting speed?
+        // This is too much of a pain... I have to check for 4 possibilities as soon as player start sprint jumping.
         final List<Vector> list = new ArrayList<>();
         for (Vector vector : vectors) {
-            list.add(vector);
-            list.add(new Vector(jump(vector.getVelocity()), vector.getType(), vector.getTransactionId()));
+            list.add(new Vector(jump(false, vector.getVelocity()), vector.getType(), vector.getTransactionId()));
+
+            if (player.sinceSprinting < 6) {
+                final Vector vector1 = new Vector(jump(true, vector.getVelocity()), vector.getType(), vector.getTransactionId());
+                vector1.setSprinting(true);
+                list.add(vector1);
+            }
         }
 
         vectors.clear();

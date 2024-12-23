@@ -24,6 +24,9 @@ public class DebugOffsetA extends OffsetHandlerCheck {
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
                     "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
 
+            Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
+            Bukkit.broadcastMessage("CV: " + player.lastClientVelocity.toVector3f().toString());
+
             Bukkit.broadcastMessage("A EOT: " + player.clientVelocity.toVector3f().toString());
 
             double eotOffset = player.claimedEOT.distance(player.clientVelocity.toVector3f());

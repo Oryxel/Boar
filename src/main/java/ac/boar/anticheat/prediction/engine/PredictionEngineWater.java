@@ -74,7 +74,7 @@ public class PredictionEngineWater extends PredictionEngine {
     }
 
     @Override
-    protected Vec3f jump(Vec3f vec3f) {
+    protected Vec3f jump(boolean sprinting, Vec3f vec3f) {
         return vec3f.add(0, 0.04F, 0);
     }
 

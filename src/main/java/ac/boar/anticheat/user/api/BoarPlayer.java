@@ -96,7 +96,7 @@ public class BoarPlayer {
 
     public double extraUncertainOffset = 0;
 
-    public Vec3f clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
+    public Vec3f lastClientVelocity = Vec3f.ZERO, clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
 
     public Vec3f waterFluidSpeed = Vec3f.ZERO, lavaFluidSpeed = Vec3f.ZERO;
@@ -325,7 +325,7 @@ public class BoarPlayer {
         float f = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(Vector3i.from(lastX, lastY, lastZ)));
         float g = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(this.getVelocityAffectingPos()));
 
-        return (double)f == 1.0 ? g : f;
+        return f == 1.0 ? g : f;
     }
 
     public float getEffectiveGravity() {
