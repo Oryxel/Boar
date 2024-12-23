@@ -5,6 +5,7 @@ import ac.boar.anticheat.data.FluidState;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.JavaDimension;
@@ -22,6 +23,7 @@ public class CompensatedWorld {
     private final BoarPlayer player;
     private final Long2ObjectMap<BoarChunk> chunks = new Long2ObjectOpenHashMap<>();
 
+    @Getter
     private int minY;
     private int heightY;
 
