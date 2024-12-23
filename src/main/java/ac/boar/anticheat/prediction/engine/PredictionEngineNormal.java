@@ -46,7 +46,7 @@ public class PredictionEngineNormal extends PredictionEngine {
     public Vec3f applyEndOfTick(Vec3f vec3f) {
         Vector3i blockPos = player.getVelocityAffectingPos();
         float slipperiness = BlockUtil.getBlockSlipperiness(player.compensatedWorld.getBlockState(blockPos));
-        float f = player.lastGround ? slipperiness : 1.0F;
+        float f = player.wasGround ? slipperiness : 1.0F;
         float g = f * 0.91F;
         float d = vec3f.y;
         StatusEffect statusEffect = player.getStatusEffect(Effect.LEVITATION);
@@ -73,7 +73,7 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     private Vec3f applyClimbingSpeed(Vec3f motion) {
-        if (player.canClimb && player.climbingSpeed > 0.2) {
+        if (player.climbing && player.climbingSpeed > 0.2) {
             // this.onLanding();
             float d = /* MathUtil.clamp(motion.x, -0.20000076F, 0.20000076F) */ motion.x;
             float e = /* MathUtil.clamp(motion.z, -0.20000076F, 0.20000076F) */ motion.z;

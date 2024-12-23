@@ -63,12 +63,13 @@ public abstract class PredictionEngine {
 
         resetVelocities();
 
-        player.collideX = afterCollision.x != beforeCollision.x;
-        player.collideZ = afterCollision.z != beforeCollision.z;
-        player.collideY = afterCollision.y != beforeCollision.y;
+        boolean bl = afterCollision.x != beforeCollision.x;
+        boolean bl2 = afterCollision.z != beforeCollision.z;
+        player.verticalCollision = afterCollision.y != beforeCollision.y;
+        player.horizontalCollision = bl || bl2;
 
-        player.lastGround = player.onGround;
-        player.onGround = beforeCollision.y < 0 && player.collideY;
+        player.wasGround = player.onGround;
+        player.onGround = beforeCollision.y < 0 && player.verticalCollision;
         player.predictedVelocity = afterCollision.clone();
 
         Vec3f clientVelocity = afterCollision.clone();
@@ -80,13 +81,13 @@ public abstract class PredictionEngine {
             clientVelocity = player.actualVelocity.clone();
         }
 
-        if (player.collideX) {
+        if (bl) {
             clientVelocity.x = 0;
         }
 
         Vector3i lv4 = player.getLandingPos();
         BlockState lv5 = player.compensatedWorld.getBlockState(lv4);
-        if (player.collideY) {
+        if (player.verticalCollision) {
             if (!player.sneaking && ((lv5.block() instanceof BedBlock) || lv5.is(Blocks.SLIME_BLOCK)) && beforeCollision.y < 0) {
                 clientVelocity.y = -beforeCollision.y * (lv5.is(Blocks.SLIME_BLOCK) ? 1 : 0.75F);
             } else {
@@ -94,7 +95,7 @@ public abstract class PredictionEngine {
             }
         }
 
-        if (player.collideZ) {
+        if (bl2) {
             clientVelocity.z = 0;
         }
 
@@ -152,7 +153,7 @@ public abstract class PredictionEngine {
     }
 
     protected void addClimbingToPossibilities(final List<Vector> vectors) {
-        if (!player.wasCanClimb && !player.canClimb) {
+        if (!player.climbing) {
             return;
         }
 
@@ -161,8 +162,7 @@ public abstract class PredictionEngine {
             list.add(vector);
 
             Vector vector1 = vector.clone();
-            vector1.setVelocity(new Vec3f(vector1.getVelocity().x, !player.canClimb ? player.lastClimbingSpeed
-                    : player.climbingSpeed, vector1.getVelocity().z));
+            vector1.setVelocity(new Vec3f(vector1.getVelocity().x, player.climbingSpeed, vector1.getVelocity().z));
             list.add(vector1);
         }
 

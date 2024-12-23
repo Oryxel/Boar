@@ -135,13 +135,13 @@ public class MovementCheckRunner implements BedrockPacketListener {
     // Possible patch for no-fall exploit on GeyserMC since geyser just check for delta.y > 0 and VERTICAL_COLLISION
     private void correctPlayerAuthInput(BoarPlayer player, PlayerAuthInputPacket packet) {
         packet.setDelta(Vector3f.from(player.clientVelocity.x, player.clientVelocity.y, player.clientVelocity.z));
-        if (packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && !player.collideY) {
+        if (packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && !player.verticalCollision) {
             packet.getInputData().remove(PlayerAuthInputData.VERTICAL_COLLISION);
-        } else if (!packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && player.collideY) {
+        } else if (!packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && player.verticalCollision) {
             packet.getInputData().add(PlayerAuthInputData.VERTICAL_COLLISION);
         }
 
-        if (!packet.getInputData().contains(PlayerAuthInputData.HORIZONTAL_COLLISION) && (player.collideX || player.collideZ)) {
+        if (!packet.getInputData().contains(PlayerAuthInputData.HORIZONTAL_COLLISION) && player.horizontalCollision) {
             packet.getInputData().add(PlayerAuthInputData.HORIZONTAL_COLLISION);
         }
     }
