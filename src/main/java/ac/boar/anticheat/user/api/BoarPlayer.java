@@ -32,6 +32,8 @@ import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
 import org.geysermc.geyser.session.GeyserSession;
+import org.geysermc.geyser.session.cache.TagCache;
+import org.geysermc.geyser.session.cache.tags.BlockTag;
 import org.geysermc.mcprotocollib.network.tcp.TcpSession;
 import org.geysermc.mcprotocollib.protocol.codec.MinecraftCodecHelper;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
@@ -262,14 +264,13 @@ public class BoarPlayer {
     }
 
     public boolean isClimbing() {
+        final TagCache cache = getSession().getTagCache();
         BlockState state = getBlockStateAtPos();
         BlockState lastState = getBlockStateAtPosLast();
 
-        boolean ladder = state.is(Blocks.LADDER) || lastState.is(Blocks.LADDER);
-        boolean scaffolding = state.is(Blocks.SCAFFOLDING) || lastState.is(Blocks.SCAFFOLDING);
-
-        climbingSpeed = ladder ? 0.20000076F : 0.15000153F;
-        return ladder || scaffolding;
+        boolean fastClimbing = !state.is(Blocks.SCAFFOLDING) && !lastState.is(Blocks.SCAFFOLDING);
+        climbingSpeed = fastClimbing ? 0.20000076F : 0.15000153F;
+        return cache.is(BlockTag.CLIMBABLE, state.block()) || cache.is(BlockTag.CLIMBABLE, lastState.block());
     }
 
     public BlockState getBlockStateAtPosLast() {
