@@ -91,7 +91,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         if (player.inputData.contains(PlayerAuthInputData.START_SPRINTING)) {
             // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
             // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
-            // Even if we're wrong about this, correct player movement.
+            // Don't let player do backwards sprinting!
             player.sprinting = player.movementInput.z > 0;
         } else if (player.inputData.contains(PlayerAuthInputData.STOP_SPRINTING)) {
             player.sprinting = false;
@@ -122,13 +122,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
             player.sinceSneaking++;
         } else {
             player.sinceSneaking = 0;
-        }
-
-        // The player will always have to be moving forward to sprint so don't let player do backwards sprinting.
-        // Or the player sprinting status is just de-synced...
-        if (player.movementInput.z < 0 && player.sprinting) {
-            player.sprinting = false;
-            player.sinceSprinting = 1;
         }
     }
 
