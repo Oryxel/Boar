@@ -31,7 +31,7 @@ public abstract class PredictionEngine {
 
     public final List<Vector> gatherAllPossibilities() {
         List<Vector> vectors = new ArrayList<>();
-        vectors.add(new Vector(player.clientVelocity, VectorType.NORMAL));
+        vectors.add(new Vector(player.eotVelocity, VectorType.NORMAL));
         addVelocityToPossibilities(vectors);
         addJumpingToPossibilities(vectors);
 
@@ -74,8 +74,6 @@ public abstract class PredictionEngine {
 
         Vec3f clientVelocity = afterCollision.clone();
         double offset = afterCollision.distanceTo(player.actualVelocity);
-        offset -= player.extraUncertainOffset;
-        player.extraUncertainOffset = 0;
 
         if (offset < 1e-4) {
             clientVelocity = player.actualVelocity.clone();
@@ -100,7 +98,7 @@ public abstract class PredictionEngine {
         }
 
         float f = player.getVelocityMultiplier();
-        player.clientVelocity = this.applyEndOfTick(clientVelocity.mul(f, 1, f));
+        player.eotVelocity = this.applyEndOfTick(clientVelocity.mul(f, 1, f));
 
         for (Map.Entry<Class<?>, Check> entry : player.checkHolder.entrySet()) {
             Check v = entry.getValue();

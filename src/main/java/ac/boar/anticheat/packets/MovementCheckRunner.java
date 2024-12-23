@@ -24,7 +24,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.bedrockRotation = packet.getRotation();
 
         // This DOES happen, sometimes it failed to add the adapter, force player to rejoin...
-        if (player.getJavaSession() == null) {
+        if (player.getTcpSession() == null) {
             player.disconnect("SessionAdapter failed to inject!");
             return;
         }
@@ -36,14 +36,14 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.inputData.clear();
         player.inputData.addAll(packet.getInputData());
 
-        player.lastX = player.tick != 1 ? player.x : packet.getPosition().getX();
-        player.lastY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
-        player.lastZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
+        player.prevX = player.tick != 1 ? player.x : packet.getPosition().getX();
+        player.prevY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
+        player.prevZ = player.tick != 1 ? player.z : packet.getPosition().getZ();
         player.x = packet.getPosition().getX();
         player.y = packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.z = packet.getPosition().getZ();
 
-        player.actualVelocity = new Vec3f(player.x - player.lastX, player.y - player.lastY, player.z - player.lastZ);
+        player.actualVelocity = new Vec3f(player.x - player.prevX, player.y - player.prevY, player.z - player.prevZ);
 
         player.yaw = packet.getRotation().getY();
         player.pitch = packet.getRotation().getX();
@@ -64,7 +64,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.lastClaimedEOT = player.claimedEOT.clone();
         player.claimedEOT = packet.getDelta();
 
-        player.lastClientVelocity = player.clientVelocity.clone();
+        player.prevEOT = player.eotVelocity.clone();
         // Is this EOT fault or travel/collision fault? This is for debugging that.
         // player.clientVelocity = new Vec3f(player.lastClaimedEOT);
 
@@ -134,7 +134,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
 
     // Possible patch for no-fall exploit on GeyserMC since geyser just check for delta.y > 0 and VERTICAL_COLLISION
     private void correctPlayerAuthInput(BoarPlayer player, PlayerAuthInputPacket packet) {
-        packet.setDelta(Vector3f.from(player.clientVelocity.x, player.clientVelocity.y, player.clientVelocity.z));
+        packet.setDelta(Vector3f.from(player.eotVelocity.x, player.eotVelocity.y, player.eotVelocity.z));
         if (packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && !player.verticalCollision) {
             packet.getInputData().remove(PlayerAuthInputData.VERTICAL_COLLISION);
         } else if (!packet.getInputData().contains(PlayerAuthInputData.VERTICAL_COLLISION) && player.verticalCollision) {

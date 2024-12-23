@@ -92,10 +92,10 @@ public class BlockUtil {
 
     public static void onSteppedOn(BoarPlayer player, Vector3i pos, BlockState state) {
         if (state.is(Blocks.SLIME_BLOCK)) {
-            float d = Math.abs(player.clientVelocity.y);
+            float d = Math.abs(player.eotVelocity.y);
             if (d < 0.1 && !player.sneaking) {
                 float e = 0.391F + d * 0.2F;
-                player.clientVelocity = player.clientVelocity.mul(e, 1, e);
+                player.eotVelocity = player.eotVelocity.mul(e, 1, e);
             }
         }
     }
