@@ -153,6 +153,9 @@ public abstract class PredictionEngine {
         vectors.addAll(list);
     }
 
+    // Just letting you know, this is not accurate, but it works, so I don't really care
+    // This should be in end of tick, if you want to get the actual climbing speed (for VFP or to fix this code)
+    // (player.climbingSpeed / 0.98) + 0.08, oh and this will false when it's not normal prediction, TODO: fix this.
     protected void addClimbingToPossibilities(final List<Vector> vectors) {
         if (!player.climbing || !player.inputData.contains(PlayerAuthInputData.JUMPING) && !player.horizontalCollision) {
             return;
