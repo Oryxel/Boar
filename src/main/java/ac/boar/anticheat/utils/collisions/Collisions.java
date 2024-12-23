@@ -161,7 +161,6 @@ public final class Collisions {
         return list;
     }
 
-    // TODO: compensated world
     private static void addCollisionBoxesToList(BoarPlayer player, MutableBlockPos blockPos, BoundingBox boundingBox, List<BoundingBox> list, boolean compensated) {
         GeyserSession session = player.getSession();
         BlockState state;
