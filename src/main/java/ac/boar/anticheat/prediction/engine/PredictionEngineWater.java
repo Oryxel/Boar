@@ -66,7 +66,7 @@ public class PredictionEngineWater extends PredictionEngine {
         lv = lv.mul(f, 0.8F, f);
         lv = this.applyFluidMovingSpeed(e, bl, lv);
 
-        if (player.horizontalCollision && Collisions.doesNotCollide(player, lv.x, lv.y + player.getStepHeight() - player.y + player.lastY, lv.z)) {
+        if (player.horizontalCollision && Collisions.doesNotCollide(player, lv.x, lv.y + player.getStepHeight() - player.y + player.prevY, lv.z)) {
             lv = new Vec3f(lv.x, 0.3F, lv.z);
         }
 

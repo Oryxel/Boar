@@ -2,12 +2,17 @@ package ac.boar.anticheat.user;
 
 import ac.boar.anticheat.user.api.BoarPlayer;
 import org.geysermc.geyser.api.connection.GeyserConnection;
+import org.geysermc.geyser.session.GeyserSession;
 
 import java.util.HashMap;
 
 public class BoarPlayerManager extends HashMap<GeyserConnection, BoarPlayer> {
     public void add(GeyserConnection connection) {
-        final BoarPlayer player = new BoarPlayer(connection);
+        if (!(connection instanceof GeyserSession)) {
+            return;
+        }
+
+        final BoarPlayer player = new BoarPlayer((GeyserSession) connection);
         player.init();
         this.put(connection, player);
     }

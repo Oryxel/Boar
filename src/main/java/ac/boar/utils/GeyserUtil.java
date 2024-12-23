@@ -36,7 +36,7 @@ public class GeyserUtil {
 
         try {
             TcpSession javaSession = getJavaSession(player, connection);
-            player.setJavaSession(javaSession);
+            player.setTcpSession(javaSession);
         } catch (Exception ignored) {
         }
     }

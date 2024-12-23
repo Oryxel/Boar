@@ -24,7 +24,6 @@ import org.cloudburstmc.protocol.bedrock.BedrockSession;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.packet.NetworkStackLatencyPacket;
-import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.entity.attribute.GeyserAttributeType;
 import org.geysermc.geyser.level.block.Blocks;
@@ -44,11 +43,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @RequiredArgsConstructor
 public class BoarPlayer {
-    private final GeyserConnection connection;
+    private final GeyserSession connection;
     public final long joinedTime = System.currentTimeMillis();
 
     @Getter @Setter private BedrockSession bedrockSession;
-    @Getter @Setter private TcpSession javaSession;
+    @Getter @Setter private TcpSession tcpSession;
 
     public final TeleportUtil teleportUtil = new TeleportUtil(this);
     public final LatencyUtil latencyUtil = new LatencyUtil(this);
@@ -67,9 +66,9 @@ public class BoarPlayer {
             .put(EntityPose.CROUCHING, EntityDimensions.changing(0.6F, 1.5F).withEyeHeight(1.27F))
             .put(EntityPose.DYING, EntityDimensions.fixed(0.2F, 0.2F).withEyeHeight(1.62F)).build();
 
-    public long runtimeEntityId, javaId;
+    public long runtimeEntityId, javaEntityId;
 
-    public float lastX, x, lastY, y, lastZ, z;
+    public float prevX, x, prevY, y, prevZ, z;
     public long tick;
 
     public boolean onGround, wasGround;
@@ -96,9 +95,7 @@ public class BoarPlayer {
 
     public Vector3i supportingBlockPos = null;
 
-    public double extraUncertainOffset = 0;
-
-    public Vec3f lastClientVelocity = Vec3f.ZERO, clientVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
+    public Vec3f prevEOT = Vec3f.ZERO, eotVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
 
     public Vec3f waterFluidSpeed = Vec3f.ZERO, lavaFluidSpeed = Vec3f.ZERO;
@@ -188,7 +185,7 @@ public class BoarPlayer {
     }
 
     public MinecraftCodecHelper getCodecHelper() {
-        return (MinecraftCodecHelper) getJavaSession().getCodecHelper();
+        return (MinecraftCodecHelper) getTcpSession().getCodecHelper();
     }
 
     public boolean isInLava() {
@@ -248,7 +245,7 @@ public class BoarPlayer {
     }
 
     public GeyserSession getSession() {
-        return (GeyserSession) connection;
+        return this.connection;
     }
 
     public float getHeight() {
@@ -274,7 +271,7 @@ public class BoarPlayer {
     }
 
     public BlockState getBlockStateAtPosLast() {
-        return compensatedWorld.getBlockState(Vector3i.from(lastX, lastY, lastZ));
+        return compensatedWorld.getBlockState(Vector3i.from(prevX, prevY, prevZ));
     }
 
     public BlockState getBlockStateAtPos() {
@@ -303,9 +300,9 @@ public class BoarPlayer {
 //                return (!((double)offset <= 0.5) || !blockState.isIn(BlockTags.FENCES)) && !blockState.isIn(BlockTags.WALLS) && !(blockState.getBlock() instanceof FenceGateBlock) ? blockPos.withY(MathHelper.floor(this.pos.y - (double)offset)) : blockPos;
 //            }
         } else {
-            int i = (int) Math.floor(this.lastX);
-            int j = (int) Math.floor(this.lastY - (double)offset);
-            int k = (int) Math.floor(this.lastZ);
+            int i = (int) Math.floor(this.prevX);
+            int j = (int) Math.floor(this.prevY - (double)offset);
+            int k = (int) Math.floor(this.prevZ);
             return Vector3i.from(i, j, k);
         }
     }
@@ -333,7 +330,7 @@ public class BoarPlayer {
     }
 
     protected float getJumpVelocityMultiplier() {
-        float f = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(Vector3i.from(lastX, lastY, lastZ)));
+        float f = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(Vector3i.from(prevX, prevY, prevZ)));
         float g = BlockUtil.getJumpVelocityMultiplier(compensatedWorld.getBlockState(this.getVelocityAffectingPos()));
 
         return f == 1.0 ? g : f;

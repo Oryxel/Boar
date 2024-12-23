@@ -18,7 +18,7 @@ public final class TcpSessionListener extends SessionAdapter {
 
     @Override
     public void packetReceived(Session session, Packet packet) {
-        if (session != player.getJavaSession()) return;
+        if (session != player.getTcpSession()) return;
 
         final PacketSendEvent event = new PacketSendEvent(player, packet);
         for (final PacketListener listener : JavaPacketEvents.getListeners()) {

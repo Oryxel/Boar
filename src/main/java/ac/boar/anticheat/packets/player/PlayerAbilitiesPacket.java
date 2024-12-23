@@ -39,7 +39,7 @@ public class PlayerAbilitiesPacket implements GeyserPacketListener, PacketListen
     @Override
     public void onPacketSend(PacketSendEvent event) {
         final BoarPlayer player = event.getPlayer();
-        if (!(event.getPacket() instanceof ClientboundUpdateAttributesPacket attributesPacket) || attributesPacket.getEntityId() != player.javaId) {
+        if (!(event.getPacket() instanceof ClientboundUpdateAttributesPacket attributesPacket) || attributesPacket.getEntityId() != player.javaEntityId) {
             return;
         }
 
