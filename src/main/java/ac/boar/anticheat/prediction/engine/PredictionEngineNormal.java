@@ -52,13 +52,13 @@ public class PredictionEngineNormal extends PredictionEngine {
         StatusEffect statusEffect = player.getStatusEffect(Effect.LEVITATION);
         if (statusEffect != null) {
             d += (0.05F * (statusEffect.getAmplifier() + 1) - vec3f.y) * 0.2F;
-        } /* else if (!this.getWorld().isChunkLoaded(blockPos)) {
-            if (this.getY() > (double)this.getWorld().getBottomY()) {
-                d = -0.1;
+        } else if (!player.compensatedWorld.isChunkLoaded(blockPos.getX(), blockPos.getZ())) {
+            if (player.y > player.compensatedWorld.getMinY()) {
+                d = -0.1F;
             } else {
-                d = 0.0;
+                d = 0;
             }
-        } */ else {
+        } else {
             d -= player.getEffectiveGravity();
         }
 
