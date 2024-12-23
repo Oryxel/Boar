@@ -72,7 +72,7 @@ public class BoarPlayer {
     public float lastX, x, lastY, y, lastZ, z;
     public long tick;
 
-    public boolean onGround, lastGround;
+    public boolean onGround, wasGround;
     public float fallDistance;
 
     public float yaw, pitch;
@@ -89,10 +89,10 @@ public class BoarPlayer {
     public boolean wasInPowderSnow, inPowderSnow;
     public boolean wasTouchingWater, touchingWater, submergedInWater;
 
-    public boolean collideX, collideZ, collideY;
+    public boolean verticalCollision, horizontalCollision;
 
-    public boolean canClimb, wasCanClimb;
-    public float lastClimbingSpeed, climbingSpeed;
+    public boolean climbing;
+    public float climbingSpeed;
 
     public Vector3i supportingBlockPos = null;
 
@@ -269,7 +269,7 @@ public class BoarPlayer {
         BlockState lastState = getBlockStateAtPosLast();
 
         boolean fastClimbing = !state.is(Blocks.SCAFFOLDING) && !lastState.is(Blocks.SCAFFOLDING);
-        climbingSpeed = fastClimbing ? 0.20000076F : 0.15000153F;
+        this.climbingSpeed = fastClimbing ? 0.20000076F : 0.15000153F;
         return cache.is(BlockTag.CLIMBABLE, state.block()) || cache.is(BlockTag.CLIMBABLE, lastState.block());
     }
 
