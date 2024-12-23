@@ -64,6 +64,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         player.lastClaimedEOT = player.claimedEOT.clone();
         player.claimedEOT = packet.getDelta();
 
+        player.lastClientVelocity = player.clientVelocity.clone();
         // Is this EOT fault or travel/collision fault? This is for debugging that.
         // player.clientVelocity = new Vec3f(player.lastClaimedEOT);
 

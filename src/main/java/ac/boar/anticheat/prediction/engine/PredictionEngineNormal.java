@@ -16,12 +16,12 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     @Override
-    public Vec3f jump(Vec3f client) {
+    public Vec3f jump(boolean sprinting, Vec3f client) {
         Vec3f vec3f = client.clone();
         float f = player.getJumpVelocity();
         if (!(f <= 1.0E-5F)) {
             vec3f = new Vec3f(vec3f.x, Math.max(f, vec3f.y), vec3f.z);
-            if (player.sprinting) {
+            if (sprinting) {
                 float g = player.yaw * 0.017453292F;
                 vec3f = vec3f.add(new Vec3f(-TrigMath.sin(g) * 0.2F, 0.0F, TrigMath.cos(g) * 0.2F));
             }
