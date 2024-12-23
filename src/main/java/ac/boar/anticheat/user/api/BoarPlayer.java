@@ -310,6 +310,16 @@ public class BoarPlayer {
         }
     }
 
+    public float getVelocityMultiplier() {
+        final BlockState lv = this.compensatedWorld.getBlockState(MathUtil.floor(x), MathUtil.floor(y), MathUtil.floor(z));
+        float f = BlockUtil.getVelocityMultiplier(lv);
+        if (!lv.is(Blocks.WATER) && !lv.is(Blocks.BUBBLE_COLUMN)) {
+            return (double)f == 1.0 ? BlockUtil.getVelocityMultiplier(compensatedWorld.getBlockState(this.getVelocityAffectingPos())) : f;
+        } else {
+            return f;
+        }
+    }
+
     public float getJumpVelocity() {
         return this.getJumpVelocity(1.0F);
     }
