@@ -4,7 +4,6 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.protocol.event.bedrock.BedrockPacketListener;
 import ac.boar.protocol.event.bedrock.PacketReceivedEvent;
 import ac.boar.protocol.event.bedrock.geyser.GeyserPacketListener;
-import ac.boar.protocol.event.bedrock.geyser.GeyserSendEvent;
 import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;

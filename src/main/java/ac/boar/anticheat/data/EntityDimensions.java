@@ -18,8 +18,7 @@ public record EntityDimensions(float width, float height, float eyeHeight, boole
 
 	public BoundingBox getBoxAt(float x, float y, float z) {
 		float g = this.width / 2.0F;
-		float h = this.height;
-		return new BoundingBox(x - g, y, z - g, x + g, y + h, z + g);
+        return new BoundingBox(x - g, y, z - g, x + g, y + this.height, z + g);
 	}
 
 	public EntityDimensions scaled(float ratio) {
