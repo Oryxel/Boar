@@ -98,6 +98,8 @@ public class BoarPlayer {
     public Vec3f prevEOT = Vec3f.ZERO, eotVelocity = Vec3f.ZERO, actualVelocity = Vec3f.ZERO, predictedVelocity = Vec3f.ZERO;
     public Vec3f movementInput = Vec3f.ZERO;
 
+    public Vec3f movementMultiplier = Vec3f.ZERO;
+
     public Vec3f waterFluidSpeed = Vec3f.ZERO, lavaFluidSpeed = Vec3f.ZERO;
 
     public Vector3f claimedEOT = Vector3f.ZERO, lastClaimedEOT = Vector3f.ZERO;
@@ -218,7 +220,15 @@ public class BoarPlayer {
     }
 
     public void updateBoundingBox() {
-        boundingBox = BoundingBox.getBoxAt(x, y, z, EntityDefinitions.PLAYER.width(), getHeight());
+        this.boundingBox = calculateBoundingBox(x, y, z);
+    }
+
+    public BoundingBox calculateBoundingBox(Vec3f vec3f) {
+        return calculateBoundingBox(vec3f.x, vec3f.y, vec3f.z);
+    }
+
+    public BoundingBox calculateBoundingBox(float x, float y, float z) {
+        return POSE_DIMENSIONS.get(pose).getBoxAt(x, y, z);
     }
 
     public void tick() {
@@ -246,10 +256,6 @@ public class BoarPlayer {
 
     public GeyserSession getSession() {
         return this.connection;
-    }
-
-    public float getHeight() {
-        return POSE_DIMENSIONS.get(pose).height();
     }
 
     public float getMovementSpeed(boolean sprinting, float slipperiness) {

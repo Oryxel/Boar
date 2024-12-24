@@ -44,8 +44,15 @@ public abstract class PredictionEngine {
         List<Vector> possibilities = this.gatherAllPossibilities();
         Vec3f beforeCollision = Vec3f.ZERO, afterCollision = Vec3f.ZERO;
         double closetOffset = Double.MAX_VALUE;
+        boolean movementMultiplied = false;
         for (Vector vector : possibilities) {
-            final Vec3f bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
+            Vec3f bc = Collisions.adjustMovementForSneaking(player, vector.getVelocity());
+            if (player.movementMultiplier.lengthSquared() > 1.0E-7) {
+                bc = bc.mul(player.movementMultiplier);
+                player.movementMultiplier = Vec3f.ZERO;
+                movementMultiplied = true;
+            }
+
             final Vec3f ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc, true);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
@@ -77,6 +84,10 @@ public abstract class PredictionEngine {
 
         if (offset < 1e-4) {
             clientVelocity = player.actualVelocity.clone();
+        }
+
+        if (movementMultiplied) {
+            clientVelocity = Vec3f.ZERO;
         }
 
         if (bl) {
