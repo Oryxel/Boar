@@ -19,6 +19,7 @@ public class LivingTicker extends EntityTicker {
         super.tickBlockCollision();
 
         player.updateBoundingBox();
+        super.checkBlockCollision();
     }
 
     public void tickMovement() {

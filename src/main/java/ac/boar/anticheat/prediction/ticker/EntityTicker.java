@@ -137,6 +137,21 @@ public class EntityTicker {
         }
     }
 
+    protected void checkBlockCollision() {
+        final Vector3i vector3i = Vector3i.from(player.boundingBox.minX + 0.001D, player.boundingBox.minY + 0.001D, player.boundingBox.minZ + 0.001D);
+        final Vector3i vector31i = Vector3i.from(player.boundingBox.maxX - 0.001D, player.boundingBox.maxY - 0.001D, player.boundingBox.maxZ - 0.001D);
+
+        final MutableBlockPos mutable = new MutableBlockPos(0, 0, 0);
+        for (int i = vector3i.getX(); i <= vector31i.getX(); ++i) {
+            for (int j = vector3i.getY(); j <= vector31i.getY(); ++j) {
+                for (int k = vector3i.getZ(); k <= vector31i.getZ(); ++k) {
+                    mutable.set(i, j, k);
+                    BlockUtil.onEntityCollision(player, player.compensatedWorld.getBlockState(mutable.x, mutable.y, mutable.z), mutable);
+                }
+            }
+        }
+    }
+
     protected final void tickBlockCollision() {
         if (player.onGround) {
             Vector3i lv = player.getLandingPos();

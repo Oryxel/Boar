@@ -16,7 +16,7 @@ public class DebugOffsetA extends OffsetHandlerCheck {
     public void onPredictionComplete(double offset) {
         Vec3f predicted = player.predictedVelocity;
 
-        if (player.actualVelocity.length() > 0) {
+        if (player.actualVelocity.length() > 0 || offset > 1e-4) {
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
                     predicted.x + "," + predicted.y + "," + predicted.z);
 

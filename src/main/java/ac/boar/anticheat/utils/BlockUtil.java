@@ -4,6 +4,7 @@ import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.collisions.BedrockCollision;
 import ac.boar.utils.math.BoundingBox;
 import ac.boar.utils.math.MutableBlockPos;
+import ac.boar.utils.math.Vec3f;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.BlockStateValues;
 import org.geysermc.geyser.level.block.Blocks;
@@ -11,11 +12,25 @@ import org.geysermc.geyser.level.block.Fluid;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.translator.collision.BlockCollision;
 import org.geysermc.geyser.util.BlockUtils;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BlockUtil {
+    public static void onEntityCollision(BoarPlayer player, BlockState state, MutableBlockPos pos) {
+        if (state.is(Blocks.SWEET_BERRY_BUSH)) {
+            player.movementMultiplier = new Vec3f(0.8F, 0.75F, 0.8F);
+        } else if (state.is(Blocks.POWDER_SNOW)) {
+            player.movementMultiplier = new Vec3f(0.9F, 1.5F, 0.9F);
+        } else if (state.is(Blocks.COBWEB)) {
+            player.movementMultiplier = new Vec3f(0.25F, 0.05F, 0.25F);
+            if (player.hasStatusEffect(Effect.WEAVING)) {
+                player.movementMultiplier = new Vec3f(0.5F, 0.25F, 0.5F);
+            }
+        }
+    }
+
     public static boolean blocksMovement(BoarPlayer player, MutableBlockPos vector3i, Fluid fluid, BlockState state) {
         if (state.is(Blocks.ICE)) {
             return false;
