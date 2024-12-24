@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class Vector implements Cloneable {
     public boolean sprinting = false;
-    public Vec3f beforeTravel = Vec3f.ZERO;
 
     private Vec3f velocity;
     private VectorType type;
