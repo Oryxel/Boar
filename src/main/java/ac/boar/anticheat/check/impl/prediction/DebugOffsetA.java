@@ -34,6 +34,10 @@ public class DebugOffsetA extends OffsetHandlerCheck {
 //            Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
 //            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + player.claimedEOT.distance(player.clientVelocity.toVector3f())
 //                    + ", EOT: " + player.claimedEOT.toString());
+
+            if (player.sprinting != player.closetVector.sprinting) {
+                Bukkit.broadcastMessage("sprinting speed not match -> since sprinting:" + player.sinceSprinting);
+            }
         }
     }
 }

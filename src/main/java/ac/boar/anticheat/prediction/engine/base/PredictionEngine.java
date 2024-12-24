@@ -143,9 +143,6 @@ public abstract class PredictionEngine {
     protected void applyTravelToPossibilities(List<Vector> vectors) {
         final List<Vector> list = new ArrayList<>();
 
-        // Is this my fault (maybe it is)? Sometimes player won't stop sprinting 3-4 ticks after sending STOP_SPRINTING.
-        // Also in a BUNCH of cases (ex: slamming your head against the wall) sprinting going to de-sync.
-        // Fine, let's allow player sprint if ticks since sprinting is < 6. and also let player choose to NOT sprint.
         for (Vector vector : vectors) {
             list.add(new Vector(travel(false, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId()));
 
@@ -193,12 +190,6 @@ public abstract class PredictionEngine {
             return;
         }
 
-        // Is this my fault (maybe it is)? Sometimes player won't stop sprinting 3-4 ticks after sending STOP_SPRINTING.
-        // Also in a BUNCH of cases (ex: slamming your head against the wall) sprinting going to de-sync.
-        // Fine, let's allow player sprint if ticks since sprinting is < 6. and also let player choose to NOT sprint.
-
-        // Also for jumping, not entirely sure but sprinting for jumping can de-sync from travel sprinting speed?
-        // This is too much of a pain... I have to check for 4 possibilities as soon as player start sprint jumping.
         final List<Vector> list = new ArrayList<>();
         for (Vector vector : vectors) {
             list.add(new Vector(jump(false, vector.getVelocity()), vector.getType(), vector.getTransactionId()));
