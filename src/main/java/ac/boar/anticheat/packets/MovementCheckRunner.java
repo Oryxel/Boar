@@ -79,37 +79,31 @@ public class MovementCheckRunner implements BedrockPacketListener {
     }
 
     private void updateInputData(BoarPlayer player) {
-        player.wasGliding = player.gliding;
-        if (player.inputData.contains(PlayerAuthInputData.START_GLIDING)) {
-            // TODO: prevent player from spoofing this.
-            player.gliding = true;
-        } else if (player.inputData.contains(PlayerAuthInputData.STOP_GLIDING)) {
-            player.gliding = false;
-        }
+        for (final PlayerAuthInputData input : player.inputData) {
+            player.wasGliding = player.gliding;
+            player.wasSprinting = player.sprinting;
+            player.wasSneaking = player.sneaking;
+            player.wasSwimming = player.swimming;
 
-        player.wasSprinting = player.sprinting;
-        if (player.inputData.contains(PlayerAuthInputData.START_SPRINTING)) {
-            // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
-            // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
-            // Don't let player do backwards sprinting!
-            player.sprinting = player.movementInput.z > 0;
-        } else if (player.inputData.contains(PlayerAuthInputData.STOP_SPRINTING)) {
-            player.sprinting = false;
-        }
+            switch (input) {
+                // TODO: Prevent player from spoofing gliding.
+                case START_GLIDING -> player.gliding = true;
+                case STOP_GLIDING -> player.gliding = false;
 
-        player.wasSneaking = player.sneaking;
-        if (player.inputData.contains(PlayerAuthInputData.START_SNEAKING)) {
-            player.sneaking = true;
-            player.sprinting = false;
-        } else if (player.inputData.contains(PlayerAuthInputData.STOP_SNEAKING)) {
-            player.sneaking = false;
-        }
+                // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
+                // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
+                // Don't let player do backwards sprinting!
+                case START_SPRINTING -> player.sprinting = player.movementInput.z > 0;
+                // Fun fact, minecraft bedrock actually somehow managed to send both START_SPRINTING and STOP_SPRINTING on the same tick. nice!
+                // Maybe for other status too, not just sprinting, haven't test long enough to know.
+                case STOP_SPRINTING -> player.sprinting = false;
 
-        player.wasSwimming = player.swimming;
-        if (player.inputData.contains(PlayerAuthInputData.START_SWIMMING)) {
-            player.swimming = true;
-        } else if (player.inputData.contains(PlayerAuthInputData.STOP_SWIMMING)) {
-            player.swimming = false;
+                case START_SNEAKING -> player.sneaking = true;
+                case STOP_SNEAKING -> player.sneaking = false;
+
+                case START_SWIMMING -> player.swimming = true;
+                case STOP_SWIMMING -> player.swimming = false;
+            }
         }
 
         if (!player.sprinting) {

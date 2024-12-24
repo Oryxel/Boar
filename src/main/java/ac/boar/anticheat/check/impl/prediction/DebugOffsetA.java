@@ -17,19 +17,20 @@ public class DebugOffsetA extends OffsetHandlerCheck {
         Vec3f predicted = player.predictedVelocity;
 
         if (player.actualVelocity.length() > 0 || offset > 1e-4) {
-            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
-                    predicted.x + "," + predicted.y + "," + predicted.z);
+//            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
+//                    predicted.x + "," + predicted.y + "," + predicted.z);
+//
+//            Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
+//                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
+//
+//            Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
+//            Bukkit.broadcastMessage("CV: " + player.prevEOT.toVector3f().toString());
+//
+//            Bukkit.broadcastMessage("A EOT: " + player.eotVelocity.toVector3f().toString());
+//
+//            double eotOffset = player.claimedEOT.distance(player.eotVelocity.toVector3f());
+//            Bukkit.broadcastMessage("EOT O: " + (eotOffset > 1e-4 ? "§b" : "§a") + eotOffset  + "," + player.claimedEOT.toString());
 
-            Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
-                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
-
-            Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
-            Bukkit.broadcastMessage("CV: " + player.prevEOT.toVector3f().toString());
-
-            Bukkit.broadcastMessage("A EOT: " + player.eotVelocity.toVector3f().toString());
-
-            double eotOffset = player.claimedEOT.distance(player.eotVelocity.toVector3f());
-            Bukkit.broadcastMessage("EOT O: " + (eotOffset > 1e-4 ? "§b" : "§a") + eotOffset  + "," + player.claimedEOT.toString());
 //            Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
 //            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + player.claimedEOT.distance(player.clientVelocity.toVector3f())
 //                    + ", EOT: " + player.claimedEOT.toString());
