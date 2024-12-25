@@ -31,7 +31,7 @@ public class PredictionEngineNormal extends PredictionEngine {
 
     @Override
     public boolean canJump() {
-        return player.inputData.contains(PlayerAuthInputData.START_JUMPING);
+        return player.inputData.contains(PlayerAuthInputData.START_JUMPING) && player.onGround;
     }
 
     @Override

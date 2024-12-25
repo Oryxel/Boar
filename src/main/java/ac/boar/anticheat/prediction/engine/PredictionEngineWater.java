@@ -55,7 +55,6 @@ public class PredictionEngineWater extends PredictionEngine {
     @Override
     public Vec3f applyEndOfTick(Vec3f vec3f) {
         float f = player.sprinting ? 0.9F : 0.8F;
-        boolean bl = player.eotVelocity.y <= 0.0;
         float e = player.getEffectiveGravity(vec3f);
 
         Vec3f lv = vec3f.clone();
@@ -64,7 +63,7 @@ public class PredictionEngineWater extends PredictionEngine {
 //        }
 
         lv = lv.mul(f, 0.8F, f);
-        lv = this.applyFluidMovingSpeed(e, bl, lv);
+        lv = this.applyFluidMovingSpeed(e, lv);
 
         if (player.horizontalCollision && Collisions.doesNotCollide(player, lv.x, lv.y + player.getStepHeight() - player.y + player.prevY, lv.z)) {
             lv = new Vec3f(lv.x, 0.3F, lv.z);
@@ -86,16 +85,9 @@ public class PredictionEngineWater extends PredictionEngine {
         return player.inputData.contains(PlayerAuthInputData.WANT_UP) && allowed;
     }
 
-    private Vec3f applyFluidMovingSpeed(float gravity, boolean falling, Vec3f motion) {
+    private Vec3f applyFluidMovingSpeed(float gravity, Vec3f motion) {
         if (gravity != 0.0) {
-            float e;
-            if (falling && Math.abs(motion.y - 0.005) >= 0.003 && Math.abs(motion.y - gravity / 16.0) < 0.003) {
-                e = -0.003F;
-            } else {
-                e = motion.y - gravity / 16.0f;
-            }
-
-            return new Vec3f(motion.x, e, motion.z);
+            return new Vec3f(motion.x, motion.y - gravity / 16.0f, motion.z);
         } else {
             return motion;
         }
