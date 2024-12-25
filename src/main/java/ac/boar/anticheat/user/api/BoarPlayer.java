@@ -91,7 +91,7 @@ public class BoarPlayer {
 
     public boolean verticalCollision, horizontalCollision;
 
-    public boolean climbing;
+    public boolean climbing, fastClimbing;
     public float climbingSpeed;
 
     public Vector3i supportingBlockPos = null;
@@ -235,6 +235,7 @@ public class BoarPlayer {
     public void tick() {
         this.attributes.forEach((_, a) -> a.tick());
         this.movementSpeed = this.attributes.get(GeyserAttributeType.MOVEMENT_SPEED).getValue();
+        this.movementSpeed *= (this.hasSprintingAttribute || this.sprinting) ? 1.3F : 1;
 
         List<Effect> ranOutStatus = new ArrayList<>();
         for (Map.Entry<Effect, StatusEffect> entry : this.statusMap.entrySet()) {
@@ -267,14 +268,17 @@ public class BoarPlayer {
         return sprinting ? 0.025999999F : 0.02F;
     }
 
+    public boolean wantToClimb() {
+        return this.horizontalCollision || this.inputData.contains(PlayerAuthInputData.JUMPING) && this.climbing;
+    }
+
     public boolean isClimbing() {
         final TagCache cache = getSession().getTagCache();
         BlockState state = getBlockStateAtPos();
-        BlockState lastState = getBlockStateAtPosLast();
 
-        boolean fastClimbing = !state.is(Blocks.SCAFFOLDING) && !lastState.is(Blocks.SCAFFOLDING);
-        this.climbingSpeed = fastClimbing ? 0.20000076F : 0.15000153F;
-        return cache.is(BlockTag.CLIMBABLE, state.block()) || cache.is(BlockTag.CLIMBABLE, lastState.block());
+        this.fastClimbing = state.is(Blocks.LADDER) || state.is(Blocks.VINE);
+        this.climbingSpeed = state.is(Blocks.SCAFFOLDING) ? 0.15F : 0.2F;
+        return cache.is(BlockTag.CLIMBABLE, state.block());
     }
 
     public BlockState getBlockStateAtPosLast() {

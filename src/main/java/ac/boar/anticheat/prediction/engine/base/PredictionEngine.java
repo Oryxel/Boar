@@ -36,7 +36,6 @@ public abstract class PredictionEngine {
         addJumpingToPossibilities(vectors);
 
         applyTravelToPossibilities(vectors);
-        addClimbingToPossibilities(vectors);
         return vectors;
     }
 
@@ -144,27 +143,6 @@ public abstract class PredictionEngine {
         for (Vector vector : vectors) {
             vector.setVelocity(travel(vector.getVelocity(), player.movementInput));
         }
-    }
-
-    // Just letting you know, this is not accurate, but it works, so I don't really care
-    // This should be in end of tick, if you want to get the actual climbing speed (for VFP or to fix this code)
-    // (player.climbingSpeed / 0.98) + 0.08, oh and this will false when it's not normal prediction, TODO: fix this.
-    protected void addClimbingToPossibilities(final List<Vector> vectors) {
-        if (!player.climbing || !player.inputData.contains(PlayerAuthInputData.JUMPING) && !player.horizontalCollision) {
-            return;
-        }
-
-        final List<Vector> list = new ArrayList<>();
-        for (Vector vector : vectors) {
-            list.add(vector);
-
-            Vector vector1 = vector.clone();
-            vector1.setVelocity(new Vec3f(vector1.getVelocity().x, player.climbingSpeed, vector1.getVelocity().z));
-            list.add(vector1);
-        }
-
-        vectors.clear();
-        vectors.addAll(list);
     }
 
     protected void addVelocityToPossibilities(final List<Vector> vectors) {

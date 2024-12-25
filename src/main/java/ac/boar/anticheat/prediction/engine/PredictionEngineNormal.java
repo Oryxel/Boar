@@ -61,24 +61,32 @@ public class PredictionEngineNormal extends PredictionEngine {
         } else {
             d -= player.getEffectiveGravity(vec3f);
         }
+        d *= 0.98F;
 
-        return new Vec3f(vec3f.x * g, d * 0.98F, vec3f.z * g);
+        if (player.fastClimbing && player.wantToClimb()) {
+            d = player.climbingSpeed;
+        }
+
+        return new Vec3f(vec3f.x * g, d, vec3f.z * g);
     }
 
     private Vec3f applyMovementInput(Vec3f client, Vec3f movementInput, float slipperiness) {
         Vec3f vec3f = updateVelocity(client, movementInput, player.getMovementSpeed(slipperiness));
         vec3f = applyClimbingSpeed(vec3f);
+        if (!player.fastClimbing && player.wantToClimb()) {
+            vec3f.y = player.climbingSpeed;
+        }
 
         return vec3f;
     }
 
     private Vec3f applyClimbingSpeed(Vec3f motion) {
-        if (player.climbing && player.climbingSpeed > 0.2) {
+        if (player.climbing && player.climbingSpeed >= 0.2) {
             // this.onLanding();
             float d = /* MathUtil.clamp(motion.x, -0.20000076F, 0.20000076F) */ motion.x;
             float e = /* MathUtil.clamp(motion.z, -0.20000076F, 0.20000076F) */ motion.z;
-            float g = Math.max(motion.y, -0.20000076F);
-            if (g < 0.0 && !player.inputData.contains(PlayerAuthInputData.WANT_UP) && (player.sneaking || player.wasSneaking)) {
+            float g = Math.max(motion.y, -0.2F);
+            if (g < 0.0 && !(player.inputData.contains(PlayerAuthInputData.JUMPING) && player.movementInput.z > 0) && (player.sneaking || player.wasSneaking)) {
                 g = 0.0F;
             }
 
