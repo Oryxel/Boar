@@ -270,7 +270,7 @@ public class BoarPlayer {
     }
 
     public boolean wantToClimb() {
-        return this.horizontalCollision || this.inputData.contains(PlayerAuthInputData.JUMPING) && this.climbing;
+        return (this.horizontalCollision || this.inputData.contains(PlayerAuthInputData.JUMPING)) && this.climbing;
     }
 
     public boolean isClimbing() {
