@@ -13,7 +13,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 - An uncompleted prediction engine that only works on normal/elytra movement. (1e-4 accuracy)
 
 ## Problems
-
+- Player can send both **START** and **STOP** sprinting at the same time WTF.
 - Floating point errors break collision, causing false positive, or loss precision
 - Player can clip into walls (they will glitch back anyway, but it will still cause false) mentioned
   in [3370](https://github.com/GeyserMC/Geyser/issues/3370) and [4269](https://github.com/GeyserMC/Geyser/issues/4269)
@@ -28,7 +28,6 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 - Why the **HELL** position (and everything else) stored in floating point. (just switch to double this is stupid [11418](https://bugs.mojang.com/browse/MCPE-11418))
 - A lot of bounding boxes is different, ~~step motion seems to be different (not sure)~~?
-- Sprinting/Sneaking status client sent doesn't seem to match up with player movement
 - NetworkStackLatency (ping packet), is deprecated, and might be removed soon (hope not).
 - CorrectPlayerMovePrediction is weird, the velocity player actually moves seems to be different from
   the one we sent, (it's not EOT or anything, it's just that...?), this is a TODO.
