@@ -59,7 +59,7 @@ public class PredictionEngineNormal extends PredictionEngine {
                 d = 0;
             }
         } else {
-            d -= player.getEffectiveGravity();
+            d -= player.getEffectiveGravity(vec3f);
         }
 
         return new Vec3f(vec3f.x * g, d * 0.98F, vec3f.z * g);

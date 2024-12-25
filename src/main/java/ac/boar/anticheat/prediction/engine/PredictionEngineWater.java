@@ -56,7 +56,7 @@ public class PredictionEngineWater extends PredictionEngine {
     public Vec3f applyEndOfTick(Vec3f vec3f) {
         float f = player.closetVector.sprinting ? 0.9F : 0.8F;
         boolean bl = player.eotVelocity.y <= 0.0;
-        float e = player.getEffectiveGravity();
+        float e = player.getEffectiveGravity(vec3f);
 
         Vec3f lv = vec3f.clone();
 //        if ((player.collideZ || player.collideX) && this.isClimbing()) {

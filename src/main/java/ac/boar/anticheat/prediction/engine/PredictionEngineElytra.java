@@ -33,7 +33,7 @@ public class PredictionEngineElytra extends PredictionEngine {
         float f = player.pitch * 0.017453292F;
         float d = (float) GenericMath.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z);
         float e = oldVelocity.horizontalLength();
-        float g = player.getEffectiveGravity();
+        float g = player.getEffectiveGravity(oldVelocity);
         float h = MathUtil.square((float) Math.cos(f));
         oldVelocity = oldVelocity.add(0.0F, g * (-1.0F + h * 0.75F), 0.0F);
         float i;

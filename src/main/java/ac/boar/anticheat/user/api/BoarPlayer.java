@@ -341,8 +341,8 @@ public class BoarPlayer {
         return f == 1.0 ? g : f;
     }
 
-    public float getEffectiveGravity() {
-        return (float) (eotVelocity.y <= 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01) : this.getFinalGravity());
+    public float getEffectiveGravity(final Vec3f vec3f) {
+        return vec3f.y < 0.0 && this.hasStatusEffect(Effect.SLOW_FALLING) ? Math.min(this.getFinalGravity(), 0.01F) : this.getFinalGravity();
     }
 
     public final float getFinalGravity() {
