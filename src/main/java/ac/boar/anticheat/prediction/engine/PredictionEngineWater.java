@@ -2,6 +2,7 @@ package ac.boar.anticheat.prediction.engine;
 
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
 
+import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.collisions.Collisions;
 import ac.boar.utils.math.Vec3f;
@@ -9,9 +10,19 @@ import org.bukkit.Bukkit;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.geyser.level.block.Fluid;
 
+import java.util.List;
+
 public class PredictionEngineWater extends PredictionEngine {
     public PredictionEngineWater(BoarPlayer player) {
         super(player);
+    }
+
+    @Override
+    protected void addTravelToPossibilities(List<Vector> vectors) {
+        for (Vector vector : vectors) {
+            vector.setVelocity(travel(player.sprinting, vector.getVelocity(), player.movementInput));
+            vector.setSprinting(player.sprinting);
+        }
     }
 
     @Override
@@ -20,11 +31,6 @@ public class PredictionEngineWater extends PredictionEngine {
         if (lv2.length() > 0.0) {
             Bukkit.broadcastMessage("water fluid!");
             lv2 = lv2.mul(0.014F);
-            if (Math.abs(vec3f.x) < 0.003 && Math.abs(vec3f.z) < 0.003 && lv2.length() < 0.0045000000000000005) {
-                Bukkit.broadcastMessage("0.003");
-                lv2 = lv2.normalize().mul(0.0045000000000000005F);
-            }
-
             vec3f = vec3f.add(lv2);
         }
 
@@ -32,29 +38,12 @@ public class PredictionEngineWater extends PredictionEngine {
             vec3f = vec3f.add(0, -0.04F, 0);
         }
 
-        float f = player.sprinting ? 0.9F : 0.8F;
-        float g = 0.02F;
-        float h = 0 /* (float)this.getAttributeValue(EntityAttributes.WATER_MOVEMENT_EFFICIENCY) */;
-        if (!player.onGround) {
-            h *= 0.5F;
-        }
-
-        if (h > 0.0F) {
-            f += (0.54600006F - f) * h;
-            g += (player.movementSpeed - g) * h;
-        }
-
-        // There is no dolphins grace in bedrock.
-//        if (this.hasStatusEffect(StatusEffects.DOLPHINS_GRACE)) {
-//            f = 0.96F;
-//        }
-
-        return this.updateVelocity(vec3f, movementInput, g);
+        return this.updateVelocity(vec3f, movementInput, 0.02F);
     }
 
     @Override
     public Vec3f applyEndOfTick(Vec3f vec3f) {
-        float f = player.closetVector.isSprinting() ? 0.9F : 0.8F;
+        float f = player.sprinting ? 0.9F : 0.8F;
         float e = player.getEffectiveGravity(vec3f);
 
         Vec3f lv = vec3f.clone();

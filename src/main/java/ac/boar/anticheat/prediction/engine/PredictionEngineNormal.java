@@ -2,6 +2,7 @@ package ac.boar.anticheat.prediction.engine;
 
 import ac.boar.anticheat.data.StatusEffect;
 import ac.boar.anticheat.prediction.engine.base.PredictionEngine;
+import ac.boar.anticheat.prediction.engine.data.Vector;
 import ac.boar.anticheat.user.api.BoarPlayer;
 import ac.boar.anticheat.utils.BlockUtil;
 import ac.boar.utils.math.Vec3f;
@@ -9,6 +10,9 @@ import org.cloudburstmc.math.TrigMath;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PredictionEngineNormal extends PredictionEngine {
     public PredictionEngineNormal(BoarPlayer player) {
@@ -32,6 +36,29 @@ public class PredictionEngineNormal extends PredictionEngine {
     @Override
     public boolean canJump() {
         return player.inputData.contains(PlayerAuthInputData.START_JUMPING) && player.onGround;
+    }
+
+    @Override
+    protected void addTravelToPossibilities(List<Vector> vectors) {
+        if (player.uncertainSprinting) {
+            final List<Vector> possibilities = new ArrayList<>();
+
+            for (Vector old : vectors) {
+                possibilities.add(new Vector(travel(false, old.getVelocity(), player.movementInput), old.getType(), old.getTransactionId()));
+
+                final Vector vector1 = new Vector(travel(true, old.getVelocity(), player.movementInput), old.getType(), old.getTransactionId());
+                vector1.setSprinting(true);
+                possibilities.add(vector1);
+            }
+
+            vectors.clear();
+            vectors.addAll(possibilities);
+            return;
+        }
+
+        for (Vector vector : vectors) {
+            vector.setVelocity(travel(player.sprinting, vector.getVelocity(), player.movementInput));
+        }
     }
 
     @Override

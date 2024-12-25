@@ -112,7 +112,7 @@ public class MovementCheckRunner implements BedrockPacketListener {
         }
 
         boolean isSprintingStupidity = (player.inputData.contains(START_SPRINTING) && player.movementInput.z > 0) && player.inputData.contains(STOP_SPRINTING);
-        player.uncertainSprinting = isSprintingStupidity || player.sprinting != player.hasSprintingAttribute;
+        player.uncertainSprinting = isSprintingStupidity || player.sprinting != player.hasSprintingAttribute || player.sinceSprinting == 1;
 
         if (!player.sprinting) {
             player.sinceSprinting++;

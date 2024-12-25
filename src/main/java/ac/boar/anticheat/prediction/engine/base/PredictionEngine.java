@@ -9,7 +9,6 @@ import ac.boar.anticheat.utils.collisions.Collisions;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.type.BedBlock;
@@ -140,25 +139,6 @@ public abstract class PredictionEngine {
     }
 
     protected void addTravelToPossibilities(List<Vector> vectors) {
-        if (player.uncertainSprinting) {
-            final List<Vector> possibilities = new ArrayList<>();
-
-            for (Vector old : vectors) {
-                possibilities.add(new Vector(travel(false, old.getVelocity(), player.movementInput), old.getType(), old.getTransactionId()));
-
-                final Vector vector1 = new Vector(travel(true, old.getVelocity(), player.movementInput), old.getType(), old.getTransactionId());
-                vector1.setSprinting(true);
-                possibilities.add(vector1);
-            }
-
-            vectors.clear();
-            vectors.addAll(possibilities);
-            return;
-        }
-        
-        for (Vector vector : vectors) {
-            vector.setVelocity(travel(player.sprinting, vector.getVelocity(), player.movementInput));
-        }
     }
 
     protected void addJumpingToPossibilities(List<Vector> vectors) {
