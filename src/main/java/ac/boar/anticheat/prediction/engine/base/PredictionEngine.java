@@ -24,9 +24,9 @@ import java.util.Map;
 public abstract class PredictionEngine {
     protected final BoarPlayer player;
 
-    public abstract Vec3f travel(boolean sprinting, Vec3f vec3f, Vec3f movementInput);
+    public abstract Vec3f travel(Vec3f vec3f, Vec3f movementInput);
     public abstract Vec3f applyEndOfTick(Vec3f vec3f);
-    protected abstract Vec3f jump(boolean sprinting, Vec3f vec3f);
+    protected abstract Vec3f jump(Vec3f vec3f);
     protected abstract boolean canJump();
 
     public final List<Vector> gatherAllPossibilities() {
@@ -141,20 +141,9 @@ public abstract class PredictionEngine {
     }
 
     protected void applyTravelToPossibilities(List<Vector> vectors) {
-        final List<Vector> list = new ArrayList<>();
-
         for (Vector vector : vectors) {
-            list.add(new Vector(travel(false, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId()));
-
-            if (player.sinceSprinting < 6) {
-                Vector vector1 = new Vector(travel(true, vector.getVelocity().clone(), player.movementInput), vector.getType(), vector.getTransactionId());
-                vector1.setSprinting(true);
-                list.add(vector1);
-            }
+            vector.setVelocity(travel(vector.getVelocity().clone(), player.movementInput));
         }
-
-        vectors.clear();
-        vectors.addAll(list);
     }
 
     // Just letting you know, this is not accurate, but it works, so I don't really care
@@ -190,18 +179,8 @@ public abstract class PredictionEngine {
             return;
         }
 
-        final List<Vector> list = new ArrayList<>();
         for (Vector vector : vectors) {
-            list.add(new Vector(jump(false, vector.getVelocity()), vector.getType(), vector.getTransactionId()));
-
-            if (player.sinceSprinting < 6) {
-                final Vector vector1 = new Vector(jump(true, vector.getVelocity()), vector.getType(), vector.getTransactionId());
-                vector1.setSprinting(true);
-                list.add(vector1);
-            }
+            vector.setVelocity(jump(vector.getVelocity()));
         }
-
-        vectors.clear();
-        vectors.addAll(list);
     }
 }

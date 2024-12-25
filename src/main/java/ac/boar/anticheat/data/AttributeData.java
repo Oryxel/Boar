@@ -2,7 +2,6 @@ package ac.boar.anticheat.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.geysermc.mcprotocollib.protocol.data.game.entity.attribute.AttributeModifier;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.attribute.ModifierOperation;
 
 import java.util.HashMap;
@@ -38,21 +37,21 @@ public class AttributeData {
         float base = this.getBaseValue();
         for (final Map.Entry<String, AttributeModifier> entry : this.modifiers.entrySet()) {
             final AttributeModifier modifier = entry.getValue();
-            if (modifier.getOperation() == ModifierOperation.ADD) {
-                base += (float) modifier.getAmount();
+            if (modifier.operation() == ModifierOperation.ADD) {
+                base += (float) modifier.amount();
             }
         }
         float value = base;
         for (final Map.Entry<String, AttributeModifier> entry : this.modifiers.entrySet()) {
             final AttributeModifier modifier = entry.getValue();
-            if (modifier.getOperation() == ModifierOperation.ADD_MULTIPLIED_BASE) {
-                value += (float) (base * modifier.getAmount());
+            if (modifier.operation() == ModifierOperation.ADD_MULTIPLIED_BASE) {
+                value += (float) (base * modifier.amount());
             }
         }
         for (final Map.Entry<String, AttributeModifier> entry : this.modifiers.entrySet()) {
             final AttributeModifier modifier = entry.getValue();
-            if (modifier.getOperation() == ModifierOperation.ADD_MULTIPLIED_TOTAL) {
-                value *= (float) (1.0F + modifier.getAmount());
+            if (modifier.operation() == ModifierOperation.ADD_MULTIPLIED_TOTAL) {
+                value *= (float) (1.0F + modifier.amount());
             }
         }
 

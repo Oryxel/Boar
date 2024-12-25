@@ -19,7 +19,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
-        player.tick();
         player.tick = packet.getTick();
         player.bedrockRotation = packet.getRotation();
 
@@ -29,12 +28,19 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
+        player.inputData.clear();
+        player.inputData.addAll(packet.getInputData());
+
+        // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
+        // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
+        player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
+
+        updateInputData(player);
+        player.tick();
+
         if (player.teleportUtil.teleportInQueue()) {
             return;
         }
-
-        player.inputData.clear();
-        player.inputData.addAll(packet.getInputData());
 
         player.prevX = player.tick != 1 ? player.x : packet.getPosition().getX();
         player.prevY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
@@ -58,17 +64,12 @@ public class MovementCheckRunner implements BedrockPacketListener {
         }
         player.sinceTeleport++;
 
-        // It's fine for us to trust this value.... even if the player spoof it they will have to correct the movement
-        // But we do want to check for funny value. Also, we will have to handle sneaking and eating ourselves, don't trust the client.
-        player.movementInput = new Vec3f(MathUtil.toValue(packet.getMotion().getX(), 1), 0, MathUtil.toValue(packet.getMotion().getY(), 1));
         player.lastClaimedEOT = player.claimedEOT.clone();
         player.claimedEOT = packet.getDelta();
 
         player.prevEOT = player.eotVelocity.clone();
         // Is this EOT fault or travel/collision fault? This is for debugging that.
         // player.clientVelocity = new Vec3f(player.lastClaimedEOT);
-
-        updateInputData(player);
 
         new PlayerTicker(player).tick();
 //        if (packet.getMotion().length() > 0) {

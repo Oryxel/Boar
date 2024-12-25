@@ -15,7 +15,7 @@ public class PredictionEngineWater extends PredictionEngine {
     }
 
     @Override
-    public Vec3f travel(boolean sprinting, Vec3f vec3f, Vec3f movementInput) {
+    public Vec3f travel(Vec3f vec3f, Vec3f movementInput) {
         Vec3f lv2 = player.waterFluidSpeed.clone();
         if (lv2.length() > 0.0) {
             Bukkit.broadcastMessage("water fluid!");
@@ -32,7 +32,7 @@ public class PredictionEngineWater extends PredictionEngine {
             vec3f = vec3f.add(0, -0.04F, 0);
         }
 
-        float f = sprinting ? 0.9F : 0.8F;
+        float f = player.sprinting ? 0.9F : 0.8F;
         float g = 0.02F;
         float h = 0 /* (float)this.getAttributeValue(EntityAttributes.WATER_MOVEMENT_EFFICIENCY) */;
         if (!player.onGround) {
@@ -54,7 +54,7 @@ public class PredictionEngineWater extends PredictionEngine {
 
     @Override
     public Vec3f applyEndOfTick(Vec3f vec3f) {
-        float f = player.closetVector.sprinting ? 0.9F : 0.8F;
+        float f = player.sprinting ? 0.9F : 0.8F;
         boolean bl = player.eotVelocity.y <= 0.0;
         float e = player.getEffectiveGravity(vec3f);
 
@@ -73,8 +73,7 @@ public class PredictionEngineWater extends PredictionEngine {
         return lv;
     }
 
-    @Override
-    protected Vec3f jump(boolean sprinting, Vec3f vec3f) {
+    protected Vec3f jump(Vec3f vec3f) {
         return vec3f.add(0, 0.04F, 0);
     }
 

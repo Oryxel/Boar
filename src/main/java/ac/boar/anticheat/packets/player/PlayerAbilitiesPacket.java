@@ -10,6 +10,7 @@ import org.cloudburstmc.protocol.bedrock.data.AbilityLayer;
 import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket;
 import org.geysermc.geyser.entity.attribute.GeyserAttributeType;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.attribute.Attribute;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.attribute.AttributeModifier;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.attribute.AttributeType;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundUpdateAttributesPacket;
 
@@ -50,16 +51,18 @@ public class PlayerAbilitiesPacket implements GeyserPacketListener, PacketListen
 
             final AttributeData data1 = player.attributes.get(GeyserAttributeType.MOVEMENT_SPEED);
             player.sendTransaction(true);
+            data1.getModifiers().clear();
             player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
                 data1.setBaseValue((float) data.getValue());
-                data.getModifiers().forEach(modifier -> {
-                    // Don't ask me what this is, modifier.getId() always throw back NoSuchMethodException for some reason...
-                    // Ignore sprinting modifier since we handle sprinting ourselves.
+                player.hasSprintingAttribute = false;
+                for (final AttributeModifier modifier : data.getModifiers()) {
                     final String id = modifier.toString().split(",")[0].replace("AttributeModifier(id=", "");
-                    if (!id.equalsIgnoreCase("minecraft:sprinting")) {
-                        data1.getModifiers().put(id, modifier);
+                    if (id.equals("minecraft:sprinting")) {
+                        player.hasSprintingAttribute = true;
+                    } else {
+                        data1.getModifiers().put(id, new ac.boar.anticheat.data.AttributeModifier(id, modifier.getAmount(), modifier.getOperation()));
                     }
-                });
+                }
             });
         }
     }

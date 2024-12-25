@@ -16,12 +16,12 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     @Override
-    public Vec3f jump(boolean sprinting, Vec3f client) {
+    public Vec3f jump(Vec3f client) {
         Vec3f vec3f = client.clone();
         float f = player.getJumpVelocity();
         if (!(f <= 1.0E-5F)) {
             vec3f = new Vec3f(vec3f.x, Math.max(f, vec3f.y), vec3f.z);
-            if (sprinting) {
+            if (player.sprinting) {
                 float g = player.yaw * 0.017453292F;
                 vec3f = vec3f.add(new Vec3f(-TrigMath.sin(g) * 0.2F, 0.0F, TrigMath.cos(g) * 0.2F));
             }
@@ -35,11 +35,11 @@ public class PredictionEngineNormal extends PredictionEngine {
     }
 
     @Override
-    public Vec3f travel(boolean sprinting, Vec3f client, Vec3f movementInput) {
+    public Vec3f travel(Vec3f client, Vec3f movementInput) {
         Vector3i blockPos = player.getVelocityAffectingPos();
         float slipperiness = BlockUtil.getBlockSlipperiness(player.compensatedWorld.getBlockState(blockPos));
         float f = player.onGround ? slipperiness : 1.0F;
-        return this.applyMovementInput(sprinting, client, movementInput, f);
+        return this.applyMovementInput(client, movementInput, f);
     }
 
     @Override
@@ -65,8 +65,8 @@ public class PredictionEngineNormal extends PredictionEngine {
         return new Vec3f(vec3f.x * g, d * 0.98F, vec3f.z * g);
     }
 
-    private Vec3f applyMovementInput(boolean sprinting, Vec3f client, Vec3f movementInput, float slipperiness) {
-        Vec3f vec3f = updateVelocity(client, movementInput, player.getMovementSpeed(sprinting, slipperiness));
+    private Vec3f applyMovementInput(Vec3f client, Vec3f movementInput, float slipperiness) {
+        Vec3f vec3f = updateVelocity(client, movementInput, player.getMovementSpeed(slipperiness));
         vec3f = applyClimbingSpeed(vec3f);
 
         return vec3f;

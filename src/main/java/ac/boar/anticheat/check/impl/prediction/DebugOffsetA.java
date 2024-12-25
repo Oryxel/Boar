@@ -21,7 +21,7 @@ public class DebugOffsetA extends OffsetHandlerCheck {
                     predicted.x + "," + predicted.y + "," + predicted.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
-                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
+                    "SPRINTING=" + player.sprinting + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
 
             Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
             Bukkit.broadcastMessage("CV: " + player.prevEOT.toVector3f().toString());
