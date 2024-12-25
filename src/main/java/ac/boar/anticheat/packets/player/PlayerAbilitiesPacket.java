@@ -50,9 +50,9 @@ public class PlayerAbilitiesPacket implements GeyserPacketListener, PacketListen
             }
 
             final AttributeData data1 = player.attributes.get(GeyserAttributeType.MOVEMENT_SPEED);
-            player.sendTransaction(true);
-            data1.getModifiers().clear();
+            player.sendTransaction();
             player.latencyUtil.addTransactionToQueue(player.lastSentId, () -> {
+                data1.getModifiers().clear();
                 data1.setBaseValue((float) data.getValue());
                 player.hasSprintingAttribute = false;
                 for (final AttributeModifier modifier : data.getModifiers()) {

@@ -17,6 +17,7 @@ public class DebugOffsetA extends OffsetHandlerCheck {
         Vec3f predicted = player.predictedVelocity;
 
         if (player.movementInput.length() > 0 || offset > 1e-4) {
+            Bukkit.broadcastMessage("speed: " + player.movementSpeed);
             if (player.uncertainSprinting) {
                 Bukkit.broadcastMessage("uncertain sprinting!");
             }
