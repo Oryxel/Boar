@@ -79,12 +79,12 @@ public class MovementCheckRunner implements BedrockPacketListener {
     }
 
     private void updateInputData(BoarPlayer player) {
-        for (final PlayerAuthInputData input : player.inputData) {
-            player.wasGliding = player.gliding;
-            player.wasSprinting = player.sprinting;
-            player.wasSneaking = player.sneaking;
-            player.wasSwimming = player.swimming;
+        player.wasGliding = player.gliding;
+        player.wasSprinting = player.sprinting;
+        player.wasSneaking = player.sneaking;
+        player.wasSwimming = player.swimming;
 
+        for (final PlayerAuthInputData input : player.inputData) {
             switch (input) {
                 // TODO: Prevent player from spoofing gliding.
                 case START_GLIDING -> player.gliding = true;
