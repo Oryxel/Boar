@@ -91,8 +91,6 @@ public class MovementCheckRunner implements BedrockPacketListener {
                 case START_GLIDING -> player.gliding = true;
                 case STOP_GLIDING -> player.gliding = false;
 
-                // Sprinting is only late when player stop sprinting (still moving at sprinting speed even tho already sent STOP_SPRINTING)
-                // But START_SPRINTING is ALWAYS correct and never actually behind (I think)
                 // Don't let player do backwards sprinting!
                 case START_SPRINTING -> player.sprinting = player.movementInput.z > 0;
                 // Fun fact, minecraft bedrock actually somehow managed to send both START_SPRINTING and STOP_SPRINTING on the same tick. nice!
