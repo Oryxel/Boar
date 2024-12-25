@@ -114,7 +114,7 @@ public class BoarPlayer {
     public final Map<Effect, StatusEffect> statusMap = new ConcurrentHashMap<>();
     public final Map<Fluid, Double> fluidHeight = new HashMap<>();
     public final List<Fluid> submergedFluidTag = new CopyOnWriteArrayList<>();
-    public BoundingBox boundingBox;
+    public BoundingBox lastBoundingBox, boundingBox;
 
     public final Set<PlayerAuthInputData> inputData = new HashSet<>();
 
@@ -143,11 +143,11 @@ public class BoarPlayer {
     }
 
     public double getSwimHeight() {
-        return (double)this.getStandingEyeHeight() < 0.4 ? 0.0 : 0.4;
+        return this.getStandingEyeHeight() < 0.4 ? 0.0 : 0.4;
     }
 
     public float getStandingEyeHeight() {
-        return 1.62F;
+        return POSE_DIMENSIONS.get(pose).eyeHeight();
     }
 
     public int getJavaBlock(BlockDefinition definition) {
@@ -204,7 +204,7 @@ public class BoarPlayer {
     }
 
     public float getEyeY() {
-        return y + POSE_DIMENSIONS.get(pose).eyeHeight();
+        return y + getStandingEyeHeight();
     }
 
     public boolean isSubmergedIn(Fluid fluidTag) {
@@ -221,6 +221,7 @@ public class BoarPlayer {
     }
 
     public void updateBoundingBox() {
+        this.lastBoundingBox = this.boundingBox.clone();
         this.boundingBox = calculateBoundingBox(x, y, z);
     }
 

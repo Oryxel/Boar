@@ -44,6 +44,10 @@ public class MovementCheckRunner implements BedrockPacketListener {
             return;
         }
 
+        if (player.boundingBox == null) {
+            player.lastBoundingBox = player.boundingBox = player.calculateBoundingBox(player.x, player.y, player.z);
+        }
+
         player.prevX = player.tick != 1 ? player.x : packet.getPosition().getX();
         player.prevY = player.tick != 1 ? player.y : packet.getPosition().getY() - EntityDefinitions.PLAYER.offset();
         player.prevZ = player.tick != 1 ? player.z : packet.getPosition().getZ();

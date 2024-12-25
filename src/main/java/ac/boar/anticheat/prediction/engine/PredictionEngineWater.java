@@ -81,7 +81,7 @@ public class PredictionEngineWater extends PredictionEngine {
         double g = player.fluidHeight.getOrDefault(Fluid.WATER, 0D);
 
         double h = player.getSwimHeight();
-        boolean allowed = player.onGround && g > h || player.wasTouchingWater && g > 0;
+        boolean allowed = player.onGround && player.touchingWater && g > 0 || g > h;
         return player.inputData.contains(PlayerAuthInputData.WANT_UP) && allowed;
     }
 

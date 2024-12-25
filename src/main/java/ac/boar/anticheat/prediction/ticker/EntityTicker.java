@@ -75,7 +75,7 @@ public class EntityTicker {
         if (player.isRegionUnloaded()) {
             return false;
         } else {
-            BoundingBox lv = player.boundingBox.contract(0.001F);
+            BoundingBox lv = player.lastBoundingBox.contract(0.001F);
             int i = MathUtil.floor(lv.minX);
             int j = MathUtil.ceil(lv.maxX);
             int k = MathUtil.floor(lv.minY);

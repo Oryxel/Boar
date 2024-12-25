@@ -24,9 +24,9 @@ public class LivingTicker extends EntityTicker {
 
     public void tickMovement() {
         PredictionEngine engine;
-        if (player.wasTouchingWater || player.isInLava()) {
+        if (player.touchingWater || player.isInLava()) {
             engine = null;
-            if (player.wasTouchingWater) {
+            if (player.touchingWater) {
                 engine = new PredictionEngineWater(player);
             }
         } else if (player.gliding || player.wasGliding) {
