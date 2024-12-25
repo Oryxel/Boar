@@ -16,6 +16,13 @@ public class PredictionEngineElytra extends PredictionEngine {
     }
 
     @Override
+    protected void applyTravelToPossibilities(List<Vector> vectors) {
+        for (Vector vector : vectors) {
+            vector.setVelocity(travel(vector.getVelocity().clone(), player.movementInput));
+        }
+    }
+
+    @Override
     public Vec3f travel(Vec3f client, Vec3f movementInput) {
         if (player.onGround) {
             player.gliding = false;

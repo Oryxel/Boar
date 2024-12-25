@@ -79,7 +79,7 @@ public class BoarPlayer {
     public boolean sprinting, wasSprinting, sneaking, wasSneaking, swimming, wasSwimming;
     public boolean gliding, wasGliding;
 
-    public boolean hasSprintingAttribute;
+    public boolean hasSprintingAttribute, uncertainSprinting;
 
     public long lastReceivedId = 0, lastSentId = 0, lastRespondTime = System.currentTimeMillis();
 
@@ -235,7 +235,6 @@ public class BoarPlayer {
     public void tick() {
         this.attributes.forEach((_, a) -> a.tick());
         this.movementSpeed = this.attributes.get(GeyserAttributeType.MOVEMENT_SPEED).getValue();
-        this.movementSpeed *= (this.hasSprintingAttribute || this.sprinting) ? 1.3F : 1;
 
         List<Effect> ranOutStatus = new ArrayList<>();
         for (Map.Entry<Effect, StatusEffect> entry : this.statusMap.entrySet()) {

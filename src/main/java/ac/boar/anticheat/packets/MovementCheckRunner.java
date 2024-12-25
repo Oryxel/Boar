@@ -11,6 +11,8 @@ import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket;
 import org.geysermc.geyser.entity.EntityDefinitions;
 
+import static org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData.*;
+
 public class MovementCheckRunner implements BedrockPacketListener {
     @Override
     public void onPacketReceived(PacketReceivedEvent event) {
@@ -104,6 +106,8 @@ public class MovementCheckRunner implements BedrockPacketListener {
                 case STOP_SWIMMING -> player.swimming = false;
             }
         }
+
+        player.uncertainSprinting = player.inputData.contains(START_SPRINTING) && player.inputData.contains(STOP_SPRINTING);
 
         if (!player.sprinting) {
             player.sinceSprinting++;

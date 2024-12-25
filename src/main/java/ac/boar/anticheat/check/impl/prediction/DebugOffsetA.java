@@ -16,24 +16,26 @@ public class DebugOffsetA extends OffsetHandlerCheck {
     public void onPredictionComplete(double offset) {
         Vec3f predicted = player.predictedVelocity;
 
-        if (player.actualVelocity.length() > 0 || offset > 1e-4) {
+        if (player.movementInput.length() > 0 || offset > 1e-4) {
+            if (player.uncertainSprinting) {
+                Bukkit.broadcastMessage("sprinting stupidity!");
+            }
+
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
                     predicted.x + "," + predicted.y + "," + predicted.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
                     "SPRINTING=" + player.sprinting + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
 
-            Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
-            Bukkit.broadcastMessage("CV: " + player.prevEOT.toVector3f().toString());
+            // Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
+            // Bukkit.broadcastMessage("CV: " + player.prevEOT.toVector3f().toString());
 
             Bukkit.broadcastMessage("A EOT: " + player.eotVelocity.toVector3f().toString());
 
             double eotOffset = player.claimedEOT.distance(player.eotVelocity.toVector3f());
             Bukkit.broadcastMessage("EOT O: " + (eotOffset > 1e-4 ? "§b" : "§a") + eotOffset  + "," + player.claimedEOT.toString());
 
-            Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
-            Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + player.claimedEOT.distance(player.eotVelocity.toVector3f())
-                    + ", EOT: " + player.claimedEOT.toString());
+//            Bukkit.broadcastMessage(player.x + "," + player.y + "," + player.z);
 
 //            if (player.sprinting != player.closetVector.sprinting) {
 //                Bukkit.broadcastMessage("sprinting speed not match -> since sprinting:" + player.sinceSprinting);

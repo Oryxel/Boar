@@ -142,7 +142,7 @@ public abstract class PredictionEngine {
 
     protected void applyTravelToPossibilities(List<Vector> vectors) {
         for (Vector vector : vectors) {
-            vector.setVelocity(travel(vector.getVelocity().clone(), player.movementInput));
+            vector.setVelocity(travel(vector.getVelocity(), player.movementInput));
         }
     }
 
