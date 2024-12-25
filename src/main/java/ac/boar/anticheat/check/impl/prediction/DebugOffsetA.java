@@ -18,7 +18,7 @@ public class DebugOffsetA extends OffsetHandlerCheck {
 
         if (player.movementInput.length() > 0 || offset > 1e-4) {
             if (player.uncertainSprinting) {
-                Bukkit.broadcastMessage("sprinting stupidity!");
+                Bukkit.broadcastMessage("uncertain sprinting!");
             }
 
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +

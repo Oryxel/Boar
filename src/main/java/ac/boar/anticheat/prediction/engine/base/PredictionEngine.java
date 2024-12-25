@@ -9,6 +9,7 @@ import ac.boar.anticheat.utils.collisions.Collisions;
 import ac.boar.utils.MathUtil;
 import ac.boar.utils.math.Vec3f;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.type.BedBlock;
@@ -23,9 +24,9 @@ import java.util.Map;
 public abstract class PredictionEngine {
     protected final BoarPlayer player;
 
-    public abstract Vec3f travel(Vec3f vec3f, Vec3f movementInput);
+    public abstract Vec3f travel(boolean sprinting, Vec3f vec3f, Vec3f movementInput);
     public abstract Vec3f applyEndOfTick(Vec3f vec3f);
-    protected abstract Vec3f jump(Vec3f vec3f);
+    protected abstract Vec3f jump(boolean sprinting, Vec3f vec3f);
     protected abstract boolean canJump();
 
     public final List<Vector> gatherAllPossibilities() {
@@ -34,7 +35,7 @@ public abstract class PredictionEngine {
         addVelocityToPossibilities(vectors);
         addJumpingToPossibilities(vectors);
 
-        applyTravelToPossibilities(vectors);
+        addTravelToPossibilities(vectors);
         return vectors;
     }
 
@@ -138,16 +139,25 @@ public abstract class PredictionEngine {
         }
     }
 
-    protected void applyTravelToPossibilities(List<Vector> vectors) {
-        for (Vector vector : vectors) {
-            vector.setVelocity(travel(vector.getVelocity(), player.movementInput));
-        }
-    }
+    protected void addTravelToPossibilities(List<Vector> vectors) {
+        if (player.uncertainSprinting) {
+            final List<Vector> possibilities = new ArrayList<>();
 
-    protected void addVelocityToPossibilities(final List<Vector> vectors) {
-        for (final Map.Entry<Long, Vec3f> entry : player.queuedVelocities.entrySet()) {
-            final Vector vector = new Vector(entry.getValue(), VectorType.VELOCITY, entry.getKey());
-            vectors.add(vector);
+            for (Vector old : vectors) {
+                possibilities.add(new Vector(travel(false, old.getVelocity(), player.movementInput), old.getType(), old.getTransactionId()));
+
+                final Vector vector1 = new Vector(travel(true, old.getVelocity(), player.movementInput), old.getType(), old.getTransactionId());
+                vector1.setSprinting(true);
+                possibilities.add(vector1);
+            }
+
+            vectors.clear();
+            vectors.addAll(possibilities);
+            return;
+        }
+        
+        for (Vector vector : vectors) {
+            vector.setVelocity(travel(player.sprinting, vector.getVelocity(), player.movementInput));
         }
     }
 
@@ -156,8 +166,29 @@ public abstract class PredictionEngine {
             return;
         }
 
+        if (player.uncertainSprinting) {
+            final List<Vector> possibilities = new ArrayList<>();
+            for (Vector old : vectors) {
+                possibilities.add(new Vector(jump(false, old.getVelocity()), old.getType(), old.getTransactionId()));
+
+                final Vector vector1 = new Vector(jump(true, old.getVelocity()), old.getType(), old.getTransactionId());
+                vector1.setSprinting(true);
+                possibilities.add(vector1);
+            }
+            vectors.clear();
+            vectors.addAll(possibilities);
+            return;
+        }
+
         for (Vector vector : vectors) {
-            vector.setVelocity(jump(vector.getVelocity()));
+            vector.setVelocity(jump(player.sprinting, vector.getVelocity()));
+        }
+    }
+
+    protected void addVelocityToPossibilities(final List<Vector> vectors) {
+        for (final Map.Entry<Long, Vec3f> entry : player.queuedVelocities.entrySet()) {
+            final Vector vector = new Vector(entry.getValue(), VectorType.VELOCITY, entry.getKey());
+            vectors.add(vector);
         }
     }
 }

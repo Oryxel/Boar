@@ -16,14 +16,14 @@ public class PredictionEngineElytra extends PredictionEngine {
     }
 
     @Override
-    protected void applyTravelToPossibilities(List<Vector> vectors) {
+    protected void addTravelToPossibilities(List<Vector> vectors) {
         for (Vector vector : vectors) {
-            vector.setVelocity(travel(vector.getVelocity().clone(), player.movementInput));
+            vector.setVelocity(travel(false, vector.getVelocity().clone(), player.movementInput));
         }
     }
 
     @Override
-    public Vec3f travel(Vec3f client, Vec3f movementInput) {
+    public Vec3f travel(boolean sprinting, Vec3f client, Vec3f movementInput) {
         if (player.onGround) {
             player.gliding = false;
         }
@@ -60,7 +60,7 @@ public class PredictionEngineElytra extends PredictionEngine {
     }
 
     @Override
-    protected Vec3f jump(Vec3f vec3f) {
+    protected Vec3f jump(boolean sprinting, Vec3f vec3f) {
         return vec3f;
     }
 

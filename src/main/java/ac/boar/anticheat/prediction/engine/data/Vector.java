@@ -6,7 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Vector implements Cloneable {
+public class Vector {
+    private boolean sprinting;
+
     private Vec3f velocity;
     private VectorType type;
     private long transactionId = -1; // if this vector is velocity or explosion...
@@ -20,10 +22,5 @@ public class Vector implements Cloneable {
         this.type = type;
         this.velocity = vec3f;
         this.transactionId = transactionId;
-    }
-
-    @Override
-    public Vector clone() {
-        return new Vector(velocity, type, transactionId);
     }
 }
