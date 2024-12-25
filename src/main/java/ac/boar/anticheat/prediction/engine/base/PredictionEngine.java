@@ -157,9 +157,7 @@ public abstract class PredictionEngine {
         }
 
         for (Vector vector : vectors) {
-            System.out.println("Before: " + vector.getVelocity().y);
             vector.setVelocity(jump(vector.getVelocity()));
-            System.out.println("After:" + vector.getVelocity().y);
         }
     }
 }
