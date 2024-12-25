@@ -86,7 +86,7 @@ public class PredictionEngineWater extends PredictionEngine {
     }
 
     private Vec3f applyFluidMovingSpeed(float gravity, Vec3f motion) {
-        if (gravity != 0.0) {
+        if (gravity != 0.0 && !player.swimming) {
             return new Vec3f(motion.x, motion.y - gravity / 16.0f, motion.z);
         } else {
             return motion;
