@@ -53,7 +53,8 @@ public abstract class PredictionEngine {
             final Vec3f ac = Collisions.adjustMovementForCollisions(player, player.boundingBox, bc, true);
 
             double offset = ac.squaredDistanceTo(player.actualVelocity);
-            if (offset <= closetOffset) {
+            boolean shouldPriority = vector.getType() == VectorType.NORMAL;
+            if (offset == closetOffset && shouldPriority || offset < closetOffset) {
                 closetOffset = offset;
                 player.closetVector = vector;
                 afterCollision = ac;

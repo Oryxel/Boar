@@ -16,17 +16,17 @@ public class DebugOffsetA extends OffsetHandlerCheck {
     public void onPredictionComplete(double offset) {
         Vec3f predicted = player.predictedVelocity;
 
-        if (player.movementInput.length() > 0 || offset > 1e-4) {
-            Bukkit.broadcastMessage("speed: " + player.movementSpeed);
-            if (player.uncertainSprinting) {
-                Bukkit.broadcastMessage("uncertain sprinting!");
-            }
+        if (player.actualVelocity.length() > 0 || offset > 1e-4) {
+//            Bukkit.broadcastMessage("speed: " + player.movementSpeed);
+//            if (player.uncertainSprinting) {
+//                Bukkit.broadcastMessage("uncertain sprinting!");
+//            }
 
             Bukkit.broadcastMessage((offset > 1e-4 ? "§c" : "§a") + "O:" + offset + ", T: " + player.closetVector.getType() + ", P: " +
                     predicted.x + "," + predicted.y + "," + predicted.z);
 
             Bukkit.broadcastMessage("§7A: " + player.actualVelocity.x + "," + player.actualVelocity.y + "," + player.actualVelocity.z + ", " +
-                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", IW=" + player.touchingWater);
+                    "SPRINTING=" + player.closetVector.isSprinting() + ", SNEAKING=" + player.sneaking + ", ST" + player.sinceTeleport + ", TI=" + player.closetVector.getTransactionId());
 
             // Bukkit.broadcastMessage("Before Travel: " + player.closetVector.getVelocity().toVector3f().toString());
             // Bukkit.broadcastMessage("CV: " + player.prevEOT.toVector3f().toString());
