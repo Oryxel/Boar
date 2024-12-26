@@ -10,15 +10,14 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 
 - A packet managing system for GeyserMC
 - A broken teleport handling system
-- An uncompleted prediction engine that only works on normal/elytra movement. (1e-4 accuracy)
+- An uncompleted prediction engine that only works on normal/elytra/water movement. (1e-6 accuracy)
+- 1:1 recreation of player world server-sided that accounted for lag.
 
 ## Problems
 - Player can send both **START** and **STOP** sprinting at the same time WTF.
 - Floating point errors break collision, causing false positive, or loss precision
 - Player can clip into walls (they will glitch back anyway, but it will still cause false) mentioned
   in [3370](https://github.com/GeyserMC/Geyser/issues/3370) and [4269](https://github.com/GeyserMC/Geyser/issues/4269)
-- Slamming your head while trying to move on the Z (and Y) axis causes 0.002 false positive.
-- Sprinting while slamming your head to the walls causes a bunch of falses.
 - Prediction engine accuracy is yuck and can be even worse if player movement is too fast or in other cases.
 - Collision is wrong and broken (different bounding boxes, collisions is wrong on block edge, sneaking on edge is wrong)
 - ~~Teleport system is broken (partially fixed)~~
@@ -32,9 +31,7 @@ A dedicated (proof of concept) ~~anti cheat~~ for GeyserMC project.
 - CorrectPlayerMovePrediction is weird, the velocity player actually moves seems to be different from
   the one we sent, (it's not EOT or anything, it's just that...?), this is a TODO.
 - Sneaking collisions calculation currently is wrong on both Bedrock (and Java - ViaBedrock).
-- Push out of block is instant, not slowly like on single-player world or on Java? (prob geyser teleport.)
-- I don't trust my way of hooking and reading packet sent from/to client enough, it might not work
-  sometimes (although that never happened).
+- Velocity after teleport act really weird in the first 3 ticks, calculated velocity will be wrong even if you use player EOT.
 
 ### Credit:
 
