@@ -7,10 +7,7 @@ import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.property.ChestType;
 import org.geysermc.geyser.level.block.property.Properties;
-import org.geysermc.geyser.level.block.type.BlockState;
-import org.geysermc.geyser.level.block.type.ChestBlock;
-import org.geysermc.geyser.level.block.type.DoorBlock;
-import org.geysermc.geyser.level.block.type.TrapDoorBlock;
+import org.geysermc.geyser.level.block.type.*;
 import org.geysermc.geyser.level.physics.Direction;
 
 import java.util.ArrayList;
@@ -19,7 +16,11 @@ import java.util.List;
 public class BedrockCollision {
     public static List<BoundingBox> getBoundingBox(BoarPlayer player, MutableBlockPos vector3i, BlockState state) {
         if (state.is(Blocks.ENDER_CHEST)) {
-            return List.of(new BoundingBox(0.025F, 0F, 0.025F, 0.975F, 0.95F, 0.975F));
+            return List.of(new BoundingBox(0.025F, 0, 0.025F, 0.975F, 0.95F, 0.975F));
+        }
+
+        if (state.block() instanceof BedBlock) {
+            return List.of(new BoundingBox(0, 0, 0, 1, 0.5625F, 1));
         }
 
         if (state.is(Blocks.HONEY_BLOCK)) {
